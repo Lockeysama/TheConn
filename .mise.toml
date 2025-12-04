@@ -1,0 +1,38 @@
+[tools]
+# 使用 mise 管理 uv 的版本
+uv = "latest"
+# 注意：通常不需要在这里指定 python，因为 uv 会根据 pyproject.toml 自动管理 python 版本
+# 如果你确实需要系统级 python，可以取消注释：
+# python = "3.12"
+
+[env]
+_.python.venv = ".venv"
+
+UV_PYTHON_PREFERENCE = "only-managed"
+
+[tasks]
+# --- 依赖管理 ---
+install = { description = "安装/同步依赖 (创建 .venv)", run = "uv sync" }
+lock = { description = "更新 uv.lock 文件", run = "uv lock" }
+tree = { description = "查看依赖树", run = "uv tree" }
+
+# 添加依赖的快捷方式 (用法: mise run add requests)
+# 这里使用了 shell 脚本语法来透传参数 "$@"
+add = { description = "添加依赖", run = "uv add $@" }
+remove = { description = "移除依赖", run = "uv remove $@" }
+
+# --- 开发运行 ---
+# 运行任意命令 (用法: mise run cmd python script.py)
+cmd = { description = "在 venv 中运行命令", run = "uv run $@" }
+
+# 启动开发服务 (根据你的项目修改)
+dev = { description = "启动开发服务", run = "uv run python main.py" }
+
+# --- 代码质量 ---
+# 假设你安装了 ruff (uv add --dev ruff)
+fmt = { description = "格式化代码", run = "uv run ruff format ." }
+lint = { description = "检查代码", run = "uv run ruff check --fix ." }
+test = { description = "运行测试", run = "uv run pytest" }
+
+# --- 清理 ---
+clean = { description = "删除虚拟环境", run = "rm -rf .venv" }
