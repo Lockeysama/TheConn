@@ -20,6 +20,24 @@
 ```shell
 my_project/
 ├── .gitignore
+├── .the_conn/                  # [AI协作层] AI 工具和上下文知识库
+│   ├── context/                # [知识层] 项目的全局上下文知识库
+│   │   ├── 00_ARCHITECTURE.md
+│   │   └── 15_PAYMENT_MODULE_DESIGN.md
+│   │
+│   ├── ai_prompts/             # [工具层] 可复用的 Prompt 工具箱
+│   │   ├── personas/
+│   │   │   └── senior_java_developer.md
+│   │   └── templates/
+│   │       ├── task_execution_master.md
+│   │       └── story_synchronization.md
+│   │
+│   └── ai_workspace/           # [执行层] AI 任务的临时工作区 (不提交到 Git)
+│       └── PAY-124/
+│           ├── task.md
+│           ├── context.manifest.json
+│           └── final_code_diff.txt
+│
 ├── epics/                      # [规划层] 所有规划文档的唯一事实来源
 │   └── EPIC-01_E-commerce_Payment/
 │       ├── README.md
@@ -29,32 +47,14 @@ my_project/
 │               └── stories/
 │                   └── PAY-124_Failed_Payment.md
 │
-├── features/                   # [规约层] BDD Gherkin 特性文件 (.feature)
-│   └── payment/
-│       └── payment_failure_handling.feature
-│
-├── .context/                   # [知识层] 项目的全局上下文知识库
-│   ├── 00_ARCHITECTURE.md
-│   └── 15_PAYMENT_MODULE_DESIGN.md
-│
-├── .ai_prompts/                # [工具层] 可复用的 Prompt 工具箱
-│   ├── personas/
-│   │   └── senior_java_developer.md
-│   └── templates/
-│       ├── task_execution_master.md
-│       └── story_synchronization.md
-│
-├── .ai_workspace/              # [执行层] AI 任务的临时工作区 (不提交到 Git)
-│   └── PAY-124/
-│       ├── task.md
-│       ├── context.manifest.json
-│       └── final_code_diff.txt
-│
 ├── src/                        # [实现层] 项目源代码
 │   └── main/java/com/ecommerce/...
 │
 └── tests/                      # [验证层] 所有测试代码
     ├── bdd/
+    │   ├── features/           # [规约层] BDD Gherkin 特性文件 (.feature)
+    │   │   └── payment/
+    │   │       └── payment_failure_handling.feature
     │   └── step_defs/
     │       └── test_payment_failure.py
     └── unit/
@@ -68,7 +68,7 @@ my_project/
 
 #### **阶段一：战略规划与意图定义 (****`epics/`****&#x20;目录)**
 
-在此阶段，人类领航员将业务需求转化为结构化的、版本化的 Markdown 文件，作为所有后续工作的“唯一事实来源”。
+在此阶段，人类领航员将业务需求转化为结构化的、版本化的 Markdown 文件，作为所有后续工作的"唯一事实来源"。
 
 1. **定义 Epic 与 Feature**: 在 `epics/` 目录下，通过 `README.md` 文件定义高阶的商业目标和功能模块。
 2. **撰写 AI-Story**: 在对应的 `stories/` 目录下，为每一个具体的可开发任务创建一个详尽的 `.md` 文件。这份文件是意图的核心。
@@ -78,15 +78,15 @@ my_project/
 领航员触发脚本，为 AI 准备好所有材料，并组装最终的指令。
 
 1. **触发任务**: 领航员在本地运行一个脚本，如 `sh start_ai_task.sh PAY-124`。
-2. **生成工作区**: 脚本在 `.ai_workspace/` 下创建 `PAY-124/` 目录。
+2. **生成工作区**: 脚本在 `.the_conn/ai_workspace/` 下创建 `PAY-124/` 目录。
 3. **准备上下文**: 脚本在该目录中创建 `context.manifest.json` 和 `task.md`。
-4. **组装并发送 Prompt**: 脚本加载 `.ai_prompts/templates/task_execution_master.md` 模板，将 Persona、清单中的上下文、以及 `task.md` 的内容全部填充进去，形成最终的 prompt 发送给 AI。
+4. **组装并发送 Prompt**: 脚本加载 `.the_conn/ai_prompts/templates/task_execution_master.md` 模板，将 Persona、清单中的上下文、以及 `task.md` 的内容全部填充进去，形成最终的 prompt 发送给 AI。
 
 #### **阶段三：代码实现与审查**
 
 AI 根据指令执行开发任务，并由人类领航员进行质量把关。
 
-1. **AI 生成规约与代码**: AI 首先根据 Story 中的 BDD 场景，创建或更新位于 `features/` 目录下的 Gherkin 文件。然后，它会编写相应的 BDD 步骤定义（在 `tests/bdd/step_defs/`）和单元测试（在 `tests/unit/`），最后编写业务逻辑代码（在 `src/`）来让所有测试通过。
+1. **AI 生成规约与代码**: AI 首先根据 Story 中的 BDD 场景，创建或更新位于 `tests/bdd/features/` 目录下的 Gherkin 文件。然后，它会编写相应的 BDD 步骤定义（在 `tests/bdd/step_defs/`）和单元测试（在 `tests/unit/`），最后编写业务逻辑代码（在 `src/`）来让所有测试通过。
 2. **AI 提交拉取请求 (Pull Request)**: AI 将所有相关代码变更提交为一个 PR。
 3. **人类领航员审查**: 领航员审查代码的逻辑、架构符合性以及方案的优雅性。
 
@@ -97,7 +97,7 @@ AI 根据指令执行开发任务，并由人类领航员进行质量把关。
 1. **合并 PR**: 领航员将通过审查的 PR 合并到主分支。
 2. **触发同步**: 领航员运行同步脚本，如 `sh sync_story.sh PAY-124`。
 3. **脚本准备同步材料**: 获取该 PR 的最终 `git diff`，并读取原始的 story 文件。
-4. **执行同步 Prompt**: 脚本使用 `.ai_prompts/templates/story_synchronization.md` 模板，将原始 Story 和最终代码变更一同发给 AI，要求其更新 Story。
+4. **执行同步 Prompt**: 脚本使用 `.the_conn/ai_prompts/templates/story_synchronization.md` 模板，将原始 Story 和最终代码变更一同发给 AI，要求其更新 Story。
 5. **领航员确认并提交**: AI 返回更新后的 Story 内容。领航员进行最终确认，然后将这个变更提交到 `epics/` 目录，完成闭环。
 
 ***
@@ -139,7 +139,7 @@ epic: EPIC-01_E-commerce_Payment
 feature: FEAT-01_Credit_Card_And_PayPal
 status: ready_for_dev
 author: @navigator-lead
-bdd_feature_file: features/payment/payment_failure_handling.feature
+bdd_feature_file: tests/bdd/features/payment/payment_failure_handling.feature
 ---
 
 # AI-Story: 信用卡支付的健壮错误处理
@@ -151,7 +151,7 @@ bdd_feature_file: features/payment/payment_failure_handling.feature
 > 作为一个购物者，我想要在我使用无效信用卡支付时，能够看到明确区分的失败提示，以便于我能理解问题所在并快速采取行动。
 
 ## 3. 验收标准 (BDD Scenarios)
-*此部分内容将被 AI 用来创建或更新位于 `features/payment/payment_failure_handling.feature` 的 Gherkin 文件。*
+*此部分内容将被 AI 用来创建或更新位于 `tests/bdd/features/payment/payment_failure_handling.feature` 的 Gherkin 文件。*
 
 **特性: 信用卡支付的错误反馈**
   为了提供清晰的用户指引，作为支付系统，我需要在支付失败时根据不同原因展示不同的提示信息。
@@ -180,9 +180,9 @@ bdd_feature_file: features/payment/payment_failure_handling.feature
 - **绝对禁止**: 修改 `Order` 模块或 `Gateway` 接口。
 ```
 
-### **A.2. BDD Gherkin 文件 (****`features/`****&#x20;目录)**
+### **A.2. BDD Gherkin 文件 (****`tests/bdd/features/`****&#x20;目录)**
 
-**`features/payment/payment_failure_handling.feature`**
+**`tests/bdd/features/payment/payment_failure_handling.feature`**
 
 ```gherkin
 # language: zh-CN
@@ -210,9 +210,9 @@ bdd_feature_file: features/payment/payment_failure_handling.feature
     而且 我应该会看到提示信息："支付失败：信用卡额度不足。"
 ```
 
-### **A.3. 上下文文件 (****`.context/`****&#x20;目录)**
+### **A.3. 上下文文件 (****`.the_conn/context/`****&#x20;目录)**
 
-**`.context/00_ARCHITECTURE.md`**
+**`.the_conn/context/00_ARCHITECTURE.md`**
 
 ```markdown
 # 项目架构总览
@@ -234,21 +234,21 @@ bdd_feature_file: features/payment/payment_failure_handling.feature
 - **测试框架**: JUnit 5 (单元测试), Cucumber (BDD 测试)
 ```
 
-### **A.4. AI 工作区文件 (****`.ai_workspace/`****&#x20;目录)**
+### **A.4. AI 工作区文件 (****`.the_conn/ai_workspace/`****&#x20;目录)**
 
-**`.ai_workspace/PAY-124/context.manifest.json`**
+**`.the_conn/ai_workspace/PAY-124/context.manifest.json`**
 
 ```json
 {
   "description": "Context files for task PAY-124: Payment Failure Handling. Includes high-level architecture for overall structure and the specific payment module design for implementation details.",
   "files": [
-    ".context/00_ARCHITECTURE.md",
-    ".context/15_PAYMENT_MODULE_DESIGN.md"
+    ".the_conn/context/00_ARCHITECTURE.md",
+    ".the_conn/context/15_PAYMENT_MODULE_DESIGN.md"
   ]
 }
 ```
 
-**`.ai_workspace/PAY-124/task.md`****&#x20;(由脚本从 AI-Story 生成)**
+**`.the_conn/ai_workspace/PAY-124/task.md`****&#x20;(由脚本从 AI-Story 生成)**
 
 ````markdown
 # AI 开发简报: [PAY-124] 信用卡支付的健壮错误处理
@@ -286,9 +286,9 @@ bdd_feature_file: features/payment/payment_failure_handling.feature
 绝对禁止: 修改 Order 模块或 Gateway 接口。
 ````
 
-**A.5. Prompt 模板 (\`.ai\_prompts/\` 目录)**
+**A.5. Prompt 模板 (`.the_conn/ai_prompts/` 目录)**
 
-`.ai_prompts/templates/task_execution_master.md`
+`.the_conn/ai_prompts/templates/task_execution_master.md`
 
 ```markdown
 {{persona}}
@@ -316,7 +316,7 @@ bdd_feature_file: features/payment/payment_failure_handling.feature
 
 ```
 
-`.ai_prompts/templates/story_synchronization.md`
+`.the_conn/ai_prompts/templates/story_synchronization.md`
 
 ````markdown
 你是一位严谨的技术文档工程师。你的任务是确保我们的规划文档（AI-Story）与最终的代码实现保持 100% 一致。
