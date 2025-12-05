@@ -36,7 +36,7 @@ my_project/
 │       └── PAY-124/
 │           ├── task.md
 │           ├── context.manifest.json
-│           └── final_code_diff.txt
+│           └── change_summary.md
 │
 ├── epics/                      # [规划层] 所有规划文档的唯一事实来源
 │   └── EPIC-01_E-commerce_Payment/
@@ -139,7 +139,7 @@ epic: EPIC-01_E-commerce_Payment
 feature: FEAT-01_Credit_Card_And_PayPal
 status: ready_for_dev
 author: @navigator-lead
-bdd_feature_file: tests/bdd/features/payment/payment_failure_handling.feature
+depends_on:
 ---
 
 # AI-Story: 信用卡支付的健壮错误处理
@@ -286,6 +286,79 @@ bdd_feature_file: tests/bdd/features/payment/payment_failure_handling.feature
 绝对禁止: 修改 Order 模块或 Gateway 接口。
 ````
 
+**`.the_conn/ai_workspace/PAY-124/change_summary.md`****&#x20;(由脚本从 story_synchronization 生成)**
+
+````markdown
+# DS-101 代码变更摘要
+
+## 任务: 统一数组协议设计与实现
+
+**提交范围**: 52bca6d..c58ff09
+**变更日期**: 2025-12-05
+
+---
+
+## 新增文件
+
+### 核心实现 (utils/datastream/)
+
+| 文件 | 说明 |
+|-----|------|
+| `protocol.go` | 协议结构定义 - Header, Event, Packet 结构体及序列化方法 |
+| `packet.go` | 数据包封装逻辑 - PacketBuilder 线程安全构建器，支持序号管理、事件排序 |
+| `protocol_test.go` | 协议结构单元测试 - 验证 JSON 序列化、字段完整性、类型边界 |
+| `packet_test.go` | 封装逻辑单元测试 - 验证序号递增、事件排序、并发安全、时间戳 |
+
+### BDD 测试 (tests/bdd/)
+
+| 文件 | 说明 |
+|-----|------|
+| `features/datastream/unified_array_protocol.feature` | Gherkin 场景文件 - 9 个验收场景 |
+| `datastream_test.go` | godog step definitions - 场景步骤实现 |
+
+---
+
+## 修改文件
+
+### 依赖管理
+
+| 文件 | 说明 |
+|-----|------|
+| `go.mod` | 新增 godog BDD 框架及相关依赖 |
+| `go.sum` | 依赖版本锁定更新 |
+
+**新增依赖列表**:
+- `github.com/cucumber/godog v0.15.1`
+- `github.com/cucumber/gherkin/go/v26 v26.2.0`
+- `github.com/cucumber/messages/go/v21 v21.0.1`
+- `github.com/gofrs/uuid v4.3.1+incompatible`
+- `github.com/hashicorp/go-immutable-radix v1.3.1`
+- `github.com/hashicorp/go-memdb v1.3.4`
+- `github.com/hashicorp/golang-lru v0.5.4`
+- `github.com/spf13/pflag v1.0.7`
+
+---
+
+## 测试结果
+
+```
+单元测试: 19 passed
+BDD 测试: 9 scenarios, 58 steps passed
+```
+
+---
+
+## 验收场景覆盖
+
+- ✅ 单个事件的数组封装
+- ✅ 多个事件的数组封装
+- ✅ 事件结构完整性
+- ✅ 序号递增验证
+- ✅ 时间戳有效性验证
+- ✅ 空事件列表处理
+- ✅ 不同类型事件的封装 (Fire/Move/Chat)
+````
+
 **A.5. Prompt 模板 (`.the_conn/ai_prompts/` 目录)**
 
 `.the_conn/ai_prompts/templates/task_execution_master.md`
@@ -321,7 +394,7 @@ bdd_feature_file: tests/bdd/features/payment/payment_failure_handling.feature
 ````markdown
 你是一位严谨的技术文档工程师。你的任务是确保我们的规划文档（AI-Story）与最终的代码实现保持 100% 一致。
 
-请对比以下的【原始 Story】和【最终代码变更】，然后更新 Story 的内容。
+请对比【原始 Story】和【最终代码变更】，然后更新 Story 的内容。
 
 **规则**:
 1.  **只更新技术细节**: 你只能修改 "验收标准 (BDD Scenarios)" 和 "技术实现要点" 部分。
@@ -331,16 +404,11 @@ bdd_feature_file: tests/bdd/features/payment/payment_failure_handling.feature
 
 ---
 
-### **【原始 Story】**
+### **数据获取方式**
+原始 Story: 从上下文中获取。
+最终变更代码：通过 Git Diff 等命令获取。
 
-```markdown
-{{original_story_content}}
 
-【最终代码变更 (Git Diff)】
-
-{{final_code_diff}}
-```
-
-现在，请生成更新后的 Story 文件内容。
+现在，请分析并更新原始 Story 文件内容。
 
 ````
