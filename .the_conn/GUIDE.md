@@ -14,7 +14,7 @@
 
 1. **生成或讨论后生成 Context 文档**（技术方案确定后）：
    ```
-   @{技术方案文档}/讨论结果（建议对讨论结果生成文档后使用） @context_generation.md 帮我生成 Context 文档
+   @{技术方案文档}/讨论结果 @context_generation.md 帮我生成 Context 文档
    ```
    → 输出到 `.the_conn/context/` 目录
 
@@ -34,7 +34,7 @@
    ```
    @{需求文档} @story_template.md 帮我拆解为 Story
    ```
-   → 输出到 `epics/.../stories/{STORY-ID}.md`
+   → 输出到 `epics/.../stories/{STORY-ID}_{Name}.md`
 
 5. 审查 AI 生成的文档，确认后提交
 
@@ -91,6 +91,26 @@
 
 3. 审查并提交所有变更
 
+### 流程五：Bug 修复
+
+**场景**: 已完成的 Story 在测试或生产环境发现 Bug。
+
+**步骤**:
+
+1. 创建 Bug Fix Story：
+   ```
+   @bug_story_template.md 帮我生成 Bug Fix Story
+   
+   父 Story: DS-104
+   发现于: 集成测试
+   现象: ...
+   ```
+   → 输出到 `epics/.../stories/{父ID}.{序号}_{Name}.md`
+
+2. 后续按流程二到流程四执行修复
+
+详细流程参见 `BUG_WORKFLOW_GUIDE.md`。
+
 ---
 
 ## 模板速查
@@ -101,9 +121,34 @@
 | `epic_template.md` | 生成 Epic 规划 | 需求文档 | `epics/{EPIC-ID}/` |
 | `feature_template.md` | 生成 Feature 规划 | 需求/Epic | `epics/.../features/` |
 | `story_template.md` | 生成 Story | 需求/Feature | `epics/.../stories/` |
+| `bug_story_template.md` | 生成 Bug Fix Story | Bug 信息 | `epics/.../stories/` |
 | `task_generation.md` | 生成 Task 简报 | Story 文件 | `.the_conn/ai_workspace/` |
 | `story_synchronization.md` | 同步 Story | Story + 代码 | 更新原 Story |
 | `change_summary.md` | 生成变更摘要 | 任务记录 | `.the_conn/ai_workspace/` |
+
+---
+
+## 关键概念
+
+### Story 类型
+
+| Type | 说明 | ID 格式 |
+|------|------|---------|
+| `dev` | 新功能开发 | `{PREFIX}-{序号}`，如 `DS-104` |
+| `bug_fix` | 缺陷修复 | `{父ID}.{序号}`，如 `DS-104.1` |
+
+### Story 状态
+
+| Status | 说明 |
+|--------|------|
+| `pending` | 未完成 |
+| `done` | 已完成 |
+
+### 文件命名
+
+```
+{ID}_{Snake_Case_Name}.md
+```
 
 ---
 
@@ -111,19 +156,22 @@
 
 ```
 .the_conn/
-├── context/                # 项目上下文知识库
-│   ├── 00_ARCHITECTURE.md      # 全局架构
-│   ├── 10_xxx_DESIGN.md        # 模块设计
-│   └── 20_xxx_SPECIFICATION.md # API 规范
+├── context/                    # 项目上下文知识库
+│   ├── 00_ARCHITECTURE.md
+│   └── 10_MODULE_DESIGN.md
 ├── ai_prompts/
-│   ├── core/Core.md        # 框架核心说明
-│   └── templates/          # 所有模板
-└── ai_workspace/{TASK-ID}/ # 任务工作区
+│   ├── core/core.md            # 框架核心说明
+│   └── templates/              # 所有模板
+├── ai_workspace/{TASK-ID}/     # 任务工作区
+├── GUIDE.md                    # 本文件
+└── BUG_WORKFLOW_GUIDE.md       # Bug Fix 工作流指南
 
 epics/
 └── {EPIC-ID}/
-    ├── README.md           # Epic 规划
+    ├── README.md               # Epic 规划
     └── features/{FEAT-ID}/
-        ├── README.md       # Feature 规划
-        └── stories/{STORY-ID}.md
+        ├── README.md           # Feature 规划
+        └── stories/
+            ├── {ID}_{Name}.md          # Story
+            └── {ID}.{序号}_{Name}.md   # Bug Fix Story
 ```
