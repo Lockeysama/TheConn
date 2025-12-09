@@ -302,19 +302,19 @@ depends_on:
 
 ### 核心实现 (utils/datastream/)
 
-| 文件 | 说明 |
-|-----|------|
-| `protocol.go` | 协议结构定义 - Header, Event, Packet 结构体及序列化方法 |
-| `packet.go` | 数据包封装逻辑 - PacketBuilder 线程安全构建器，支持序号管理、事件排序 |
-| `protocol_test.go` | 协议结构单元测试 - 验证 JSON 序列化、字段完整性、类型边界 |
-| `packet_test.go` | 封装逻辑单元测试 - 验证序号递增、事件排序、并发安全、时间戳 |
+| 文件               | 说明                                                                  |
+| ------------------ | --------------------------------------------------------------------- |
+| `protocol.go`      | 协议结构定义 - Header, Event, Packet 结构体及序列化方法               |
+| `packet.go`        | 数据包封装逻辑 - PacketBuilder 线程安全构建器，支持序号管理、事件排序 |
+| `protocol_test.go` | 协议结构单元测试 - 验证 JSON 序列化、字段完整性、类型边界             |
+| `packet_test.go`   | 封装逻辑单元测试 - 验证序号递增、事件排序、并发安全、时间戳           |
 
 ### BDD 测试 (tests/bdd/)
 
-| 文件 | 说明 |
-|-----|------|
-| `features/datastream/unified_array_protocol.feature` | Gherkin 场景文件 - 9 个验收场景 |
-| `datastream_test.go` | godog step definitions - 场景步骤实现 |
+| 文件                                                 | 说明                                  |
+| ---------------------------------------------------- | ------------------------------------- |
+| `features/datastream/unified_array_protocol.feature` | Gherkin 场景文件 - 9 个验收场景       |
+| `datastream_test.go`                                 | godog step definitions - 场景步骤实现 |
 
 ---
 
@@ -322,10 +322,10 @@ depends_on:
 
 ### 依赖管理
 
-| 文件 | 说明 |
-|-----|------|
+| 文件     | 说明                          |
+| -------- | ----------------------------- |
 | `go.mod` | 新增 godog BDD 框架及相关依赖 |
-| `go.sum` | 依赖版本锁定更新 |
+| `go.sum` | 依赖版本锁定更新              |
 
 **新增依赖列表**:
 - `github.com/cucumber/godog v0.15.1`
