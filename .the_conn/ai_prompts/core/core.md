@@ -101,36 +101,39 @@ PR 合并后，确保"意图"与"实现"的一致性。
 
 ### Story 类型
 
-| Type | 说明 | ID 格式 |
-|------|------|---------|
-| `dev` | 新功能开发 | `{PREFIX}-{序号}`，如 `DS-104` |
-| `bug_fix` | 缺陷修复 | `{父ID}.{序号}`，如 `DS-104.1` |
+| Type      | 说明       | ID 格式                        |
+| --------- | ---------- | ------------------------------ |
+| `dev`     | 新功能开发 | `{PREFIX}-{序号}`，如 `DS-104` |
+| `bug_fix` | 缺陷修复   | `{父ID}.{序号}`，如 `DS-104.1` |
 
 ### Story 状态
 
-| Status | 说明 |
-|--------|------|
+| Status    | 说明   |
+| --------- | ------ |
 | `pending` | 未完成 |
-| `done` | 已完成 |
+| `done`    | 已完成 |
 
 ### 文件命名规则
 
-| 类型 | 格式 | 示例 |
-|------|------|------|
-| Story | `{ID}_{Name}.md` | `DS-104_Dynamic_Piggybacking.md` |
-| Bug Fix | `{ID}_{Name}.md` | `DS-104.1_Concurrency_Fix.md` |
+| 类型    | 格式             | 示例                             |
+| ------- | ---------------- | -------------------------------- |
+| Story   | `{ID}_{Name}.md` | `DS-104_Dynamic_Piggybacking.md` |
+| Bug Fix | `{ID}_{Name}.md` | `DS-104.1_Concurrency_Fix.md`    |
+
+**ID 规则**
+Feature 功能简写+编号
 
 ---
 
 ## 附录：模板索引
 
-| 用途 | 模板文件 |
-|------|----------|
-| 生成 Epic | `templates/epic_template.md` |
-| 生成 Feature | `templates/feature_template.md` |
-| 生成 Story | `templates/story_template.md` |
-| 生成 Bug Fix Story | `templates/bug_story_template.md` |
-| 生成 Task 简报 | `templates/task_generation.md` |
-| 生成 Context 文档 | `templates/context_generation.md` |
-| 同步 Story | `templates/story_synchronization.md` |
-| 生成变更摘要 | `templates/change_summary.md` |
+| 用途               | 模板文件                             |
+| ------------------ | ------------------------------------ |
+| 生成 Epic          | `templates/epic_template.md`         |
+| 生成 Feature       | `templates/feature_template.md`      |
+| 生成 Story         | `templates/story_template.md`        |
+| 生成 Bug Fix Story | `templates/bug_story_template.md`    |
+| 生成 Task 简报     | `templates/task_generation.md`       |
+| 生成 Context 文档  | `templates/context_generation.md`    |
+| 同步 Story         | `templates/story_synchronization.md` |
+| 生成变更摘要       | `templates/change_summary.md`        |
