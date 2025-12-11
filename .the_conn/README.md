@@ -4,43 +4,55 @@
 
 ---
 
-## 模板分类
+## Prompts 分类
 
-### 规划层模板
+### 初始化 Prompts
 
-用于创建 Epic、Feature、Story 的规划文档。
+用于项目初始化。
 
-| 模板文件 | 用途 |
-|----------|------|
-| `templates/epic_template.md` | 生成 Epic 规划文档 |
-| `templates/feature_template.md` | 生成 Feature 规划文档 |
-| `templates/story_template.md` | 生成 Story 文件（type: dev） |
-| `templates/bug_story_template.md` | 生成 Bug Fix Story 文件（type: bug_fix） |
+| Prompt 文件                              | 用途                         |
+| ---------------------------------------- | ---------------------------- |
+| `prompts/initialization/project_init.md` | 初始化项目结构和公共 Context |
 
-### 执行层模板
+### Context 管理 Prompts
 
-用于 AI 任务执行和上下文管理。
+用于知识库管理。
 
-| 模板文件 | 用途 |
-|----------|------|
-| `templates/task_generation.md` | 从 Story 生成任务简报 |
-| `templates/context_generation.md` | 生成上下文清单 |
+| Prompt 文件                  | 用途                        |
+| ---------------------------- | --------------------------- |
+| `prompts/context/extract.md` | 从技术方案提取 Context 文档 |
+| `prompts/context/add.md`     | 添加新 Context 文档         |
+| `prompts/context/update.md`  | 更新现有 Context 文档       |
 
-### 同步层模板
+### 规划层 Prompts
 
-用于实现与意图的双向同步。
+用于需求评审、拆解和创建规划文档。
 
-| 模板文件 | 用途 |
-|----------|------|
-| `templates/story_synchronization.md` | 同步 Story 与代码变更 |
-| `templates/change_summary.md` | 生成代码变更摘要 |
+| Prompt 文件                                  | 用途                                     |
+| -------------------------------------------- | ---------------------------------------- |
+| `prompts/planning/requirements_review.md`    | 需求与技术方案评审                       |
+| `prompts/planning/requirements_breakdown.md` | 需求拆解（批量生成 Epic/Feature/Story）  |
+| `prompts/planning/epic_planning.md`          | 生成 Epic 规划文档                       |
+| `prompts/planning/feature_planning.md`       | 生成 Feature 规划文档                    |
+| `prompts/planning/story_writing.md`          | 生成 Story 文件（type: dev）             |
+| `prompts/planning/bug_fix_story.md`          | 生成 Bug Fix Story 文件（type: bug_fix） |
+
+### 执行层 Prompts
+
+用于完整的任务执行流程（开发 + 测试 + 同步 + 总结）。
+
+| Prompt 文件                            | 用途                                |
+| -------------------------------------- | ----------------------------------- |
+| `prompts/execution/task_generation.md` | 生成任务简报（包含完整执行流程）    |
+| `prompts/execution/story_sync.md`      | 同步 Story 状态（任务闭环的一部分） |
+| `prompts/execution/change_summary.md`  | 生成变更摘要（任务闭环的一部分）    |
 
 ### 指南文档
 
-| 文档 | 内容 |
-|------|------|
-| `BUG_WORKFLOW_GUIDE.md` | Bug Fix 工作流指南 |
-| `core/core.md` | AI 领航员敏捷工作流 |
+| 文档                    | 内容                |
+| ----------------------- | ------------------- |
+| `BUG_WORKFLOW_GUIDE.md` | Bug Fix 工作流指南  |
+| `core/core.md`          | AI 领航员敏捷工作流 |
 
 ---
 
@@ -49,21 +61,28 @@
 ### 标准开发流程
 
 ```
-1. 规划阶段
-   ├── epic_template.md → 创建 Epic
-   ├── feature_template.md → 创建 Feature
-   └── story_template.md → 创建 Story
+0. 初始化阶段
+   └── initialization/project_init.md → 初始化项目结构
                 ↓
-2. 准备阶段
-   ├── context_generation.md → 生成上下文清单
-   └── task_generation.md → 生成任务简报
+1. 评审阶段
+   └── planning/requirements_review.md → 需求与方案评审
                 ↓
-3. 执行阶段
-   └── AI 根据任务简报实现功能
+2. 规划阶段
+   ├── context/extract.md → 提取 Context
+   ├── 方案 A（推荐）:
+   │   └── planning/requirements_breakdown.md → 批量生成 Epic/Feature/Story
+   └── 方案 B（精细控制）:
+       ├── planning/epic_planning.md → 逐个创建 Epic
+       ├── planning/feature_planning.md → 逐个创建 Feature
+       └── planning/story_writing.md → 逐个创建 Story
                 ↓
-4. 同步阶段
-   ├── change_summary.md → 生成变更摘要
-   └── story_synchronization.md → 同步 Story
+3. 准备阶段
+   └── execution/task_generation.md → 生成任务简报（含闭环流程）
+                ↓
+4. 执行阶段
+   ├── AI 执行 Step 1-5（开发 + 测试）
+   ├── 人工 Review 检查点 ⚠️
+   └── AI 执行 Step 6-7（生成摘要 + 同步 Story）← 显式确认后自动执行
 ```
 
 ### Bug Fix 流程
@@ -87,63 +106,93 @@ Story 完成并合并
 
 ## 关键概念
 
-### Story 类型
+### ID 命名规范
 
-| Type | 说明 | ID 格式 |
-|------|------|---------|
-| `dev` | 新功能开发 | `{PREFIX}-{序号}`，如 `DS-104` |
-| `bug_fix` | 缺陷修复 | `{父ID}.{序号}`，如 `DS-104.1` |
+| 类型    | 格式                    | 示例         |
+| ------- | ----------------------- | ------------ |
+| Epic    | `EPIC-{序号}`           | `EPIC-01`    |
+| Feature | `FEAT-{序号}`           | `FEAT-01`    |
+| Story   | `STORY-{序号}`          | `STORY-01`   |
+| Bug Fix | `STORY-{序号}.{子序号}` | `STORY-01.1` |
+| Task    | `TASK-{序号}`           | `TASK-01`    |
 
-### Story 状态
+### Story 类型与状态
 
-| Status | 说明 |
-|--------|------|
-| `pending` | 未完成 |
-| `done` | 已完成 |
+**Type**: `dev` (新功能) | `bug_fix` (缺陷修复)
 
-### 文件命名
+**Status**: `pending` (未完成) | `done` (已完成)
 
-```
-{ID}_{Snake_Case_Name}.md
-```
+### 文件命名规范
 
-示例：`DS-104_Dynamic_Piggybacking.md`
+**格式**: `{ID}_{PascalCaseName}.md`
+
+**示例**:
+- `EPIC-01_Base_Init/`
+- `STORY-01_Create_Structure.md`
+- `TASK-01_STORY-01_Create_Structure/`
+
+### Task 与 Story 关系
+
+- **1:1** - 正常：一个 Story → 一个 Task
+- **1:N** - 迭代：一个 Story → 多个 Task（开发 + 优化 + 修复）
 
 ---
 
 ## 快速使用
 
-### 创建新 Story
+### 项目初始化
 
 ```
-# 向 AI 提供需求，使用模板生成
-请使用 story_template.md 模板，根据以下需求生成 Story：
-{需求描述}
+@prompts/initialization/project_init.md 帮我初始化 The Conn 项目
+```
+
+### 评审需求和方案
+
+```
+@{需求文档} @prompts/planning/requirements_review.md 开始评审
+```
+
+### 批量生成规划
+
+```
+@{需求文档} @{技术方案} @prompts/planning/requirements_breakdown.md 开始拆解
+```
+
+### 提取 Context
+
+```
+@{技术方案文档} @prompts/context/extract.md 帮我提取 Context 文档
+```
+
+### 单独创建 Story
+
+```
+@{需求描述} @prompts/planning/story_writing.md 帮我生成 Story
 ```
 
 ### 创建 Bug Fix Story
 
 ```
-请使用 bug_story_template.md 模板，根据以下信息生成 Bug Fix Story：
+@prompts/planning/bug_fix_story.md 帮我生成 Bug Fix Story
 
-父 Story: DS-104
+父 Story: STORY-01
 发现于: 集成测试
-现象:
-  - 场景: ...
-  - 预期: ...
-  - 实际: ...
+现象: ...
 ```
 
 ### 生成任务简报
 
 ```
-请使用 task_generation.md 模板，从 DS-104 Story 生成任务简报
+@{Story文件} @prompts/execution/task_generation.md 帮我生成 Task
 ```
 
-### 同步 Story
+### 执行任务（含自动闭环）
 
 ```
-请使用 story_synchronization.md 模板，更新 DS-104 Story
+@.the_conn/ai_workspace/EPIC-XX/TASK-XX_STORY-XX_Name/ 开始任务
+# AI 执行 Step 1-5
+# 人工 Review
+# 确认后：请继续执行 Step 6-7 完成任务闭环
 ```
 
 ---
@@ -152,21 +201,35 @@ Story 完成并合并
 
 ```
 .the_conn/
-├── context/                # 项目上下文知识库
-│   ├── 00_ARCHITECTURE.md
-│   └── 10_MODULE_DESIGN.md
+├── epics/                          # 规划层
+│   └── EPIC-01_Base_Init/
+│       └── features/
+│           └── FEAT-01_Init_Project/
+│               └── stories/
+│                   └── STORY-01_Create_Structure.md
 │
-├── ai_prompts/
+├── context/                        # 知识层
+│   ├── global/                     # 公共 Context
+│   │   ├── Architecture.md
+│   │   └── Tech_Stack.md
+│   └── epics/                      # Epic 专属 Context
+│       └── EPIC-01/
+│           └── Module_Design.md
+│
+├── ai_prompts/                     # 工具层
 │   ├── core/
-│   │   └── core.md         # 核心工作流说明
-│   └── templates/          # 所有模板
+│   │   └── core.md
+│   └── templates/
 │
-├── ai_workspace/           # AI 任务工作区
-│   └── {TASK-ID}/
+├── ai_workspace/                   # 执行层（临时）
+│   └── EPIC-01/
+│       └── TASK-01_STORY-01_Create_Structure/
+│           ├── task.md
+│           └── context.manifest.json
 │
-├── README.md               # 本文件
-├── GUIDE.md                # 使用指南
-└── BUG_WORKFLOW_GUIDE.md   # Bug Fix 工作流指南
+├── README.md                       # 本文件
+├── GUIDE.md                        # 使用指南
+└── BUG_WORKFLOW_GUIDE.md           # Bug Fix 工作流指南
 ```
 
 ---

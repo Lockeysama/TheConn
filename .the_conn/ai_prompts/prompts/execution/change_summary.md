@@ -2,6 +2,8 @@
 
 你是一位注重清晰沟通的技术文档工程师。你的任务是为刚完成的开发任务生成一份**变更摘要**，帮助团队快速了解本次交付的内容。
 
+---
+
 ## 生成原则
 
 1. **聚焦价值**: 突出"做了什么"和"为什么重要"，而非代码细节
@@ -39,12 +41,14 @@
 ### 必选章节
 
 ```markdown
-# [任务ID] 变更摘要
+# [TASK-ID] 变更摘要
 
 ## 任务: [任务名称]
 
+**关联 Story**: STORY-{序号}
+**Epic**: EPIC-{序号}
 **提交范围**: [起始commit..结束commit]
-**完成日期**: [YYYY-MM-DD]
+**完成日期**: yyyy-mm-dd
 
 ---
 
@@ -52,23 +56,23 @@
 
 ### 新增文件
 
-| 文件路径 | 说明 |
-|---------|------|
-| `path/to/file.go` | 一句话描述职责 |
-| `path/to/file_test.go` | 单元测试 (N 个测试用例) |
-| `tests/bdd/features/xxx.feature` | BDD 特性文件 (N 个场景) |
-| `tests/bdd/xxx_test.go` | Step Definitions (N 个步骤) |
+| 文件路径                         | 说明                        |
+| -------------------------------- | --------------------------- |
+| `path/to/file.go`                | 一句话描述职责              |
+| `path/to/file_test.go`           | 单元测试 (N 个测试用例)     |
+| `tests/bdd/features/xxx.feature` | BDD 特性文件 (N 个场景)     |
+| `tests/bdd/xxx_test.go`          | Step Definitions (N 个步骤) |
 
 ### 修改文件
 
-| 文件路径 | 变更说明 |
-|---------|---------|
+| 文件路径              | 变更说明     |
+| --------------------- | ------------ |
 | `path/to/existing.go` | 具体改动内容 |
 
 ### 依赖变更
 
-| 依赖 | 版本 | 用途 |
-|-----|------|------|
+| 依赖           | 版本   | 用途     |
+| -------------- | ------ | -------- |
 | `package/name` | vX.Y.Z | 简要说明 |
 
 ---
@@ -107,10 +111,12 @@
 对于一个中等规模的功能开发任务：
 
 ```markdown
-# DS-102 变更摘要
+# TASK-02 变更摘要
 
 ## 任务: 发送缓冲队列与历史窗口
 
+**关联 Story**: STORY-02
+**Epic**: EPIC-02
 **提交范围**: c58ff09..abc1234
 **完成日期**: 2025-12-05
 
@@ -120,27 +126,27 @@
 
 ### 新增文件
 
-| 文件路径 | 说明 |
-|---------|------|
-| `utils/datastream/buffer.go` | 发送缓冲队列 (SendBuffer) |
-| `utils/datastream/history.go` | 历史窗口管理 (HistoryWindow) |
-| `utils/datastream/buffer_test.go` | 缓冲队列单元测试 (8 个测试用例) |
-| `utils/datastream/history_test.go` | 历史窗口单元测试 (10 个测试用例) |
-| `tests/bdd/features/datastream/send_buffer.feature` | 发送缓冲队列 BDD 特性 (3 个场景) |
-| `tests/bdd/features/datastream/history_window.feature` | 历史窗口 BDD 特性 (2 个场景) |
-| `tests/bdd/send_buffer_test.go` | 发送缓冲队列 Step Definitions (10 个步骤) |
-| `tests/bdd/history_window_test.go` | 历史窗口 Step Definitions (11 个步骤) |
+| 文件路径                                               | 说明                                      |
+| ------------------------------------------------------ | ----------------------------------------- |
+| `utils/datastream/buffer.go`                           | 发送缓冲队列 (SendBuffer)                 |
+| `utils/datastream/history.go`                          | 历史窗口管理 (HistoryWindow)              |
+| `utils/datastream/buffer_test.go`                      | 缓冲队列单元测试 (8 个测试用例)           |
+| `utils/datastream/history_test.go`                     | 历史窗口单元测试 (10 个测试用例)          |
+| `tests/bdd/features/datastream/send_buffer.feature`    | 发送缓冲队列 BDD 特性 (3 个场景)          |
+| `tests/bdd/features/datastream/history_window.feature` | 历史窗口 BDD 特性 (2 个场景)              |
+| `tests/bdd/send_buffer_test.go`                        | 发送缓冲队列 Step Definitions (10 个步骤) |
+| `tests/bdd/history_window_test.go`                     | 历史窗口 Step Definitions (11 个步骤)     |
 
 ### 修改文件
 
-| 文件路径 | 变更说明 |
-|---------|---------|
+| 文件路径                  | 变更说明              |
+| ------------------------- | --------------------- |
 | `epics/.../DS-102_xxx.md` | Story 状态同步为 done |
 
 ### 依赖变更
 
-| 依赖 | 版本 | 用途 |
-|-----|------|------|
+| 依赖                        | 版本    | 用途                            |
+| --------------------------- | ------- | ------------------------------- |
 | `github.com/cucumber/godog` | v0.15.1 | BDD 测试框架 (已存在，本次复用) |
 
 ---
@@ -172,11 +178,12 @@
 
 ## 数据获取方式
 
-- **任务信息**: 从当前工作区的 `task.md` 获取
+- **任务信息**: 从 `.the_conn/ai_workspace/EPIC-{序号}/TASK-{序号}_STORY-{序号}_{Name}/task.md` 获取
+- **Story 信息**: 从 Story Frontmatter 获取 epic, feature 等信息
 - **提交范围**: 通过 `git log` 查看相关提交
 - **文件变更**: 通过 `git status` 和 `git diff` 获取
-- **BDD 文件**: 检查 `tests/bdd/features/` 和 `tests/bdd/*_test.go`
-- **依赖变更**: 检查 `go.mod` / `pyproject.toml` / `package.json` 差异
+- **BDD 文件**: 检查 `tests/bdd/features/` 和对应的测试代码
+- **依赖变更**: 检查 `go.mod` / `pyproject.toml` / `package.json` / `requirements.txt` 差异
 - **测试结果**: 从测试执行输出中提取
 
 ---
