@@ -79,6 +79,7 @@
 
 ## 依赖关系图
 
+**文本格式**:
 ```
 STORY-01 (无依赖)
   ↓
@@ -95,6 +96,32 @@ STORY-06 (依赖 STORY-05)
 STORY-07, STORY-08 (依赖 STORY-06)
 ```
 
+**Mermaid 可视化**:
+```mermaid
+graph TD
+  STORY-01[STORY-01: 创建缓冲队列] --> STORY-02[STORY-02: 添加线程安全]
+  STORY-02 --> STORY-03[STORY-03: 实现冗余控制]
+  
+  STORY-04[STORY-04: Packet 去重] --> STORY-05[STORY-05: Event 排序]
+  
+  STORY-05 --> STORY-06[STORY-06: 端到端集成]
+  STORY-03 --> STORY-06
+  
+  STORY-06 --> STORY-07[STORY-07: 性能测试]
+  STORY-06 --> STORY-08[STORY-08: 文档完善]
+  
+  style STORY-01 fill:#a8e6cf
+  style STORY-04 fill:#a8e6cf
+  style STORY-06 fill:#ffd3b6
+  style STORY-07 fill:#ffaaa5
+  style STORY-08 fill:#ffaaa5
+```
+
+**图例**:
+- 绿色：无依赖，可立即开始
+- 橙色：关键路径上的节点
+- 红色：依赖多个前置 Story
+
 ## 建议开发顺序
 
 1. **第一批** (并行): STORY-01, STORY-04
@@ -107,10 +134,42 @@ STORY-07, STORY-08 (依赖 STORY-06)
 **请用户确认大纲后，继续 Phase 3**
 ```
 
-等待用户确认：
+---
+
+### 用户反馈与迭代
+
+展示大纲后，等待用户反馈。用户可能会提出调整：
+
+**常见反馈类型**:
+
+| 反馈                | 处理方式                              |
+| ------------------- | ------------------------------------- |
+| "EPIC-01 太大了"    | 拆分为 2 个 Epic，重新分配 Features   |
+| "STORY-03 依赖不对" | 调整 `depends_on` 字段，更新依赖图    |
+| "缺少某个功能"      | 补充到合适的 Epic/Feature，新增 Story |
+| "STORY-05 粒度太细" | 合并到其他 Story                      |
+| "Feature 顺序不对"  | 调整 Feature 编号和顺序               |
+
+**迭代流程**:
 ```
-用户确认后，输入：确认，请生成详细文档
+展示大纲 v1
+  ↓
+用户反馈调整
+  ↓
+展示大纲 v2
+  ↓
+用户再次反馈（可选）
+  ↓
+用户确认："确认，请生成详细文档"
+  ↓
+生成 Phase 3
 ```
+
+**重要原则**: 可以多轮迭代，直到用户满意。不要急于生成文件。
+
+---
+
+**等待用户确认**: 用户输入"**确认，请生成详细文档**"后，继续 Phase 3
 
 ---
 

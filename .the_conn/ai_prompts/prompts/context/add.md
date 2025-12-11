@@ -1,62 +1,101 @@
-# 添加 Context 文档指南
+# Context 添加指南
 
-你的任务是根据用户提供的内容，创建新的 Context 文档。
+根据用户提供的内容，创建新的 Context 文档。
 
 ---
 
-## 输入
+## 使用场景
 
-用户会提供：
-- Context 类型（从枚举中选择）
-- Context 作用域（global 或 EPIC-XX）
-- Context 内容（技术方案、设计文档、讨论结果等）
+- 需要添加新的架构设计
+- 需要记录新的模块设计
+- 需要定义新的 API 规范
+- 需要补充遗漏的 Context
+
+---
+
+## Context 类型系统
+
+### 全局 Context (scope: global)
+
+适用于整个项目的通用知识，所有 Epic 都可引用。
+
+| Type               | 说明         | 典型文件名              |
+| ------------------ | ------------ | ----------------------- |
+| `architecture`     | 系统架构     | `Architecture.md`       |
+| `tech_stack`       | 技术栈       | `Tech_Stack.md`         |
+| `coding_standard`  | 编码规范     | `Coding_Standard_Go.md` |
+| `testing_strategy` | 测试策略     | `Testing_Strategy.md`   |
+| `deployment`       | 部署方案     | `Deployment.md`         |
+| `api_convention`   | API 约定     | `API_Convention.md`     |
+| `domain_model`     | 核心领域模型 | `Domain_Model.md`       |
+
+### Epic Context (scope: epic:EPIC-XX)
+
+特定 Epic 的专属知识，仅该 Epic 使用。
+
+| Type            | 说明     | 典型文件名                |
+| --------------- | -------- | ------------------------- |
+| `module_design` | 模块设计 | `Module_Design_Init.md`   |
+| `data_model`    | 数据模型 | `Data_Model_User.md`      |
+| `api_spec`      | API 规范 | `API_Spec_REST.md`        |
+| `integration`   | 集成方案 | `Integration_OAuth.md`    |
+| `algorithm`     | 算法说明 | `Algorithm_Scheduling.md` |
+| `protocol`      | 协议设计 | `Protocol_Design_UDP.md`  |
+| `migration`     | 迁移方案 | `Migration_V1_To_V2.md`   |
+
+---
+
+## 输入要求
+
+用户需要提供：
+1. **Context 类型**: 从上述枚举中选择
+2. **Context 作用域**: global 或 EPIC-XX
+3. **Context 内容**: 技术方案、设计文档、讨论结果等
 
 ---
 
 ## 输出要求
 
-### 1. 确定 Context 类型
+### 1. 文件路径格式
 
-**公共 Context Types (scope: global)**:
-- `architecture` - 系统架构
-- `tech_stack` - 技术栈
-- `coding_standard` - 编码规范
-- `testing_strategy` - 测试策略
-- `deployment` - 部署方案
-- `api_convention` - API 约定
-- `domain_model` - 核心领域模型
+```
+{Scope 目录}/{Type}_{Descriptor}.md
+```
 
-**Epic Context Types (scope: EPIC-XX)**:
-- `module_design` - 模块设计
-- `data_model` - 数据模型
-- `api_spec` - API 规范
-- `integration` - 集成方案
-- `algorithm` - 算法说明
-- `protocol` - 协议设计
-- `migration` - 迁移方案
+**全局 Context**:
+```
+.the_conn/context/global/{Type}_{Descriptor}.md
+```
 
-### 2. 确定文件路径
+**Epic Context**:
+```
+.the_conn/context/epics/EPIC-{序号}/{Type}_{Descriptor}.md
+```
 
-**格式**: `{Type}_{Descriptor}.md`
-
-- **公共 Context**: `.the_conn/context/global/{Type}_{Descriptor}.md`
-- **Epic Context**: `.the_conn/context/epics/EPIC-{序号}/{Type}_{Descriptor}.md`
+**命名规则**:
+- `{Type}`: 从类型枚举中选择（小写）
+- `{Descriptor}`: 描述性名称，使用 PascalCase
+- 特殊情况：纯类型名不加 Descriptor（如 `Architecture.md`）
 
 **示例**:
 - `.the_conn/context/global/Architecture.md`
+- `.the_conn/context/global/Tech_Stack.md`
 - `.the_conn/context/global/Coding_Standard_Go.md`
 - `.the_conn/context/epics/EPIC-01/Module_Design_Init.md`
 - `.the_conn/context/epics/EPIC-02/Protocol_Design_UDP.md`
 
-### 3. Frontmatter 规范
+---
+
+### 2. Frontmatter 规范
 
 ```yaml
 ---
-type: {type}
-scope: global | EPIC-{序号}
+type: {类型}
+scope: {global 或 epic:EPIC-XX}
 title: {标题}
-created: yyyy-mm-dd
-updated: yyyy-mm-dd
+created: {yyyy-mm-dd}
+updated: {yyyy-mm-dd}
+status: active
 tags:
   - {tag1}
   - {tag2}
@@ -64,22 +103,35 @@ tags:
 ```
 
 **字段说明**:
-- `type`: 从上述枚举中选择（必填）
-- `scope`: `global` 或 `EPIC-01` 格式（必填）
-- `title`: 文档标题（必填）
-- `created`: 创建日期，格式 `yyyy-mm-dd`（必填）
-- `updated`: 更新日期，初次创建与 created 相同（必填）
-- `tags`: 便于搜索的标签（可选但推荐）
+
+| 字段      | 类型   | 说明             | 示例                       | 必填 |
+| --------- | ------ | ---------------- | -------------------------- | ---- |
+| `type`    | enum   | Context 类型     | `architecture`             | 是   |
+| `scope`   | string | 范围             | `global` 或 `epic:EPIC-01` | 是   |
+| `title`   | string | 标题             | `系统架构设计`             | 是   |
+| `created` | date   | 创建日期         | `2025-12-11`               | 是   |
+| `updated` | date   | 最后更新日期     | `2025-12-11`               | 是   |
+| `status`  | enum   | 状态             | `active` / `deprecated`    | 是   |
+| `tags`    | array  | 标签（便于搜索） | `[microservices, grpc]`    | 否   |
+
+**字段约束**:
+- `type`: 必须从类型枚举中选择
+- `scope`: 格式必须是 `global` 或 `epic:EPIC-{序号}`
+- `created`: 创建时的日期
+- `updated`: 初次创建时与 `created` 相同
+- `status`: 新创建的 Context 都是 `active`
+- `tags`: 可选但强烈推荐，有助于 Context 搜索
 
 ---
 
 ## 生成原则
 
-1. **准确分类**: 根据内容选择最合适的 type
-2. **合理命名**: Descriptor 应简洁明确，使用 PascalCase
-3. **结构清晰**: 使用标题层级组织内容
-4. **聚焦决策**: 记录"为什么这样设计"，而非显而易见的细节
-5. **保持精简**: 只包含 AI 完成任务必需的信息
+1. **类型准确**: 根据内容选择最合适的 type
+2. **范围合理**: 判断是全局通用还是 Epic 专属
+3. **命名清晰**: Descriptor 应简洁明确，使用 PascalCase
+4. **结构清晰**: 使用标题层级组织内容
+5. **聚焦决策**: 记录"为什么这样设计"，而非显而易见的细节
+6. **保持精简**: 只包含 AI 完成任务必需的信息
 
 ---
 
@@ -92,74 +144,233 @@ tags:
 
 ## 1. 概述与目标
 
-{简要说明目标和适用场景}
+{简要说明设计目标和适用场景，1-3 句话}
 
 ## 2. 核心设计
 
-{核心算法、数据结构、流程}
+### 2.1 {设计要点1}
 
-## 3. 接口设计
+{说明}
 
-{API 或函数签名}
+### 2.2 {设计要点2}
 
-## 4. 实施要点
+{说明}
 
-{关键实现细节}
+## 3. 技术选型（如适用）
 
-## 5. 注意事项
+| 类别   | 选择   | 理由         |
+| ------ | ------ | ------------ |
+| {类别} | {技术} | {为什么选择} |
 
-{约束、限制、已知问题}
+## 4. 接口设计（如适用）
+
+{API 签名、函数定义、数据结构}
+
+## 5. 实施要点
+
+- {关键实现细节1}
+- {关键实现细节2}
+
+## 6. 注意事项
+
+- {约束、限制、已知问题}
 ```
 
-### API/数据模型类 (api_spec, data_model)
+---
+
+### API/数据模型类 (api_spec, data_model, api_convention)
 
 ```markdown
 # {标题}
 
 ## 1. 概述
 
-{API/模型用途}
+{API/模型用途，1-2 句话}
 
 ## 2. 定义
 
-{数据结构或接口定义}
+### 2.1 {接口/模型1}
+
+{定义或签名}
+
+### 2.2 {接口/模型2}
+
+{定义或签名}
 
 ## 3. 示例
 
-{使用示例}
+{使用示例，帮助理解}
 
-## 4. 约束
+## 4. 约束与规则
 
-{验证规则、限制}
+- {验证规则}
+- {限制条件}
 ```
 
-### 集成/迁移类 (integration, migration)
+---
+
+### 集成/迁移/部署类 (integration, migration, deployment)
 
 ```markdown
 # {标题}
 
 ## 1. 背景
 
-{为什么需要}
+{为什么需要，1-3 句话}
 
-## 2. 方案
+## 2. 方案概述
 
-{具体方案}
+{方案简要说明}
 
-## 3. 步骤
+## 3. 关键步骤
 
-{执行步骤}
+1. {步骤1}
+2. {步骤2}
 
-## 4. 风险与对策
+## 4. 配置说明（如适用）
 
-{风险和应对}
+{配置项说明}
+
+## 5. 风险与对策
+
+| 风险   | 影响   | 应对措施 |
+| ------ | ------ | -------- |
+| {风险} | {影响} | {措施}   |
+```
+
+---
+
+### 规范/策略类 (coding_standard, testing_strategy, domain_model)
+
+```markdown
+# {标题}
+
+## 1. 目标
+
+{规范的目的}
+
+## 2. 规则
+
+### 2.1 {规则类别1}
+
+{具体规则}
+
+### 2.2 {规则类别2}
+
+{具体规则}
+
+## 3. 示例
+
+**好的做法**:
+```{language}
+{示例代码}
+```
+
+**不好的做法**:
+```{language}
+{示例代码}
+```
+
+## 4. 检查清单
+
+- [ ] {检查项1}
+- [ ] {检查项2}
 ```
 
 ---
 
 ## 示例
 
-### 示例 1: 添加模块设计文档
+### 示例 1: 添加编码规范
+
+**用户输入**:
+```
+类型: coding_standard
+作用域: global
+语言: Go
+内容: Go 编码规范 - 错误处理、命名约定、注释规范
+```
+
+**输出**:
+
+**文件**: `.the_conn/context/global/Coding_Standard_Go.md`
+
+```markdown
+---
+type: coding_standard
+scope: global
+title: Go 编码规范
+created: 2025-12-11
+updated: 2025-12-11
+status: active
+tags:
+  - golang
+  - coding-style
+  - best-practices
+---
+
+# Go 编码规范
+
+## 1. 目标
+
+确保 Go 代码风格统一，提高可读性和可维护性。
+
+## 2. 规则
+
+### 2.1 命名约定
+
+- **变量**: 驼峰命名，首字母小写（如 `userName`）
+- **常量**: 驼峰命名，首字母大写（如 `MaxRetries`）
+- **函数**: 驼峰命名，导出函数首字母大写（如 `GetUser`）
+- **接口**: 单方法接口以 `-er` 结尾（如 `Reader`, `Writer`）
+
+### 2.2 错误处理
+
+- 不忽略错误，明确处理或返回
+- 错误信息使用小写，不以标点结尾
+- 使用 `errors.New()` 创建简单错误
+- 使用 `fmt.Errorf()` 添加上下文
+
+### 2.3 注释规范
+
+- 导出函数必须有注释，以函数名开头
+- 注释使用完整句子，以句号结尾
+- 复杂逻辑添加行内注释
+
+## 3. 示例
+
+**好的做法**:
+```go
+// GetUser retrieves user information by ID.
+func GetUser(id int) (*User, error) {
+    user, err := db.Query(id)
+    if err != nil {
+        return nil, fmt.Errorf("failed to get user %d: %w", id, err)
+    }
+    return user, nil
+}
+```
+
+**不好的做法**:
+```go
+// get user
+func getUser(id int) *User {
+    user, _ := db.Query(id) // 忽略错误
+    return user
+}
+```
+
+## 4. 检查清单
+
+- [ ] 所有导出函数都有注释
+- [ ] 所有错误都被处理
+- [ ] 命名符合 Go 惯例
+- [ ] 使用 `gofmt` 格式化代码
+```
+
+---
+
+### 示例 2: 添加模块设计
 
 **用户输入**:
 ```
@@ -175,52 +386,100 @@ tags:
 ```markdown
 ---
 type: module_design
-scope: EPIC-01
+scope: epic:EPIC-01
 title: 初始化模块设计
 created: 2025-12-11
 updated: 2025-12-11
+status: active
 tags:
   - initialization
   - project-structure
+  - cli
 ---
 
 # 初始化模块设计
 
 ## 1. 概述与目标
 
-提供 CLI 命令一键创建 The Conn 框架的标准目录结构。
+提供 CLI 命令一键创建 The Conn 框架的标准目录结构和必要配置文件。
 
 ## 2. 核心设计
 
 ### 2.1 目录结构定义
 
-使用常量定义标准目录树...
+使用常量定义标准目录树：
+```python
+PROJECT_STRUCTURE = {
+    ".the_conn": {
+        "epics": {},
+        "context": {
+            "global": {},
+            "epics": {}
+        },
+        "ai_workspace": {}
+    },
+    "src": {},
+    "tests": {
+        "bdd": {
+            "features": {},
+            "step_defs": {}
+        },
+        "unit": {}
+    }
+}
+```
 
 ### 2.2 幂等性设计
 
-重复执行不覆盖已有文件...
+重复执行不覆盖已有文件：
+- 检查目标文件是否存在
+- 存在则跳过，输出提示
+- 不存在则创建
 
 ## 3. 接口设计
 
 ```python
-def init_project(target_path: Path, overwrite: bool = False) -> Result:
-    """初始化项目结构"""
+def init_project(
+    target_path: Path,
+    overwrite: bool = False,
+    template_set: str = "default"
+) -> InitResult:
+    """
+    初始化 The Conn 项目结构
+    
+    Args:
+        target_path: 目标目录
+        overwrite: 是否覆盖已有文件
+        template_set: 模板集名称
+        
+    Returns:
+        InitResult: 初始化结果（成功文件列表、跳过文件列表）
+    """
 ```
 
 ## 4. 实施要点
 
-- 使用 pathlib 处理路径
+- 使用 `pathlib` 处理路径，跨平台兼容
 - 模板文件作为 package data 打包
-- 权限处理: Unix 644, Windows 兼容
+- 文件权限: Unix 644, Windows 默认
+- 目录权限: Unix 755, Windows 默认
+
+## 5. 注意事项
+
+- 检查目标目录写权限
+- 大量文件创建时需要进度提示
+- 失败时回滚已创建的文件（可选）
 ```
 
-### 示例 2: 添加协议设计文档
+---
+
+### 示例 3: 添加协议设计
 
 **用户输入**:
 ```
 类型: protocol
 作用域: EPIC-02
-内容: UDP 可靠传输协议设计（3次冗余 + 动态捎带）
+内容: UDP 可靠传输协议（3次冗余 + 动态捎带）
 ```
 
 **输出**:
@@ -230,21 +489,23 @@ def init_project(target_path: Path, overwrite: bool = False) -> Result:
 ```markdown
 ---
 type: protocol
-scope: EPIC-02
-title: UDP 可靠传输协议
+scope: epic:EPIC-02
+title: UDP 可靠传输协议设计
 created: 2025-12-11
 updated: 2025-12-11
+status: active
 tags:
   - udp
   - reliability
   - protocol
+  - redundancy
 ---
 
 # UDP 可靠传输协议设计
 
 ## 1. 概述与目标
 
-解决 UDP 丢包问题，实现 99.9% 到达率...
+解决 UDP 丢包问题，实现 99.9% 事件到达率，无需 ACK 等待，低延迟。
 
 ## 2. 核心设计
 
@@ -252,21 +513,91 @@ tags:
 
 ```json
 {
-  "h": {"seq": 5001, "ts": 1699999001},
-  "d": [{"id": 101, "event": "..."}]
+  "h": {
+    "seq": 5001,        // Packet 序号（单调递增）
+    "ts": 1699999001    // 发送时间戳（毫秒）
+  },
+  "d": [
+    {
+      "id": 101,        // Event 唯一 ID
+      "event": "..."    // Event 数据
+    }
+  ]
 }
 ```
 
 ### 2.2 冗余策略
 
-3次发送: T+0ms, T+20ms, T+40ms...
+每个 Event 发送 3 次：
+- **T+0ms**: 首次发送
+- **T+20ms**: 第 1 次冗余
+- **T+40ms**: 第 2 次冗余
 
-## 3. 实施要点
+动态捎带：后续 Packet 可携带历史 Event（最近 3-5 个）
 
-- Packet 去重使用 seq
-- Event 去重使用 id
-- 历史窗口保留最近 3-5 个事件
+### 2.3 去重机制
+
+**发送端**:
+- 维护历史窗口（最近 5 个 Event）
+- seq 单调递增，溢出后从 0 重新开始
+
+**接收端**:
+- Packet 去重：基于 `seq`，HashSet 存储已处理的 seq
+- Event 去重：基于 `id`，HashSet 存储已处理的 id
+
+### 2.4 排序机制
+
+基于 Event 的 `timestamp` 或 `id` 排序后交付上层。
+
+## 3. 技术选型
+
+| 类别     | 选择       | 理由             |
+| -------- | ---------- | ---------------- |
+| 编码格式 | JSON       | 易调试、跨语言   |
+| 冗余间隔 | 20ms       | 平衡延迟和可靠性 |
+| 历史窗口 | 5 个 Event | 覆盖常见丢包场景 |
+
+## 4. 实施要点
+
+- seq 使用 64 位整数，避免频繁溢出
+- Event id 使用 UUID 或雪花 ID 保证全局唯一
+- 去重 HashSet 定期清理，避免内存泄漏
+- 历史窗口使用循环队列实现
+
+## 5. 注意事项
+
+- 系统时钟偏移可能影响排序，考虑使用逻辑时钟
+- 网络抖动可能导致冗余包乱序，接收端需处理
+- 高频发送场景需控制历史窗口大小，避免 Packet 过大
 ```
+
+---
+
+## 常见问题
+
+**Q: 何时使用 add.md，何时使用 extract.md？**
+
+A:
+- **add.md**: 用户已经整理好内容，直接创建 Context
+- **extract.md**: 用户提供原始材料（技术方案、讨论记录），需要 AI 提取关键信息
+
+**Q: 如何判断 Context 是 global 还是 epic？**
+
+A:
+- **Global**: 多个 Epic 都会用到（如架构、编码规范、技术栈）
+- **Epic**: 仅特定 Epic 使用（如特定模块的设计、特定协议）
+
+**Q: 一个主题应该创建一个 Context 还是多个？**
+
+A: 根据主题复杂度：
+- 简单主题（如 "Go 编码规范"）: 一个 Context
+- 复杂主题（如 "微服务架构 + gRPC 协议 + 数据模型"）: 拆分为多个 Context
+
+**Q: Context 内容应该多详细？**
+
+A: 足够让 AI 完成开发任务即可：
+- ✅ 包含：设计决策、技术选型理由、关键实现要点
+- ❌ 不包含：项目背景故事、冗长的讨论过程、显而易见的常识
 
 ---
 

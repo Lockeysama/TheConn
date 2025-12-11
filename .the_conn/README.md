@@ -23,6 +23,7 @@
 | `prompts/context/extract.md` | 从技术方案提取 Context 文档 |
 | `prompts/context/add.md`     | 添加新 Context 文档         |
 | `prompts/context/update.md`  | 更新现有 Context 文档       |
+| `prompts/context/search.md`  | 搜索相关 Context 文档       |
 
 ### 规划层 Prompts
 
@@ -32,6 +33,8 @@
 | -------------------------------------------- | ---------------------------------------- |
 | `prompts/planning/requirements_review.md`    | 需求与技术方案评审                       |
 | `prompts/planning/requirements_breakdown.md` | 需求拆解（批量生成 Epic/Feature/Story）  |
+| `prompts/planning/requirements_change.md`    | 需求变更管理                             |
+| `prompts/planning/project_status.md`         | 项目状态查看                             |
 | `prompts/planning/epic_planning.md`          | 生成 Epic 规划文档                       |
 | `prompts/planning/feature_planning.md`       | 生成 Feature 规划文档                    |
 | `prompts/planning/story_writing.md`          | 生成 Story 文件（type: dev）             |

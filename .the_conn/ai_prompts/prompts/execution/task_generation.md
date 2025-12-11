@@ -34,6 +34,43 @@
   TASK-04 → STORY-02.1 (Bug 修复)
   ```
 
+### 3. Task 粒度控制 ⚠️
+
+**重要原则**: 避免过分细分 Task，以免浪费 tokens 和降低效率。
+
+**推荐粒度**:
+- ✅ **1 Story = 1 Task**（默认，适用于大多数情况）
+- ✅ **1 Story = 2-3 Tasks**（仅在必要时拆分，如 Story 跨多天或包含明显独立的阶段）
+
+**何时拆分 Task**:
+- Story 工作量超过 3 天
+- Story 包含明显独立的子任务（如"实现核心逻辑" + "添加缓存优化"）
+- Story 的不同部分可以并行开发（多人协作）
+
+**何时不拆分**:
+- ❌ 不要为"写测试"和"写代码"分别创建 Task（这是 BDD/TDD 流程的一部分）
+- ❌ 不要为每个小函数创建单独的 Task
+- ❌ 不要过度细分导致 Task 数量激增
+
+**拆分示例**:
+
+✅ **合理拆分**:
+```
+STORY-05: 实现用户认证（预计 4 天）
+├── TASK-05: 实现基础认证逻辑（2 天）
+└── TASK-06: 添加 OAuth 集成（2 天）
+```
+
+❌ **过度细分**:
+```
+STORY-05: 实现用户认证
+├── TASK-05: 创建 User 结构体
+├── TASK-06: 实现 Login 函数
+├── TASK-07: 实现 Logout 函数
+├── TASK-08: 写单元测试
+└── TASK-09: 写集成测试
+```
+
 ### 3. 目录命名规则
 
 - **格式**: `TASK-{序号}_STORY-{序号}_{PascalCaseName}`
@@ -202,9 +239,18 @@
 2. **技术关键词提取**: 从验收标准和技术要点中提取关键技术术语
 3. **依赖关系识别**: 该 Story 是否依赖其他 Story 或现有模块？
 
-### Phase 2: Context 文件扫描
+### Phase 2: Context 文件搜索
 
-扫描 `.the_conn/context/` 目录，根据 Phase 1 的分析结果匹配相关文件：
+**优先使用 Context 搜索工具**: 
+
+```
+@prompts/context/search.md 搜索相关 Context
+
+关键词: {从 Story 中提取的关键词}
+Epic: {Story 所属 Epic ID}
+```
+
+如果未使用搜索工具，手动扫描 `.the_conn/context/` 目录，根据 Phase 1 的分析结果匹配相关文件：
 
 **扫描路径**:
 1. `.the_conn/context/global/` - 公共 Context

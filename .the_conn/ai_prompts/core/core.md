@@ -209,6 +209,8 @@ STORY-02 → TASK-03 (首次开发)
 | -------------------- | -------------------------------------------- |
 | 需求与方案评审       | `prompts/planning/requirements_review.md`    |
 | 需求拆解（批量生成） | `prompts/planning/requirements_breakdown.md` |
+| 需求变更管理         | `prompts/planning/requirements_change.md`    |
+| 项目状态查看         | `prompts/planning/project_status.md`         |
 | 生成 Epic            | `prompts/planning/epic_planning.md`          |
 | 生成 Feature         | `prompts/planning/feature_planning.md`       |
 | 生成 Story           | `prompts/planning/story_writing.md`          |
@@ -221,6 +223,7 @@ STORY-02 → TASK-03 (首次开发)
 | 提取 Context 文档 | `prompts/context/extract.md` |
 | 添加 Context 文档 | `prompts/context/add.md`     |
 | 更新 Context 文档 | `prompts/context/update.md`  |
+| 搜索 Context 文档 | `prompts/context/search.md`  |
 
 ### 执行层 Prompts
 
