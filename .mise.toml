@@ -15,13 +15,13 @@ UV_PYTHON_PREFERENCE = "only-managed"
 
 [tasks]
 # --- Python 依赖管理 ---
-install = { description = "安装/同步 Python 依赖", run = "uv sync" }
-lock = { description = "更新 uv.lock 文件", run = "uv lock" }
-tree = { description = "查看 Python 依赖树", run = "uv tree" }
+install = { description = "安装/同步 Python 依赖", run = "cd src/python && uv sync" }
+lock = { description = "更新 uv.lock 文件", run = "cd src/python && uv lock" }
+tree = { description = "查看 Python 依赖树", run = "cd src/python && uv tree" }
 
 # 添加依赖的快捷方式
-add = { description = "添加 Python 依赖", run = "uv add $@" }
-remove = { description = "移除 Python 依赖", run = "uv remove $@" }
+add = { description = "添加 Python 依赖", run = "cd src/python && uv add $@" }
+remove = { description = "移除 Python 依赖", run = "cd src/python && uv remove $@" }
 
 # --- Node.js 依赖管理 ---
 npm-install = { description = "安装 Node.js 依赖", run = "cd src/typescript && npm install" }
@@ -29,14 +29,14 @@ npm-link = { description = "本地链接 TypeScript CLI", run = "cd src/typescri
 npm-unlink = { description = "取消本地链接", run = "npm unlink -g @theconn/cli" }
 
 # --- Python 开发运行 ---
-cmd = { description = "在 venv 中运行命令", run = "uv run $@" }
-py-cli = { description = "运行 Python CLI", run = "uv run theconn $@" }
+cmd = { description = "在 venv 中运行命令", run = "cd src/python && uv run $@" }
+py-cli = { description = "运行 Python CLI", run = "cd src/python && uv run theconn $@" }
 
 # --- Node.js 开发运行 ---
 ts-cli = { description = "运行 TypeScript CLI", run = "node src/typescript/bin/theconn.js $@" }
 
 # --- 测试 CLI 工具 ---
-test-py-init = { description = "测试 Python CLI init", run = "mkdir -p /tmp/test-theconn-py && uv run theconn init --path=/tmp/test-theconn-py" }
+test-py-init = { description = "测试 Python CLI init", run = "mkdir -p /tmp/test-theconn-py && cd src/python && uv run theconn init --path=/tmp/test-theconn-py" }
 test-ts-init = { description = "测试 TypeScript CLI init", run = "mkdir -p /tmp/test-theconn-ts && node src/typescript/bin/theconn.js init --path=/tmp/test-theconn-ts" }
 
 # --- 代码质量 ---
@@ -46,8 +46,8 @@ fmt-ts = { description = "格式化 TypeScript 代码", run = "cd src/typescript
 lint-ts = { description = "检查 TypeScript 代码", run = "cd src/typescript && npx eslint ." }
 
 # --- 构建 ---
-build-py = { description = "构建 Python 包", run = "uv build" }
+build-py = { description = "构建 Python 包", run = "cd src/python && uv build" }
 build-ts = { description = "构建 TypeScript 包", run = "cd src/typescript && npm pack" }
 
 # --- 清理 ---
-clean = { description = "清理构建产物", run = "rm -rf .venv dist src/typescript/node_modules" }
+clean = { description = "清理构建产物", run = "rm -rf src/python/.venv src/python/dist src/typescript/node_modules" }
