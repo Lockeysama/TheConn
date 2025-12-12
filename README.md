@@ -9,14 +9,27 @@ Integrate The Conn framework into your project with one command:
 **Python users:**
 
 ```bash
+# Run in your current project directory
 uvx theconn init
+
+# Or specify the target project path
+uvx theconn init /path/to/your/project
 ```
 
 **Node.js users:**
 
 ```bash
+# Run in your current project directory
 npx theconn-cli init
+
+# Or specify the target project path
+npx theconn-cli init /path/to/your/project
 ```
+
+**Notes:**
+- By default, the command initializes The Conn framework in the current working directory
+- If a path argument is specified, initialization will be performed in the target directory
+- Initialization creates the `.the_conn/` directory and its required subdirectory structure
 
 Then read `.the_conn/GUIDE.md` for detailed usage instructions.
 

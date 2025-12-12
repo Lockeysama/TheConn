@@ -9,14 +9,27 @@
 **Python 用户：**
 
 ```bash
+# 在当前项目目录下运行
 uvx theconn init
+
+# 或指定目标项目路径
+uvx theconn init /path/to/your/project
 ```
 
 **Node.js 用户：**
 
 ```bash
+# 在当前项目目录下运行
 npx theconn-cli init
+
+# 或指定目标项目路径
+npx theconn-cli init /path/to/your/project
 ```
+
+**说明：**
+- 默认情况下，命令会在当前工作目录初始化 The Conn 框架
+- 如果指定了路径参数，将在目标目录下进行初始化
+- 初始化会创建 `.the_conn/` 目录及其必需的子目录结构
 
 然后阅读 `.the_conn/GUIDE.md` 了解详细的使用方法。
 
