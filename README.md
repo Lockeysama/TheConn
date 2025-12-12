@@ -13,7 +13,7 @@ uvx theconn init
 
 **Node.js users:**
 ```bash
-npx @theconn/cli init
+npx theconn-cli init
 ```
 
 Then read `.the_conn/GUIDE.md` for usage instructions.

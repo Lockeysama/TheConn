@@ -21,13 +21,13 @@ uvx theconn init --path=./my-project
 
 ```bash
 # 初始化 The Conn 框架到当前目录
-npx @theconn/cli init
+npx theconn-cli init
 
 # 使用特定分支
-npx @theconn/cli init --branch=v1.0.0
+npx theconn-cli init --branch=v1.0.0
 
 # 指定目标目录
-npx @theconn/cli init --path=./my-project
+npx theconn-cli init --path=./my-project
 ```
 
 ## 📦 命令列表
@@ -43,7 +43,7 @@ uvx theconn init [--branch=BRANCH] [--path=PATH]
 
 **Node.js:**
 ```bash
-npx @theconn/cli init [--branch=BRANCH] [--path=PATH]
+npx theconn-cli init [--branch=BRANCH] [--path=PATH]
 ```
 
 **选项:**
@@ -77,7 +77,7 @@ uvx theconn update [--branch=BRANCH] [--path=PATH]
 
 **Node.js:**
 ```bash
-npx @theconn/cli update [--branch=BRANCH] [--path=PATH]
+npx theconn-cli update [--branch=BRANCH] [--path=PATH]
 ```
 
 **选项:**
@@ -108,7 +108,7 @@ uvx theconn uninstall [--path=PATH]
 
 **Node.js:**
 ```bash
-npx @theconn/cli uninstall [--path=PATH] [--yes]
+npx theconn-cli uninstall [--path=PATH] [--yes]
 ```
 
 **选项:**
@@ -141,7 +141,7 @@ uvx theconn check [--path=PATH]
 
 **Node.js:**
 ```bash
-npx @theconn/cli check [--path=PATH]
+npx theconn-cli check [--path=PATH]
 ```
 
 **选项:**
@@ -171,7 +171,7 @@ cd my-awesome-project
 uvx theconn init
 
 # 或使用 npx
-npx @theconn/cli init
+npx theconn-cli init
 ```
 
 ### 2. 添加到 .gitignore
@@ -258,7 +258,7 @@ done
 - Python >= 3.12
 - 自动安装依赖: `click`, `requests`, `rich`
 
-### Node.js CLI (`@theconn/cli`)
+### Node.js CLI (`theconn-cli`)
 - Node.js >= 18.0.0
 - 自动安装依赖: `chalk`, `commander`, `ora`
 

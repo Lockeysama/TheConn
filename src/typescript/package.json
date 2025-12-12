@@ -1,6 +1,6 @@
 {
-    "name": "@theconn/cli",
-    "version": "0.1.1",
+    "name": "theconn-cli",
+    "version": "0.1.3",
     "description": "The Conn - AI-powered development framework CLI",
     "keywords": [
         "theconn",

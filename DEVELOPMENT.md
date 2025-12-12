@@ -53,7 +53,7 @@ TheConn/
 The Conn 提供两个独立但功能一致的 CLI 实现：
 
 1. **Python CLI** (`theconn`) - 使用 `uvx` 运行，面向 Python 生态系统
-2. **TypeScript CLI** (`@theconn/cli`) - 使用 `npx` 运行，面向 Node.js 生态系统
+2. **TypeScript CLI** (`theconn-cli`) - 使用 `npx` 运行，面向 Node.js 生态系统
 
 两个实现的功能完全相同：
 - ✅ `init` - 从 GitHub 下载框架文件并初始化项目
@@ -374,7 +374,7 @@ Python 项目配置文件：
 ### src/typescript/package.json
 
 Node.js 包配置文件：
-- 包名：`@theconn/cli`
+- 包名：`theconn-cli`
 - 可执行文件：`bin/theconn.js`
 - 依赖：`chalk`, `commander`, `ora`
 - 类型：`"type": "module"` (ESM)

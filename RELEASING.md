@@ -162,9 +162,9 @@ npm publish
 
 ```bash
 # 使用 npx 测试
-npx @theconn/cli --version
-npx @theconn/cli --help
-npx @theconn/cli init
+npx theconn-cli --version
+npx theconn-cli --help
+npx theconn-cli init
 ```
 
 ---
@@ -312,9 +312,9 @@ jobs:
 ## 📝 发布后检查清单
 
 - [ ] 在 PyPI 上能找到新版本：https://pypi.org/project/theconn/
-- [ ] 在 npm 上能找到新版本：https://www.npmjs.com/package/@theconn/cli
+- [ ] 在 npm 上能找到新版本：https://www.npmjs.com/package/theconn-cli
 - [ ] `uvx theconn --version` 显示正确版本
-- [ ] `npx @theconn/cli --version` 显示正确版本
+- [ ] `npx theconn-cli --version` 显示正确版本
 - [ ] 测试所有命令（init, update, check, uninstall）
 - [ ] 更新 GitHub Release Notes
 - [ ] 更新文档中的版本号引用（如果有）

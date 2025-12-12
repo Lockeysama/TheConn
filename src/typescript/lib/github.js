@@ -10,8 +10,15 @@ const GITHUB_RAW_BASE = 'https://raw.githubusercontent.com';
  * GitHub client for downloading framework files
  */
 export class GitHubClient {
-    constructor(repo = GITHUB_REPO) {
+    constructor(repo = GITHUB_REPO, token = null) {
         this.repo = repo;
+        this.token = token || process.env.GITHUB_TOKEN;
+        this.headers = {
+            Accept: 'application/vnd.github.v3+json'
+        };
+        if (this.token) {
+            this.headers.Authorization = `token ${this.token}`;
+        }
     }
 
     /**
@@ -20,7 +27,7 @@ export class GitHubClient {
     async getBranchCommit (branch) {
         const url = `${GITHUB_API_BASE}/repos/${this.repo}/branches/${branch}`;
         const response = await fetch(url, {
-            headers: { Accept: 'application/vnd.github.v3+json' }
+            headers: this.headers
         });
 
         if (response.status === 404) {
@@ -46,7 +53,7 @@ export class GitHubClient {
 
         const url = `${GITHUB_API_BASE}/repos/${this.repo}/contents/${sourcePath}?ref=${branch}`;
         const response = await fetch(url, {
-            headers: { Accept: 'application/vnd.github.v3+json' }
+            headers: this.headers
         });
 
         if (!response.ok) {

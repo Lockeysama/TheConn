@@ -1,5 +1,6 @@
 """GitHub integration for downloading framework files."""
 
+import os
 import shutil
 from pathlib import Path
 from typing import Optional
@@ -18,12 +19,21 @@ GITHUB_RAW_BASE = "https://raw.githubusercontent.com"
 class GitHubClient:
     """Client for interacting with GitHub repository."""
     
-    def __init__(self, repo: str = GITHUB_REPO):
+    def __init__(self, repo: str = GITHUB_REPO, token: Optional[str] = None):
         self.repo = repo
         self.session = requests.Session()
-        self.session.headers.update({
+        
+        # Set up headers
+        headers = {
             "Accept": "application/vnd.github.v3+json",
-        })
+        }
+        
+        # Add token if provided or from environment
+        token = token or os.environ.get("GITHUB_TOKEN")
+        if token:
+            headers["Authorization"] = f"token {token}"
+        
+        self.session.headers.update(headers)
     
     def get_branch_commit(self, branch: str) -> str:
         """Get the latest commit SHA for a branch."""
