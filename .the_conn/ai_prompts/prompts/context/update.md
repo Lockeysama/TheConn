@@ -95,7 +95,7 @@ theconn init [options] [target_path]
 - `--overwrite`: 覆盖已存在的文件
 - `--dry-run`: 模拟执行，不实际创建文件
 
-## 5. 实施要点
+## 5. 关键约束
 
 ...
 ```
