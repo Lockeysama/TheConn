@@ -36,8 +36,8 @@ py-cli = { description = "运行 Python CLI", run = "uv run theconn $@" }
 ts-cli = { description = "运行 TypeScript CLI", run = "node src/typescript/bin/theconn.js $@" }
 
 # --- 测试 CLI 工具 ---
-test-py-init = { description = "测试 Python CLI init", run = "mkdir -p /tmp/test-theconn-py && cd /tmp/test-theconn-py && uv run theconn init" }
-test-ts-init = { description = "测试 TypeScript CLI init", run = "mkdir -p /tmp/test-theconn-ts && cd /tmp/test-theconn-ts && node src/typescript/bin/theconn.js init" }
+test-py-init = { description = "测试 Python CLI init", run = "mkdir -p /tmp/test-theconn-py && uv run theconn init --path=/tmp/test-theconn-py" }
+test-ts-init = { description = "测试 TypeScript CLI init", run = "mkdir -p /tmp/test-theconn-ts && node src/typescript/bin/theconn.js init --path=/tmp/test-theconn-ts" }
 
 # --- 代码质量 ---
 fmt-py = { description = "格式化 Python 代码", run = "uv run ruff format src/python" }
