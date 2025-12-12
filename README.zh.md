@@ -7,16 +7,294 @@
 使用一条命令将 The Conn 框架集成到你的项目：
 
 **Python 用户：**
+
 ```bash
 uvx theconn init
 ```
 
 **Node.js 用户：**
+
 ```bash
 npx theconn-cli init
 ```
 
-然后阅读 `.the_conn/GUIDE.md` 了解使用方法。
+然后阅读 `.the_conn/GUIDE.md` 了解详细的使用方法。
+
+## 🎯 如何使用 The Conn
+
+### 目录结构
+
+初始化后，The Conn 会在你的项目中创建 `.the_conn/` 目录：
+
+```text
+.the_conn/
+├── epics/              # 📋 规划层 - 项目路线图
+│   └── EPIC-01_功能名称/
+│       ├── README.md
+│       └── features/
+│           └── FEAT-01_子功能/
+│               ├── README.md
+│               └── stories/
+│                   └── STORY-01_任务描述.md
+│
+├── context/            # 📚 知识层 - 架构与决策
+│   ├── global/         # 项目级上下文
+│   │   ├── Architecture.md
+│   │   ├── Tech_Stack.md
+│   │   └── Coding_Standard.md
+│   └── epics/          # Epic 专属上下文
+│       └── EPIC-01/
+│           └── Module_Design.md
+│
+├── ai_prompts/         # 🤖 工具层 - AI 提示词模板
+│   ├── core/
+│   ├── prompts/
+│   │   ├── initialization/
+│   │   ├── planning/
+│   │   ├── context/
+│   │   └── execution/
+│   └── README.md
+│
+├── ai_workspace/       # 🔧 执行层 - 临时工作区
+│   └── EPIC-01/
+│       └── TASK-01_STORY-01_Name/
+│           ├── task.md
+│           └── context.manifest.json
+│
+├── GUIDE.md            # 完整使用指南
+└── README.md           # 框架文档
+```
+
+### 完整工作流（5 个阶段）
+
+#### 阶段 0：项目初始化
+
+首次设置，创建结构和基础上下文。
+
+```bash
+# 运行 `uvx theconn init` 或 `npx theconn-cli init` 后：
+# 使用 AI 初始化项目结构
+@prompts/initialization/project_init.md 帮我初始化 The Conn 项目
+```
+
+这会创建：
+
+- 目录结构
+- 初始全局上下文（架构、技术栈、编码规范）
+- 项目约定
+
+#### 阶段 1：从需求到规划
+
+将外部需求转换为可执行的开发任务。
+
+##### 步骤 1：需求评审
+
+```bash
+@{需求文档} @prompts/planning/requirements_review.md 开始评审
+```
+
+- 与 AI 讨论需求
+- 确定技术方案
+- 输出：技术方案文档
+
+##### 步骤 2：提取上下文
+
+```bash
+@{技术方案} @prompts/context/extract.md 提取上下文
+```
+
+- 将可复用知识提取到 `.the_conn/context/global/`
+- 创建架构决策、模式、约定
+
+##### 步骤 3：生成规划（选择 A 或 B）
+
+###### 方案 A：批量生成（推荐）
+
+```bash
+@{需求文档} @{技术方案} @prompts/planning/requirements_breakdown.md 开始拆解
+```
+
+- AI 展示大纲 → 你确认 → AI 生成所有 Epic/Feature/Story 文件
+
+###### 方案 B：逐步生成
+
+```bash
+# 生成 Epic
+@{需求文档} @prompts/planning/epic_planning.md 生成 Epic
+
+# 生成 Feature
+@{需求文档} @prompts/planning/feature_planning.md 生成 Feature
+
+# 生成 Story
+@{需求文档} @prompts/planning/story_writing.md 生成 Story
+```
+
+##### 步骤 4：提取 Epic 专属上下文
+
+```bash
+@.the_conn/epics/EPIC-XX_Name/README.md @prompts/context/extract.md 提取 Epic 上下文
+```
+
+- 输出到 `.the_conn/context/epics/EPIC-XX/`
+- 包含模块设计、数据模型、API 规范
+
+#### 阶段 2：从 Story 到 Task
+
+为 AI 准备执行材料。
+
+```bash
+@{Story文件} @prompts/execution/task_generation.md 生成 Task
+```
+
+在 `.the_conn/ai_workspace/EPIC-XX/TASK-XX_STORY-XX_Name/` 创建：
+
+1. `task.md` - 任务简报（强调 BDD/TDD 测试先行）
+2. `context.manifest.json` - 该任务的上下文清单
+
+#### 阶段 3：执行开发任务
+
+AI 辅助编码，人工监督。
+
+```bash
+# 开始任务
+@.the_conn/ai_workspace/EPIC-XX/TASK-XX_STORY-XX_Name/ 开始任务
+```
+
+AI 遵循 BDD/TDD 工作流（步骤 1-5）：
+
+1. 创建/更新 `.feature` 文件（BDD 场景）
+2. 先编写测试代码
+3. 实现业务逻辑使测试通过
+4. 运行测试并验证
+5. 代码完成
+
+##### ⚠️ 人工审查检查点
+
+- 审查代码实现
+- 审查测试覆盖
+- 确认符合预期
+
+##### 完成任务闭环（步骤 6-7）
+
+```bash
+# 批准后
+请继续执行 Step 6-7 完成任务闭环
+```
+
+AI 自动：
+
+1. 生成变更摘要
+2. 同步 Story 状态为 `done`
+
+#### 阶段 4：任务闭环与同步
+
+如果阶段 3 中未执行步骤 6-7，手动执行：
+
+```bash
+# 生成变更摘要
+@prompts/execution/change_summary.md 生成变更摘要
+
+# 同步 Story 文档
+@{原始Story文件} @prompts/execution/story_sync.md 开始同步
+```
+
+#### 阶段 5：Bug 修复工作流
+
+对于已完成 Story 中发现的 Bug：
+
+```bash
+@prompts/planning/bug_fix_story.md 生成 Bug Fix Story
+
+父 Story: STORY-01
+发现于: 集成测试
+现象: ...
+```
+
+- 创建 `STORY-XX.X_Name.md`（例如 `STORY-01.1_Fix_Bug.md`）
+- 然后按照阶段 2-4 修复
+
+### 核心概念
+
+#### 规划层级
+
+```text
+Epic（业务目标）
+  └── Feature（功能模块）
+      └── Story（可实现任务）
+          └── Task（AI 执行单元）
+```
+
+#### ID 命名规范
+
+- Epic：`EPIC-01`, `EPIC-02`, ...
+- Feature：`FEAT-01`, `FEAT-02`, ...（每个 Epic 内）
+- Story：`STORY-01`, `STORY-02`, ...（每个 Epic 内）
+- Bug 修复：`STORY-01.1`, `STORY-01.2`, ...（继承父 Story ID）
+- Task：`TASK-01`, `TASK-02`, ...（Epic 内顺序编号）
+
+#### 上下文系统
+
+上下文是指导 AI 生成符合你愿景的代码的"知识库"：
+
+- **全局上下文**（`context/global/`）：整个项目共享
+  - Architecture.md - 系统架构
+  - Tech_Stack.md - 技术选型
+  - Coding_Standard.md - 代码规范
+  - Testing_Strategy.md - 测试策略
+
+- **Epic 上下文**（`context/epics/EPIC-XX/`）：Epic 专属知识
+  - Module_Design.md - 模块结构
+  - Data_Model.md - 数据模式
+  - API_Spec.md - API 契约
+  - Integration_Plan.md - 集成策略
+
+#### 核心原则
+
+- **你规划，AI 执行**：你定义"做什么"和"为什么"；AI 处理"如何做"
+- **上下文为王**：良好维护的上下文确保一致、高质量的 AI 输出
+- **测试先行**：总是在实现前创建测试（BDD/TDD）
+- **人工审查**：集成前总是要审查
+- **迭代开发**：将复杂任务分解为 Story，系统性地处理
+
+### 快速开始示例
+
+初始化后，典型的第一次会话：
+
+```bash
+# 1. 初始化项目结构
+@prompts/initialization/project_init.md 初始化项目
+
+# 2. 定义你的第一个 Epic（例如：用户认证）
+@{auth_requirements.md} @prompts/planning/requirements_review.md 评审
+
+# 3. 从批准的方案生成规划
+@{requirements.md} @{tech_solution.md} @prompts/planning/requirements_breakdown.md 拆解
+
+# 4. 开始实现第一个 Story
+@{STORY-01_Login.md} @prompts/execution/task_generation.md 生成 Task
+@.the_conn/ai_workspace/EPIC-01/TASK-01_STORY-01_Login/ 开始任务
+
+# 5. 审查、批准，让 AI 完成闭环
+请继续执行 Step 6-7
+```
+
+### 协作技巧
+
+#### 团队协作
+
+- 将 `epics/` 和 `context/` 提交到 Git（共享规划和知识）
+- 将 `ai_workspace/` 添加到 `.gitignore`（个人临时工作）
+- 使用分支策略：`epic/EPIC-XX` 用于 Epic 级别的工作
+- 通过 Epic README 协调 Story ID
+
+#### 单人开发
+
+- 从全局上下文开始（架构、技术栈）
+- 一次创建一个 Epic
+- 批判性地审查 AI 输出 - 你是舰长
+- 随着项目演进保持上下文更新
+
+关于完整的工作流程、故障排除和高级功能，请在初始化后查看 `.the_conn/GUIDE.md`。
 
 ## 📚 文档
 
@@ -37,16 +315,16 @@ npx theconn-cli init
 
 为了清晰地定义这套人机协作的哲学，我们将整个开发过程比作一次星际航行：
 
-* **领航员 (The Navigator) - 人类开发者**：
+- **领航员 (The Navigator) - 人类开发者**：
     您是舰长，是战略决策者。您不负责去引擎室拧每一颗螺丝，但您要设定最终的目的地（业务目标）、规划穿越星辰大海的航线（软件架构）、并在关键时刻做出决策（技术选型、逻辑审查）。您的智慧和经验，是航行成功的唯一保障。
 
-* **AI 船员 (The AI Crew) - AI 代理与工具**：
+- **AI 船员 (The AI Crew) - AI 代理与工具**：
     他们是高效、忠诚的执行者。他们掌握着强大的引擎（代码生成）、精准的传感器（测试与分析）和可靠的防御系统（代码修复）。他们能完美执行您下达的任何指令，但他们不会、也不应决定航船的航向。
 
-* **舰桥 (The Bridge) - 开发环境**：
+- **舰桥 (The Bridge) - 开发环境**：
     这是您的指挥中心，是信息汇集与指令发出的地方。
 
-* **指挥台 (The Conn) - 本项目框架**：
+- **指挥台 (The Conn) - 本项目框架**：
     这便是我们的项目——**The Conn**。它不是整座舰桥，而是舰桥上最核心的那个**指挥与航行控制台**。
 
 ## **为什么命名为“The Conn”？**
