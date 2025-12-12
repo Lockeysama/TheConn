@@ -1,6 +1,6 @@
 # The Conn: 项目命名哲学与使命
 
-[English Version](README.md) | [CLI 文档](CLI.md)
+[English Version](README.md) | [CLI 文档](CLI.md) | [开发指南](DEVELOPMENT.md)
 
 ## 🚀 快速开始
 
@@ -18,7 +18,12 @@ npx @theconn/cli init
 
 然后阅读 `.the_conn/GUIDE.md` 了解使用方法。
 
-[📚 完整 CLI 文档](CLI.md)
+## 📚 文档
+
+- **[CLI.md](CLI.md)** - CLI 使用文档（面向用户）
+- **[DEVELOPMENT.md](DEVELOPMENT.md)** - 开发指南（面向开发者）
+- **[CONTRIBUTING.md](CONTRIBUTING.md)** - 贡献指南
+- **[RELEASING.md](RELEASING.md)** - 发布流程（面向维护者）
 
 ## 核心思想：在 AI 浪潮中，为人类领航员重夺指挥权
 

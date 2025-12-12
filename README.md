@@ -1,6 +1,6 @@
 # The Conn: Naming Philosophy & Mission
 
-[中文版](README.zh.md) | [CLI Documentation](CLI.md)
+[中文版](README.zh.md) | [CLI Documentation](CLI.md) | [Development Guide](DEVELOPMENT.md)
 
 ## 🚀 Quick Start
 
@@ -18,7 +18,12 @@ npx @theconn/cli init
 
 Then read `.the_conn/GUIDE.md` for usage instructions.
 
-[📚 Full CLI Documentation](CLI.md)
+## 📚 Documentation
+
+- **[CLI.md](CLI.md)** - CLI usage guide (for users)
+- **[DEVELOPMENT.md](DEVELOPMENT.md)** - Development guide (for contributors)
+- **[CONTRIBUTING.md](CONTRIBUTING.md)** - Contribution guidelines
+- **[RELEASING.md](RELEASING.md)** - Release process (for maintainers)
 
 ## Core Idea: Reclaiming Command for the Human Navigator in the Age of AI
 

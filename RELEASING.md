@@ -1,15 +1,21 @@
-# 发布指南
+# The Conn 发布指南
 
-本文档说明如何测试和发布 The Conn CLI 工具到 PyPI 和 npm。
+> 📌 **本文档面向项目维护者**  
+> 说明如何测试和发布 The Conn CLI 工具到 PyPI 和 npm。
+>
+> 开发指南请查看 [DEVELOPMENT.md](DEVELOPMENT.md)
+
+---
 
 ## 📦 发布前准备
 
 ### 检查清单
 
 - [ ] 所有代码已提交到 Git
-- [ ] 版本号已更新（`pyproject.toml` 和 `packages/npm-cli/package.json`）
+- [ ] 版本号已更新（`pyproject.toml` 和 `src/typescript/package.json`）
 - [ ] 已在本地测试所有命令
 - [ ] 已更新 CHANGELOG（如果有）
+- [ ] Python 和 TypeScript 版本号已同步
 - [ ] GitHub 仓库已推送到远程
 
 ---
@@ -51,6 +57,8 @@ cd /Users/chenyitao/Documents/git/TheConn
 rm -rf dist/
 
 # 构建包
+mise run build-py
+# 或直接使用 uv
 uv build
 ```
 
@@ -76,6 +84,7 @@ twine upload dist/*
 # 从 PyPI 安装并测试
 uvx theconn --version
 uvx theconn --help
+uvx theconn init
 ```
 
 ---
@@ -155,6 +164,7 @@ npm publish
 # 使用 npx 测试
 npx @theconn/cli --version
 npx @theconn/cli --help
+npx @theconn/cli init
 ```
 
 ---
@@ -182,48 +192,83 @@ npm version major   # 0.2.0 -> 1.0.0
 
 ### 同步版本号
 
-确保两个包的版本号保持一致：
+确保以下位置的版本号保持一致：
 - `pyproject.toml` 中的 `version`
-- `packages/npm-cli/package.json` 中的 `version`
-- `src/theconn/cli.py` 中的 `@click.version_option(version="...")`
-- `packages/npm-cli/bin/theconn.js` 中的 `.version(...)`
+- `src/typescript/package.json` 中的 `version`
+- `src/python/theconn/cli.py` 中的 `@click.version_option(version="...")`
+- `src/typescript/bin/theconn.js` 中的 `.version(...)`
 
-### 发布新版本
+### 完整发布流程
 
-1. 更新所有版本号
-2. 提交代码：`git commit -am "Bump version to x.y.z"`
-3. 打标签：`git tag vx.y.z`
-4. 推送：`git push && git push --tags`
-5. 发布 Python 包到 PyPI
-6. 发布 Node.js 包到 npm
+1. **更新所有版本号**
+   ```bash
+   # 编辑 pyproject.toml
+   version = "0.2.0"
+   
+   # 更新 Node.js 版本
+   cd src/typescript && npm version 0.2.0
+   ```
+
+2. **提交代码**
+   ```bash
+   git add .
+   git commit -m "chore: bump version to 0.2.0"
+   ```
+
+3. **打标签**
+   ```bash
+   git tag v0.2.0
+   ```
+
+4. **推送到 GitHub**
+   ```bash
+   git push origin main
+   git push origin v0.2.0
+   ```
+
+5. **发布 Python 包**
+   ```bash
+   mise run build-py
+   twine upload dist/*
+   ```
+
+6. **发布 Node.js 包**
+   ```bash
+   cd src/typescript
+   npm publish
+   ```
 
 ---
 
-## 🧪 自动化测试（可选）
+## 🧪 自动化发布（可选）
 
 ### GitHub Actions 工作流
 
-创建 `.github/workflows/publish.yml`:
+创建 `.github/workflows/release.yml`:
 
 ```yaml
-name: Publish Packages
+name: Release Packages
 
 on:
   release:
-    types: [created]
+    types: [published]
 
 jobs:
   publish-pypi:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      
       - name: Install uv
         run: pip install uv
+      
       - name: Build package
         run: uv build
+      
       - name: Publish to PyPI
         env:
           TWINE_USERNAME: __token__
@@ -236,17 +281,31 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
           registry-url: 'https://registry.npmjs.org'
+      
       - name: Install dependencies
         run: cd src/typescript && npm install
+      
       - name: Publish to npm
         run: cd src/typescript && npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 ```
+
+### 设置 GitHub Secrets
+
+1. **PyPI Token**:
+   - 访问 https://pypi.org/manage/account/token/
+   - 创建新 token
+   - 在 GitHub 仓库设置中添加 `PYPI_API_TOKEN`
+
+2. **npm Token**:
+   - 运行 `npm token create`
+   - 在 GitHub 仓库设置中添加 `NPM_TOKEN`
 
 ---
 
@@ -258,6 +317,7 @@ jobs:
 - [ ] `npx @theconn/cli --version` 显示正确版本
 - [ ] 测试所有命令（init, update, check, uninstall）
 - [ ] 更新 GitHub Release Notes
+- [ ] 更新文档中的版本号引用（如果有）
 - [ ] 在社交媒体或社区宣布新版本（可选）
 
 ---
@@ -266,28 +326,55 @@ jobs:
 
 ### PyPI 发布失败
 
-**问题：** "File already exists"
+#### 问题：文件已存在
 
-**解决：** 版本号已被使用，需要更新版本号后重新构建。
+```
+File already exists
+```
 
-**问题：** "Invalid or non-existent authentication"
+**解决方案**：
+- 版本号已被使用
+- 更新版本号后重新构建
+- 不能重复发布相同版本
 
-**解决：** 
+#### 问题：认证失败
+
+```
+Invalid or non-existent authentication
+```
+
+**解决方案**：
 1. 访问 https://pypi.org/manage/account/token/
 2. 创建 API token
-3. 使用 token 登录：`twine upload --username __token__ --password <token> dist/*`
+3. 使用 token 登录：
+   ```bash
+   twine upload --username __token__ --password <your-token> dist/*
+   ```
 
 ### npm 发布失败
 
-**问题：** "You do not have permission to publish"
+#### 问题：没有发布权限
 
-**解决：** 
+```
+You do not have permission to publish
+```
+
+**解决方案**：
 1. 确认已登录：`npm whoami`
-2. 如果是 scoped package，首次发布需要：`npm publish --access public`
+2. 如果是 scoped package，首次发布需要：
+   ```bash
+   npm publish --access public
+   ```
 
-**问题：** "Version already exists"
+#### 问题：版本已存在
 
-**解决：** 更新版本号：`npm version patch`
+```
+Version already exists
+```
+
+**解决方案**：
+- 更新版本号：`npm version patch`
+- 或手动编辑 `package.json`
 
 ---
 
@@ -297,6 +384,7 @@ jobs:
 - [npm 发布文档](https://docs.npmjs.com/cli/v9/commands/npm-publish)
 - [Semantic Versioning](https://semver.org/)
 - [uv 文档](https://docs.astral.sh/uv/)
+- [GitHub Actions 文档](https://docs.github.com/en/actions)
 
 ---
 
@@ -306,4 +394,16 @@ jobs:
 2. **版本同步**：确保 Python 和 Node.js 包版本号一致
 3. **备份代码**：发布前确保代码已提交并推送到 GitHub
 4. **文档更新**：发布新版本时更新 README 和 CHANGELOG
-5. **谨慎操作**：npm 包发布后 24 小时内可以撤销，之后无法删除特定版本
+5. **谨慎操作**：
+   - PyPI: 发布后无法删除，只能 yank
+   - npm: 发布后 72 小时内可以撤销，之后只能废弃
+6. **遵循语义化版本**：使用 [Semantic Versioning](https://semver.org/)
+
+---
+
+## 📞 获取帮助
+
+如果发布过程中遇到问题：
+- 查看 [Issues](https://github.com/Lockeysama/TheConn/issues)
+- 参考 [DEVELOPMENT.md](DEVELOPMENT.md)
+- 提交新 Issue
