@@ -52,10 +52,9 @@
 
 ### 指南文档
 
-| 文档                    | 内容                |
-| ----------------------- | ------------------- |
-| `BUG_WORKFLOW_GUIDE.md` | Bug Fix 工作流指南  |
-| `core/core.md`          | AI 领航员敏捷工作流 |
+| 文档           | 内容                |
+| -------------- | ------------------- |
+| `core/core.md` | AI 领航员敏捷工作流 |
 
 ---
 
@@ -231,8 +230,7 @@ Story 完成并合并
 │           └── context.manifest.json
 │
 ├── README.md                       # 本文件
-├── GUIDE.md                        # 使用指南
-└── BUG_WORKFLOW_GUIDE.md           # Bug Fix 工作流指南
+└── GUIDE.md                        # 使用指南
 ```
 
 ---
@@ -240,5 +238,4 @@ Story 完成并合并
 ## 相关资源
 
 - **核心工作流**: `core/core.md`
-- **Bug Fix 指南**: `BUG_WORKFLOW_GUIDE.md`
 - **使用指南**: `GUIDE.md`

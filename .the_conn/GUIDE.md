@@ -164,8 +164,6 @@
 
 2. 后续按流程二到流程四执行修复
 
-详细流程参见 `BUG_WORKFLOW_GUIDE.md`。
-
 ---
 
 ## 模板速查
@@ -270,8 +268,7 @@
 │           └── change_summary.md
 │
 ├── README.md
-├── GUIDE.md                            # 本文件
-└── BUG_WORKFLOW_GUIDE.md
+└── GUIDE.md                            # 本文件
 ```
 
 ---
