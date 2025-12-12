@@ -6,12 +6,21 @@ readme = "README.md"
 authors = [
     { name = "Lockeysama", email = "196349143@qq.com" }
 ]
+license = { text = "MIT" }
 requires-python = ">=3.12"
 dependencies = [
     "click>=8.1.0",
     "requests>=2.31.0",
     "rich>=13.0.0",
 ]
+keywords = ["theconn", "ai", "development", "framework", "cli"]
+
+[project.urls]
+Homepage = "https://github.com/Lockeysama/TheConn"
+Documentation = "https://github.com/Lockeysama/TheConn/blob/main/CLI.md"
+Repository = "https://github.com/Lockeysama/TheConn"
+Issues = "https://github.com/Lockeysama/TheConn/issues"
+Changelog = "https://github.com/Lockeysama/TheConn/releases"
 
 [project.scripts]
 theconn = "theconn.cli:main"
