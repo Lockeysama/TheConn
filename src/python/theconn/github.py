@@ -51,6 +51,7 @@ class GitHubClient:
         source_path: str,
         target_path: Path,
         exclude: Optional[list[str]] = None,
+        base_source_path: Optional[str] = None,
     ) -> None:
         """Download a directory from GitHub recursively.
         
@@ -59,8 +60,13 @@ class GitHubClient:
             source_path: Path in repository
             target_path: Local target path
             exclude: List of paths to exclude (relative to source_path)
+            base_source_path: Base path for calculating relative paths (used internally)
         """
         exclude = exclude or []
+        # On first call, base_source_path is None, so we set it to source_path
+        if base_source_path is None:
+            base_source_path = source_path
+            
         url = f"{GITHUB_API_BASE}/repos/{self.repo}/contents/{source_path}?ref={branch}"
         
         response = self.session.get(url)
@@ -75,8 +81,10 @@ class GitHubClient:
             item_name = item["name"]
             item_path = item["path"]
             
+            # Calculate relative path from base_source_path
+            relative_path = item_path[len(base_source_path):].lstrip("/")
+            
             # Check if excluded
-            relative_path = item_path[len(source_path):].lstrip("/")
             if any(relative_path.startswith(ex) for ex in exclude):
                 continue
             
@@ -87,8 +95,8 @@ class GitHubClient:
                 target_file.parent.mkdir(parents=True, exist_ok=True)
                 target_file.write_bytes(file_content)
             elif item["type"] == "dir":
-                # Recurse into directory
-                self.download_directory(branch, item_path, target_path, exclude)
+                # Recurse into directory, passing the same base_source_path
+                self.download_directory(branch, item_path, target_path, exclude, base_source_path)
     
     def download_file(self, branch: str, source_path: str, target_path: Path) -> None:
         """Download a single file from GitHub.
@@ -141,7 +149,8 @@ def download_framework_files(
         prompts_dir = target_dir / "ai_prompts"
         if prompts_dir.exists():
             shutil.rmtree(prompts_dir)
-        client.download_directory(branch, ".the_conn/ai_prompts", target_dir, exclude=[])
+        prompts_dir.mkdir(parents=True, exist_ok=True)
+        client.download_directory(branch, ".the_conn/ai_prompts", prompts_dir, exclude=[])
         
         # Download GUIDE.md
         progress.add_task("Downloading GUIDE.md...", total=None)
