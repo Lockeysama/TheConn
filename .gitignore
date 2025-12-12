@@ -1,3 +1,6 @@
+# The Conn 临时文件
+.the_conn/ai_workspace/
+
 # Python
 __pycache__/
 *.py[cod]
@@ -19,6 +22,7 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+MANIFEST
 
 # Virtual environments
 venv/
@@ -31,13 +35,25 @@ env/
 .idea/
 *.swp
 *.swo
+*~
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+src/typescript/node_modules/
+
+# OS
 .DS_Store
-*.tmp
+Thumbs.db
 
-# Project specific
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Logs
 *.log
-.env
-.env.local
-*.lock
-
-# The Conn - specific files

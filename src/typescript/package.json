@@ -1,0 +1,45 @@
+{
+    "name": "@theconn/cli",
+    "version": "0.1.0",
+    "description": "The Conn - AI-powered development framework CLI",
+    "keywords": [
+        "theconn",
+        "ai",
+        "development",
+        "framework",
+        "cli"
+    ],
+    "homepage": "https://github.com/Lockeysama/TheConn",
+    "bugs": {
+        "url": "https://github.com/Lockeysama/TheConn/issues"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Lockeysama/TheConn.git"
+    },
+    "license": "MIT",
+    "author": {
+        "name": "Lockeysama",
+        "email": "196349143@qq.com"
+    },
+    "type": "module",
+    "bin": {
+        "theconn": "./bin/theconn.js"
+    },
+    "files": [
+        "bin",
+        "lib",
+        "README.md"
+    ],
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "dependencies": {
+        "chalk": "^5.3.0",
+        "commander": "^12.0.0",
+        "ora": "^8.0.1"
+    },
+    "engines": {
+        "node": ">=18.0.0"
+    }
+}

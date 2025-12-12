@@ -1,6 +1,24 @@
 # The Conn: Naming Philosophy & Mission
 
-[中文版](README.zh.md)
+[中文版](README.zh.md) | [CLI Documentation](CLI.md)
+
+## 🚀 Quick Start
+
+Integrate The Conn framework into your project with one command:
+
+**Python users:**
+```bash
+uvx theconn init
+```
+
+**Node.js users:**
+```bash
+npx @theconn/cli init
+```
+
+Then read `.the_conn/GUIDE.md` for usage instructions.
+
+[📚 Full CLI Documentation](CLI.md)
 
 ## Core Idea: Reclaiming Command for the Human Navigator in the Age of AI
 

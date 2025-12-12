@@ -1,9 +1,12 @@
 [tools]
-# 使用 mise 管理 uv 的版本
+# Python 环境管理
 uv = "latest"
 # 注意：通常不需要在这里指定 python，因为 uv 会根据 pyproject.toml 自动管理 python 版本
 # 如果你确实需要系统级 python，可以取消注释：
 # python = "3.12"
+
+# Node.js 环境管理
+node = "20"  # 使用 Node.js 20 LTS
 
 [env]
 _.python.venv = ".venv"
@@ -11,28 +14,40 @@ _.python.venv = ".venv"
 UV_PYTHON_PREFERENCE = "only-managed"
 
 [tasks]
-# --- 依赖管理 ---
-install = { description = "安装/同步依赖 (创建 .venv)", run = "uv sync" }
+# --- Python 依赖管理 ---
+install = { description = "安装/同步 Python 依赖", run = "uv sync" }
 lock = { description = "更新 uv.lock 文件", run = "uv lock" }
-tree = { description = "查看依赖树", run = "uv tree" }
+tree = { description = "查看 Python 依赖树", run = "uv tree" }
 
-# 添加依赖的快捷方式 (用法: mise run add requests)
-# 这里使用了 shell 脚本语法来透传参数 "$@"
-add = { description = "添加依赖", run = "uv add $@" }
-remove = { description = "移除依赖", run = "uv remove $@" }
+# 添加依赖的快捷方式
+add = { description = "添加 Python 依赖", run = "uv add $@" }
+remove = { description = "移除 Python 依赖", run = "uv remove $@" }
 
-# --- 开发运行 ---
-# 运行任意命令 (用法: mise run cmd python script.py)
+# --- Node.js 依赖管理 ---
+npm-install = { description = "安装 Node.js 依赖", run = "cd src/typescript && npm install" }
+npm-link = { description = "本地链接 TypeScript CLI", run = "cd src/typescript && npm link" }
+npm-unlink = { description = "取消本地链接", run = "npm unlink -g @theconn/cli" }
+
+# --- Python 开发运行 ---
 cmd = { description = "在 venv 中运行命令", run = "uv run $@" }
+py-cli = { description = "运行 Python CLI", run = "uv run theconn $@" }
 
-# 启动开发服务 (根据你的项目修改)
-dev = { description = "启动开发服务", run = "uv run python main.py" }
+# --- Node.js 开发运行 ---
+ts-cli = { description = "运行 TypeScript CLI", run = "node src/typescript/bin/theconn.js $@" }
+
+# --- 测试 CLI 工具 ---
+test-py-init = { description = "测试 Python CLI init", run = "mkdir -p /tmp/test-theconn-py && cd /tmp/test-theconn-py && uv run theconn init" }
+test-ts-init = { description = "测试 TypeScript CLI init", run = "mkdir -p /tmp/test-theconn-ts && cd /tmp/test-theconn-ts && node src/typescript/bin/theconn.js init" }
 
 # --- 代码质量 ---
-# 假设你安装了 ruff (uv add --dev ruff)
-fmt = { description = "格式化代码", run = "uv run ruff format ." }
-lint = { description = "检查代码", run = "uv run ruff check --fix ." }
-test = { description = "运行测试", run = "uv run pytest" }
+fmt-py = { description = "格式化 Python 代码", run = "uv run ruff format src/python" }
+lint-py = { description = "检查 Python 代码", run = "uv run ruff check src/python" }
+fmt-ts = { description = "格式化 TypeScript 代码", run = "cd src/typescript && npx prettier --write ." }
+lint-ts = { description = "检查 TypeScript 代码", run = "cd src/typescript && npx eslint ." }
+
+# --- 构建 ---
+build-py = { description = "构建 Python 包", run = "uv build" }
+build-ts = { description = "构建 TypeScript 包", run = "cd src/typescript && npm pack" }
 
 # --- 清理 ---
-clean = { description = "删除虚拟环境", run = "rm -rf .venv" }
+clean = { description = "清理构建产物", run = "rm -rf .venv dist src/typescript/node_modules" }

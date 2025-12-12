@@ -1,6 +1,24 @@
 # The Conn: 项目命名哲学与使命
 
-[English Version](README.md)
+[English Version](README.md) | [CLI 文档](CLI.md)
+
+## 🚀 快速开始
+
+使用一条命令将 The Conn 框架集成到你的项目：
+
+**Python 用户：**
+```bash
+uvx theconn init
+```
+
+**Node.js 用户：**
+```bash
+npx @theconn/cli init
+```
+
+然后阅读 `.the_conn/GUIDE.md` 了解使用方法。
+
+[📚 完整 CLI 文档](CLI.md)
 
 ## 核心思想：在 AI 浪潮中，为人类领航员重夺指挥权
 
