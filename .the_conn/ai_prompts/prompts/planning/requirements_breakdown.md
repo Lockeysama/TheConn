@@ -196,6 +196,8 @@ graph TD
 
 用户确认大纲后，按以下顺序生成文档：
 
+**重要提示**: 生成 Epic 规划文档后，建议用户使用 `@prompts/context/extract.md` 从 Epic 规划中提取 Epic 专属的 Context 文档（如模块设计、数据模型等），存放到 `.the_conn/context/epics/EPIC-XX/` 目录。
+
 #### 3.1 生成 Epic 文档
 
 参考 `@prompts/planning/epic_planning.md` 的规则，为每个 Epic 生成：
@@ -354,12 +356,13 @@ depends_on:
 
 生成大纲后，自检：
 
-- [ ] **Epic 粒度**: 是否太大或太小？
+- [ ] **Epic 粒度**: 是否按业务领域或子系统合理划分？
 - [ ] **Feature 独立性**: 每个 Feature 是否独立可交付？
-- [ ] **Story 可估算**: 每个 Story 是否 1-3 天可完成？
+- [ ] **Story 边界**: 每个 Story 的职责和边界是否清晰？
+- [ ] **便于 AI 编码**: 每个 Story 的输入输出、接口是否明确？
 - [ ] **依赖合理**: 依赖关系是否真实存在？是否有循环依赖？
 - [ ] **ID 连续**: Epic/Feature/Story 编号是否连续无跳号？
-- [ ] **命名清晰**: 名称是否准确描述功能？
+- [ ] **命名清晰**: 名称是否准确描述功能模块？
 
 ---
 

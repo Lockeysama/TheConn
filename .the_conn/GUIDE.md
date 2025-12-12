@@ -51,6 +51,13 @@
    ```
    → AI 展示大纲 → 用户确认 → 批量生成所有 Epic/Feature/Story
 
+4. **提取 Epic 专属 Context**（Epic 规划完成后）：
+   ```
+   @.the_conn/epics/EPIC-XX_Name/README.md @prompts/context/extract.md 帮我提取 Epic 专属 Context
+   ```
+   → 输出到 `.the_conn/context/epics/EPIC-XX/`
+   → 包含模块设计、数据模型、API 规范等 Epic 专属的技术细节
+
 #### 方案 B: 逐个生成（精细控制）
 
 1. **需求与方案评审**（同上）
@@ -75,7 +82,13 @@
    ```
    → 输出到 `.the_conn/epics/.../stories/STORY-XX_Name.md`
 
-6. 审查 AI 生成的文档，确认后提交
+6. **提取 Epic 专属 Context**（Epic 规划完成后）：
+   ```
+   @.the_conn/epics/EPIC-XX_Name/README.md @prompts/context/extract.md 帮我提取 Epic 专属 Context
+   ```
+   → 输出到 `.the_conn/context/epics/EPIC-XX/`
+
+7. 审查 AI 生成的文档，确认后提交
 
 ### 流程二：从 Story 到 Task
 
