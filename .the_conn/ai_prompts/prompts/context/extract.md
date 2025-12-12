@@ -127,16 +127,60 @@ tags:
 3. **关键决策**: 哪些设计决策需要记录？
 4. **技术要点**: 哪些技术细节需要被后续任务引用？
 
-### Step 2: 确定 Context 类型和路径
+### Step 2: 检查已有 Context（避免重复）
+
+**重要**: 在提取新 Context 前，先检查已有的 Context，避免重复提取！
+
+1. **查看全局 Context** (`.the_conn/context/global/`)：
+   - 使用 `@prompts/context/search.md` 搜索相关 Context
+   - 检查是否已有类似内容（如 Architecture.md、Tech_Stack.md 等）
+   - 确认哪些内容已经在全局 Context 中
+
+2. **查看 Epic Context** (`.the_conn/context/epics/EPIC-XX/`)（如果提取 Epic Context）：
+   - 检查该 Epic 下是否已有相关 Context
+   - 避免创建重复的 Context 文档
+
+3. **判断是否需要提取**：
+   - ✅ **需要提取**: 材料中包含**新的**设计决策、架构信息、接口约定
+   - ❌ **无需提取**: 内容已在现有 Context 中覆盖
+   - 🔄 **需要更新**: 内容与现有 Context 有重叠，但有新增或变化 → 使用 `@prompts/context/update.md`
+
+### Step 3: 确定 Context 类型和作用域
+
+**作用域判断原则**（优先使用 global）：
+
+| 内容类型           | 作用域     | 理由                     |
+| ------------------ | ---------- | ------------------------ |
+| 系统架构           | **global** | 全项目通用               |
+| 技术栈             | **global** | 全项目通用               |
+| 编码规范           | **global** | 全项目通用               |
+| 测试策略           | **global** | 全项目通用               |
+| API 通用约定       | **global** | 全项目 API 都应遵循      |
+| 核心领域模型       | **global** | 跨 Epic 共享             |
+| 特定模块设计       | **epic**   | 仅该 Epic 使用           |
+| Epic 专属数据模型  | **epic**   | 仅该 Epic 使用           |
+| Epic 专属 API 规范 | **epic**   | 仅该 Epic 的 API         |
+| Epic 专属协议      | **epic**   | 仅该 Epic 使用的通信协议 |
+| Epic 专属算法      | **epic**   | 仅该 Epic 使用的特殊算法 |
+
+**判断标准**:
+- 如果内容适用于**多个 Epic** 或**整个项目** → global
+- 如果内容仅适用于**单个 Epic** → epic
+- **有疑问时，优先选择 global**（后续可以重构为 epic）
 
 根据分析结果，确定：
 - **Type**: 从枚举中选择最匹配的类型
 - **Scope**: global 或 epic:EPIC-XX
 - **Descriptor**: 如何简洁准确地描述这个 Context
 
-### Step 3: 提取核心内容
+### Step 4: 提取核心内容
 
 **提取原则 - 关注"是什么"和"为什么"，而非"怎么做"**:
+
+**避免重复原则**:
+- 如果某些内容已在 global Context 中，Epic Context 应**引用而非复制**
+- 在 Epic Context 中可以写："参考 Architecture.md 的微服务架构设计"
+- 只提取该 Epic **独有的、差异化的**设计内容
 
 1. **设计决策优先**: 记录"为什么这样设计"、"有哪些选择"、"为什么选这个方案"
 2. **接口和边界**: 记录模块接口、数据格式、协议约定、边界职责
@@ -161,9 +205,22 @@ tags:
 - ❌ 项目背景和动机（应在 Epic/Story 中）
 - ❌ 显而易见的常识（"Python 是动态语言"）
 
-### Step 4: 组织内容结构
+### Step 5: 组织内容结构
 
 根据 Context 类型使用对应的模板（见下方"内容结构模板"）。
+
+**引用全局 Context 的方式**:
+如果 Epic Context 需要依赖全局 Context，在文档开头说明：
+
+```markdown
+## 依赖的全局 Context
+
+- `Architecture.md` - 微服务架构设计
+- `Tech_Stack.md` - Go 技术栈
+- `Coding_Standard_Go.md` - Go 编码规范
+
+本文档假设读者已了解上述全局 Context，仅描述本 Epic 专属的设计。
+```
 
 ---
 
@@ -537,6 +594,23 @@ A: 足够让 AI 完成开发任务即可。避免：
 
 A: 提示用户补充关键信息，或在 Context 中标注"待补充"，后续使用 @prompts/context/update.md 更新。
 
+**Q: 如何避免重复提取 Context？**
+
+A: **必须先检查已有 Context**！
+1. 使用 `@prompts/context/search.md` 搜索相关主题
+2. 如果内容已存在 global Context，Epic Context 应引用而非复制
+3. 如果内容部分重叠，考虑更新现有 Context 而非创建新的
+4. 原则：**优先复用全局 Context，Epic Context 只包含该 Epic 独有的内容**
+
+**Q: 如何判断内容应该放在 global 还是 epic？**
+
+A: 
+- **global**: 适用于多个 Epic 或整个项目的通用知识
+- **epic**: 仅适用于单个 Epic 的专属内容
+- **有疑问时，优先选择 global**（便于复用，后续可重构）
+
 ---
 
 现在，请根据用户提供的材料提取 Context 文档。
+
+**提醒**: 提取前先使用 `@prompts/context/search.md` 检查是否已有相关 Context！
