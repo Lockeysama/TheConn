@@ -1,6 +1,6 @@
 # The Conn: 项目命名哲学与使命
 
-[English Version](README.md) | [CLI 文档](CLI.md) | [开发指南](DEVELOPMENT.md)
+[English Version](README.md) | [CLI 文档](CLI.md) | [使用指南](.the_conn/GUIDE.md) | [开发指南](DEVELOPMENT.md)
 
 ## 🚀 快速开始
 
@@ -28,8 +28,8 @@ npx theconn-cli init
 
 ```text
 .the_conn/
-├── epics/              # 📋 规划层 - 项目路线图
-│   └── EPIC-01_功能名称/
+├── epics/              # 📋 规划层 - 项目路线图（初始为空）
+│   └── EPIC-01_功能名称/                  # 规划阶段创建
 │       ├── README.md
 │       └── features/
 │           └── FEAT-01_子功能/
@@ -37,16 +37,16 @@ npx theconn-cli init
 │               └── stories/
 │                   └── STORY-01_任务描述.md
 │
-├── context/            # 📚 知识层 - 架构与决策
+├── context/            # 📚 知识层 - 架构与决策（初始为空）
 │   ├── global/         # 项目级上下文
-│   │   ├── Architecture.md
-│   │   ├── Tech_Stack.md
-│   │   └── Coding_Standard.md
+│   │   ├── Architecture.md                # 项目初始化时创建
+│   │   ├── Tech_Stack.md                  # 项目初始化时创建
+│   │   └── Coding_Standard.md            # 项目初始化时创建
 │   └── epics/          # Epic 专属上下文
-│       └── EPIC-01/
+│       └── EPIC-01/                       # Epic 规划时创建
 │           └── Module_Design.md
 │
-├── ai_prompts/         # 🤖 工具层 - AI 提示词模板
+├── ai_prompts/         # 🤖 工具层 - AI 提示词模板（从 GitHub 下载）
 │   ├── core/
 │   ├── prompts/
 │   │   ├── initialization/
@@ -55,15 +55,27 @@ npx theconn-cli init
 │   │   └── execution/
 │   └── README.md
 │
-├── ai_workspace/       # 🔧 执行层 - 临时工作区
-│   └── EPIC-01/
+├── ai_workspace/       # 🔧 执行层 - 临时工作区（初始为空）
+│   └── EPIC-01/                           # 任务执行时创建
 │       └── TASK-01_STORY-01_Name/
 │           ├── task.md
 │           └── context.manifest.json
 │
-├── GUIDE.md            # 完整使用指南
-└── README.md           # 框架文档
+├── GUIDE.md            # 完整使用指南（从 GitHub 下载）
+├── README.md           # 框架文档（从 GitHub 下载）
+└── .version            # 版本跟踪（自动创建）
 ```
+
+**初始化时创建的内容：**
+
+- ✅ `ai_prompts/` - 从 GitHub 下载（所有模板可直接使用）
+- ✅ `GUIDE.md` - 从 GitHub 下载（完整使用指南）
+- ✅ `README.md` - 从 GitHub 下载（框架文档）
+- ✅ `.version` - 自动创建（跟踪安装版本）
+- 📁 `epics/` - 空目录（规划阶段填充）
+- 📁 `context/global/` - 空目录（通过项目初始化 prompt 填充）
+- 📁 `context/epics/` - 空目录（创建 Epic 时填充）
+- 📁 `ai_workspace/` - 空目录（临时工作区，建议添加到 `.gitignore`）
 
 ### 完整工作流（5 个阶段）
 

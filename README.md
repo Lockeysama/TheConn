@@ -1,6 +1,6 @@
 # The Conn: Naming Philosophy & Mission
 
-[中文版](README.zh.md) | [CLI Documentation](CLI.md) | [Development Guide](DEVELOPMENT.md)
+[中文版](README.zh.md) | [CLI Documentation](CLI.md) | [Usage Guide](.the_conn/GUIDE.md) | [Development Guide](DEVELOPMENT.md)
 
 ## 🚀 Quick Start
 
@@ -28,8 +28,8 @@ After initialization, The Conn creates a `.the_conn/` directory in your project:
 
 ```text
 .the_conn/
-├── epics/              # 📋 Planning Layer - Your project roadmap
-│   └── EPIC-01_Feature_Name/
+├── epics/              # 📋 Planning Layer - Your project roadmap (EMPTY initially)
+│   └── EPIC-01_Feature_Name/              # Created by you during planning
 │       ├── README.md
 │       └── features/
 │           └── FEAT-01_Sub_Feature/
@@ -37,16 +37,16 @@ After initialization, The Conn creates a `.the_conn/` directory in your project:
 │               └── stories/
 │                   └── STORY-01_Task_Description.md
 │
-├── context/            # 📚 Knowledge Layer - Architecture & decisions
+├── context/            # 📚 Knowledge Layer - Architecture & decisions (EMPTY initially)
 │   ├── global/         # Project-wide context
-│   │   ├── Architecture.md
-│   │   ├── Tech_Stack.md
-│   │   └── Coding_Standard.md
+│   │   ├── Architecture.md                # Created during initialization
+│   │   ├── Tech_Stack.md                  # Created during initialization
+│   │   └── Coding_Standard.md            # Created during initialization
 │   └── epics/          # Epic-specific context
-│       └── EPIC-01/
+│       └── EPIC-01/                       # Created during Epic planning
 │           └── Module_Design.md
 │
-├── ai_prompts/         # 🤖 Tool Layer - AI prompt templates
+├── ai_prompts/         # 🤖 Tool Layer - AI prompt templates (Downloaded from GitHub)
 │   ├── core/
 │   ├── prompts/
 │   │   ├── initialization/
@@ -55,15 +55,27 @@ After initialization, The Conn creates a `.the_conn/` directory in your project:
 │   │   └── execution/
 │   └── README.md
 │
-├── ai_workspace/       # 🔧 Execution Layer - Temporary work area
-│   └── EPIC-01/
+├── ai_workspace/       # 🔧 Execution Layer - Temporary work area (EMPTY initially)
+│   └── EPIC-01/                           # Created during task execution
 │       └── TASK-01_STORY-01_Name/
 │           ├── task.md
 │           └── context.manifest.json
 │
-├── GUIDE.md            # Complete usage guide
-└── README.md           # Framework documentation
+├── GUIDE.md            # Complete usage guide (Downloaded from GitHub)
+├── README.md           # Framework documentation (Downloaded from GitHub)
+└── .version            # Version tracking (Created automatically)
 ```
+
+**What's created during initialization:**
+
+- ✅ `ai_prompts/` - Downloaded from GitHub (all templates ready to use)
+- ✅ `GUIDE.md` - Downloaded from GitHub (complete usage guide)
+- ✅ `README.md` - Downloaded from GitHub (framework documentation)
+- ✅ `.version` - Created automatically (tracks installation version)
+- 📁 `epics/` - Empty directory (you'll populate this during planning)
+- 📁 `context/global/` - Empty directory (populated via project initialization prompt)
+- 📁 `context/epics/` - Empty directory (populated as you create Epics)
+- 📁 `ai_workspace/` - Empty directory (temporary work area, add to `.gitignore`)
 
 ### Complete Workflow (5 Stages)
 
