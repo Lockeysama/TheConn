@@ -15,8 +15,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/Lockeysama/TheConn.git",
-        "directory": "src/typescript"
+        "url": "git+https://github.com/Lockeysama/TheConn.git"
     },
     "license": "MIT",
     "author": {
