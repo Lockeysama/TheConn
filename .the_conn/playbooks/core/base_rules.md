@@ -90,7 +90,6 @@ func (s *DefaultSender) Send(event Event) error {
     return s.queue.Push(event)
 }
 ```
-```
 
 ### 3.2 文档操作
 
@@ -135,201 +134,29 @@ func (s *DefaultSender) Send(event Event) error {
 - 表格必须对齐
 - 使用合适的标题层级（# ## ### ####）
 
-### 5.2 Frontmatter 规范
+### 5.2 命名与格式规范
 
-**Story/Epic/Feature 文档必须包含 Frontmatter**：
-```yaml
----
-id: STORY-01
-type: dev
-status: pending
-created: 2025-12-16
----
-```
+**详见**：`@playbooks/core/naming_conventions.md`
 
-**Context 文档必须包含 Frontmatter**：
-```yaml
----
-type: architecture
-scope: global
-title: 系统架构设计
-created: 2025-12-16
-updated: 2025-12-16
-status: active
----
-```
+包含：ID 命名规范、Story 类型、Frontmatter 格式、复杂度评分标准等。
 
-### 5.3 ID 命名规范
+### 5.3 语言使用规范
 
-| 类型    | 格式                    | 示例         |
-| ------- | ----------------------- | ------------ |
-| Epic    | `EPIC-{序号}`           | `EPIC-01`    |
-| Feature | `FEAT-{序号}`           | `FEAT-01`    |
-| Story   | `STORY-{序号}`          | `STORY-01`   |
-| Bug Fix | `STORY-{序号}.{子序号}` | `STORY-01.1` |
-| Task    | `TASK-{序号}`           | `TASK-01`    |
+**核心原则**：AI 默认使用用户对话语言生成所有文档。
 
-### 5.4 语言使用规范
-
-**核心原则**：AI 默认使用用户输入或对话使用的语言来生成所有文档。
-
-**规则说明**：
-
-1. **文档语言跟随对话语言**
-   - 用户使用中文交流 → 生成中文文档
-   - 用户使用英文交流 → 生成英文文档
-   - 用户使用其他语言 → 生成相应语言的文档
-
-2. **BDD Feature 语言双重判断**
-   
-   BDD Feature 需要判断两个维度的语言：
-   
-   **维度 1：编程语言（决定测试框架）**
-   - 项目使用 Go → 使用 godog
-   - 项目使用 Python → 使用 pytest-bdd 或 behave
-   - 项目使用 JavaScript/TypeScript → 使用 cucumber-js
-   - 项目使用 Java → 使用 Cucumber JVM
-   
-   **维度 2：自然语言（决定 Gherkin 关键词）**
-   - 检查该 BDD 框架是否支持用户对话使用的自然语言
-   - 如果支持 → 使用对话自然语言的 Gherkin 关键词
-   - 如果不支持 → 使用英文 Gherkin 关键词（默认）
-   
-   **判断流程**：
-   ```
-   1. 识别项目编程语言 → 确定 BDD 框架（用户可指定）
-   2. 识别用户对话自然语言 → 确定期望的 Gherkin 语言
-   3. AI 自行分析框架文档/配置 → 确定框架支持的自然语言和关键词
-   4. 根据分析结果 → 决定实际使用的 Gherkin 关键词
-   ```
-   
-   **⚠️ 重要说明**：
-   - 不同 BDD 框架对同一自然语言的关键词实现可能不同
-   - 例如：中文关键词在不同框架中可能是 "功能/场景" 或 "特性/情景"
-   - **AI 必须先查阅框架文档或分析项目配置，再确定使用的关键词**
-   - 用户可以指定任意 BDD 框架，不限于参考表中列出的框架
-
-**示例：**
-
-**注意**：以下示例中的中文关键词（功能/场景/假如/当/那么）是基于 godog 框架的。不同框架可能使用不同的中文关键词，AI 必须先分析具体框架的语法支持。
-
-**场景 1：Go 项目 + 中文对话**
-```
-编程语言: Go → BDD 框架: godog
-对话语言: 中文 → 期望: 中文 Gherkin
-godog 支持中文: ✅ 是 → 使用中文关键词
-```
-```gherkin
-功能: 用户登录
-
-  场景: 用户成功登录
-    假如 用户已注册
-    当 用户输入正确的用户名和密码
-    那么 用户应该成功登录
-    而且 页面应该跳转到首页
-```
-
-**场景 2：Python 项目 + 中文对话**
-```
-编程语言: Python → BDD 框架: pytest-bdd
-对话语言: 中文 → 期望: 中文 Gherkin
-pytest-bdd 支持中文: ❌ 否 → 使用英文关键词
-```
-```gherkin
-Feature: User Login  # 框架不支持中文，使用英文
-
-  Scenario: User logs in successfully
-    Given the user is registered
-    When the user enters correct username and password
-    Then the user should be logged in
-    And the page should redirect to home
-```
-
-**场景 3：JavaScript 项目 + 英文对话**
-```
-编程语言: JavaScript → BDD 框架: cucumber-js
-对话语言: 英文 → 期望: 英文 Gherkin
-cucumber-js 支持英文: ✅ 是 → 使用英文关键词
-```
-```gherkin
-Feature: User Login
-
-  Scenario: User logs in successfully
-    Given the user is registered
-    When the user enters correct username and password
-    Then the user should be logged in
-    And the page should redirect to home
-```
-
-**场景 4：Go 项目 + 英文对话**
-```
-编程语言: Go → BDD 框架: godog
-对话语言: 英文 → 期望: 英文 Gherkin
-godog 支持英文: ✅ 是 → 使用英文关键词
-```
-```gherkin
-Feature: User Login
-
-  Scenario: User logs in successfully
-    Given the user is registered
-    When the user enters correct username and password
-    Then the user should be logged in
-    And the page should redirect to home
-```
-
-**BDD 框架语言支持参考表**：
-
-| 编程语言      | 常用 BDD 框架 | 支持中文 | 支持英文 | 其他语言支持 |
-| ------------- | ------------- | -------- | -------- | ------------ |
-| Go            | godog         | ✅        | ✅        | 多语言支持   |
-| Python        | pytest-bdd    | ❌        | ✅        | 仅英文       |
-| Python        | behave        | ✅        | ✅        | 多语言支持   |
-| JavaScript/TS | cucumber-js   | ✅        | ✅        | 多语言支持   |
-| Java          | Cucumber JVM  | ✅        | ✅        | 多语言支持   |
-| Ruby          | cucumber      | ✅        | ✅        | 多语言支持   |
-| C#            | SpecFlow      | ✅        | ✅        | 多语言支持   |
-
-**⚠️ 重要说明**：
-1. **此表仅供参考**，不限制用户只能使用表中的框架
-2. **用户可以指定任意 BDD 框架**，AI 需要自行分析该框架的语法支持
-3. **不同框架的关键词可能不同**，即使都支持中文，关键词也可能有差异
-4. **AI 工作流程**：
-   - 用户指定框架 → AI 查阅框架文档
-   - 分析框架支持的自然语言和关键词
-   - 根据分析结果生成正确的 Gherkin 语法
-5. **具体支持情况请参考项目实际使用的框架版本文档**
-
-**特殊情况处理**：
-
-- 如果用户在中文对话中明确要求使用英文文档 → 使用英文
-- 如果用户在英文对话中明确要求使用中文文档 → 使用中文
-- 技术术语（如类名、函数名、变量名）→ 始终使用项目约定的命名规范，通常为英文
-- 如果无法确定框架的语言支持 → 默认使用英文 Gherkin 关键词
+**基本规则**：
+- 中文对话 → 中文文档
+- 英文对话 → 英文文档
+- 技术术语保持项目约定（通常为英文）
 
 ---
 
-## 6. 复杂度评估（不使用时间估算）
+## 6. 专项规范引用
 
-**重要**：在 The Conn 框架中，**不使用时间估算**，而使用**复杂度评分**。
-
-### 6.1 复杂度评分标准
-
-- **范围**：1.0 - 10.0 分（支持浮点数）
-- **评分考虑因素**：
-  - 技术难度
-  - 工作量
-  - 依赖复杂度
-  - 风险等级
-
-### 6.2 评分示例
-
-| 复杂度 | 描述   | 示例                   |
-| ------ | ------ | ---------------------- |
-| 1.0    | 极简单 | 简单的数据结构定义     |
-| 3.0    | 简单   | 基础的 CRUD 操作       |
-| 5.0    | 中等   | 带业务逻辑的功能模块   |
-| 7.0    | 复杂   | 多模块集成、算法实现   |
-| 10.0   | 极复杂 | 核心架构设计、复杂算法 |
+**详细规范文档**：
+- **测试策略**：`@playbooks/core/test_strategy_rules.md`
+- **复杂度评估**：`@playbooks/core/complexity_rules.md`
+- **BDD 语言配置**：`@playbooks/core/bdd_language_rules.md`
 
 ---
 
