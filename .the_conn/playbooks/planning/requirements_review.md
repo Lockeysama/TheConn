@@ -23,6 +23,7 @@
 2. **技术方案**: 设计合理的技术实现方案
 3. **风险识别**: 提前发现潜在问题
 4. **最佳实践**: 确保方案符合行业标准
+5. **测试策略**: 确认项目的测试框架和 BDD 配置
 
 ---
 
@@ -132,6 +133,153 @@
 - 根据数据特征选择存储方案
 - 优先使用项目已有的存储系统
 - 缓存不是银弹，确认真正需要
+
+#### 2.4 测试框架与 BDD 配置 ✨
+
+**⚠️ 重要**: 在此阶段确认测试配置，后续生成 Story 时会自动应用。
+
+**AI 工作流程**:
+
+```
+Step 1: 检查公共 Context
+    ↓
+检查 .the_conn/context/global/ 目录：
+- Tech_Stack.md（技术栈）
+- Testing_Strategy.md（测试策略）
+- Coding_Standard_*.md（编码规范）
+    ↓
+Step 2: 从 Context 中提取信息
+    ↓
+如果找到相关配置 → 直接使用
+如果缺少部分信息 → 仅询问缺失的信息
+如果完全没有 → 询问所有必要信息
+    ↓
+Step 3: 分析 BDD 框架语法
+    ↓
+查阅框架文档，确定关键词
+    ↓
+Step 4: 应用默认测试策略
+    ↓
+使用混合策略（不需要用户决策）
+```
+
+**必须确认的信息**:
+
+1. **项目编程语言**
+   - 优先从 `Tech_Stack.md` 或项目文件（如 `go.mod`, `package.json`, `requirements.txt`）中获取
+   - 如果无法确定，再询问用户
+
+2. **BDD 测试框架**
+   - 优先从 `Testing_Strategy.md` 中获取
+   - 如果没有，根据编程语言使用默认框架：
+     - Go: godog
+     - Python: pytest-bdd
+     - JavaScript/TypeScript: cucumber-js
+     - Java: Cucumber JVM
+   - 用户可以随时指定其他框架
+
+3. **BDD Feature 文件语言**
+   - 跟随用户对话语言
+   - AI 自行分析框架的语法支持
+   - 确定正确的关键词
+
+4. **测试策略**（自动应用，不需要用户决策）
+   - **默认使用混合策略**：
+     - 用户可见功能 Story → BDD + 单元测试
+     - 技术实现 Story → 仅单元测试
+     - Feature 包含 ≥3 个 Story → 自动添加 E2E 测试 Story
+     - Epic 包含 ≥3 个 Feature → 自动添加 Epic E2E 测试 Story
+   
+   - **性能测试**（按需建议）：
+     - AI 分析需求时检测性能敏感场景
+     - 如果检测到潜在性能瓶颈 → 告知用户并询问是否需要性能测试 Story
+     - 常见场景：大数据处理、高并发、实时性要求、复杂算法
+
+**AI 输出示例 1（从 Context 获取到完整信息）**:
+
+```markdown
+📋 项目测试配置（从 Context 获取）：
+
+✅ 从 .the_conn/context/global/Tech_Stack.md 读取：
+- 编程语言: Go
+- BDD 框架: godog
+
+✅ 从 .the_conn/context/global/Testing_Strategy.md 读取：
+- 测试策略: 混合策略
+- 单元测试: 所有 Story 包含
+- BDD 测试: 用户功能 Story 包含
+
+🔍 BDD 框架分析：
+- 框架: godog
+- 支持中文: ✅
+- 关键词: 功能/场景/假如/当/那么/而且
+
+✅ 配置已确认，后续生成 Story 时将自动应用此配置。
+```
+
+**AI 输出示例 2（部分信息缺失）**:
+
+```markdown
+📋 项目测试配置分析：
+
+✅ 从 package.json 检测到：
+- 编程语言: JavaScript/TypeScript
+- 默认 BDD 框架: cucumber-js
+
+⚠️ 未找到测试策略文档，将使用默认混合策略。
+
+🔍 需要确认：
+您的项目使用的 BDD 框架是 cucumber-js 吗？
+还是使用其他框架？（如果是，请告知框架名称）
+
+（如果用户确认或提供信息后）
+
+✅ 配置已确认：
+- 编程语言: JavaScript
+- BDD 框架: cucumber-js
+- 自然语言: 中文
+- BDD 关键词: 功能/场景/假如/当/那么/而且
+- 测试策略: 混合策略（默认）
+```
+
+**AI 输出示例 3（检测到性能敏感场景）**:
+
+```markdown
+⚠️ 性能测试建议：
+
+检测到以下可能的性能瓶颈场景：
+1. FEAT-02: 实时数据处理
+   - 需要处理 10,000+ 条/秒的数据流
+   - 要求延迟 <100ms
+   
+2. FEAT-03: 复杂查询优化
+   - 涉及多表 JOIN 和聚合
+   - 数据量预计 1M+ 行
+
+💡 建议：
+是否需要为这些 Feature 添加性能测试 Story？
+- STORY-97: Performance_RealTimeProcessing
+- STORY-96: Performance_ComplexQuery
+
+如果需要，我会在需求拆解大纲中自动添加。
+```
+
+**如果框架不常见或自定义**:
+
+```markdown
+🔍 检测到自定义 BDD 框架: {框架名称}
+
+AI 尝试分析：
+1. 检查项目中的 .feature 文件
+2. 查找框架配置文件
+3. 搜索框架文档
+
+如果无法确定语法支持，请告知：
+1. 该框架是否支持中文 Gherkin？
+2. 如果支持，关键词是什么？
+
+或者，我将默认使用英文 Gherkin 关键词。
+```
 
 ---
 
