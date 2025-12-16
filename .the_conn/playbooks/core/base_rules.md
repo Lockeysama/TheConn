@@ -114,15 +114,6 @@ func (s *DefaultSender) Send(event Event) error {
 └── ai_workspace/        # 临时工作区（可创建和修改）
 ```
 
-### 4.2 引用规则
-
-**在 Playbook 中引用其他文件时**：
-- 使用相对路径：`@playbooks/core/base_rules.md`
-- 或使用绝对路径：`.the_conn/playbooks/core/base_rules.md`
-
-**在 Playbook 中引用用户文档时**：
-- 只读引用：`@docs/GUIDE.md`（仅用于告知用户，不可修改）
-
 ---
 
 ## 5. 文档生成规范
