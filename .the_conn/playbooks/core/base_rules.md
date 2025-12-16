@@ -148,13 +148,7 @@ func (s *DefaultSender) Send(event Event) error {
 - 表格必须对齐
 - 使用合适的标题层级（# ## ### ####）
 
-### 5.2 命名与格式规范
-
-**详见**：`@playbooks/core/naming_conventions.md`
-
-包含：ID 命名规范、Story 类型、Frontmatter 格式、复杂度评分标准等。
-
-### 5.3 语言使用规范
+### 5.2 语言使用规范
 
 **核心原则**：AI 默认使用用户对话语言生成所有文档。
 
