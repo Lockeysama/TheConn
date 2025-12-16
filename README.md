@@ -27,6 +27,7 @@ npx theconn-cli init /path/to/your/project
 ```
 
 **Notes:**
+
 - By default, the command initializes The Conn framework in the current working directory
 - If a path argument is specified, initialization will be performed in the target directory
 - Initialization creates the `.the_conn/` directory and its required subdirectory structure
@@ -49,6 +50,7 @@ The Conn provides a unified command entry point `tc.md` for easy interaction wit
 ```
 
 **See documentation:**
+
 - 📘 [Quick Start Guide](.the_conn/docs/QUICK_START.md)
 - 📗 [Command Reference](.the_conn/docs/COMMANDS.md)
 - 📙 [Command Mapping](.the_conn/docs/COMMAND_MAPPING.md)

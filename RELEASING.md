@@ -176,6 +176,7 @@ npx theconn-cli init
 **Python 包：**
 
 编辑 `pyproject.toml`:
+
 ```toml
 [project]
 version = "0.2.0"  # 更新版本号
@@ -193,6 +194,7 @@ npm version major   # 0.2.0 -> 1.0.0
 ### 同步版本号
 
 确保以下位置的版本号保持一致：
+
 - `pyproject.toml` 中的 `version`
 - `src/typescript/package.json` 中的 `version`
 - `src/python/theconn/cli.py` 中的 `@click.version_option(version="...")`
@@ -201,6 +203,7 @@ npm version major   # 0.2.0 -> 1.0.0
 ### 完整发布流程
 
 1. **更新所有版本号**
+
    ```bash
    # 编辑 pyproject.toml
    version = "0.2.0"
@@ -210,29 +213,34 @@ npm version major   # 0.2.0 -> 1.0.0
    ```
 
 2. **提交代码**
+
    ```bash
    git add .
    git commit -m "chore: bump version to 0.2.0"
    ```
 
 3. **打标签**
+
    ```bash
    git tag v0.2.0
    ```
 
 4. **推送到 GitHub**
+
    ```bash
    git push origin main
    git push origin v0.2.0
    ```
 
 5. **发布 Python 包**
+
    ```bash
    mise run build-py
    twine upload dist/*
    ```
 
 6. **发布 Node.js 包**
+
    ```bash
    cd src/typescript
    npm publish
@@ -299,7 +307,7 @@ jobs:
 ### 设置 GitHub Secrets
 
 1. **PyPI Token**:
-   - 访问 https://pypi.org/manage/account/token/
+   - 访问 <https://pypi.org/manage/account/token/>
    - 创建新 token
    - 在 GitHub 仓库设置中添加 `PYPI_API_TOKEN`
 
@@ -311,8 +319,8 @@ jobs:
 
 ## 📝 发布后检查清单
 
-- [ ] 在 PyPI 上能找到新版本：https://pypi.org/project/theconn/
-- [ ] 在 npm 上能找到新版本：https://www.npmjs.com/package/theconn-cli
+- [ ] 在 PyPI 上能找到新版本：<https://pypi.org/project/theconn/>
+- [ ] 在 npm 上能找到新版本：<https://www.npmjs.com/package/theconn-cli>
 - [ ] `uvx theconn --version` 显示正确版本
 - [ ] `npx theconn-cli --version` 显示正确版本
 - [ ] 测试所有命令（init, update, check, uninstall）
@@ -333,6 +341,7 @@ File already exists
 ```
 
 **解决方案**：
+
 - 版本号已被使用
 - 更新版本号后重新构建
 - 不能重复发布相同版本
@@ -344,9 +353,11 @@ Invalid or non-existent authentication
 ```
 
 **解决方案**：
-1. 访问 https://pypi.org/manage/account/token/
+
+1. 访问 <https://pypi.org/manage/account/token/>
 2. 创建 API token
 3. 使用 token 登录：
+
    ```bash
    twine upload --username __token__ --password <your-token> dist/*
    ```
@@ -360,8 +371,10 @@ You do not have permission to publish
 ```
 
 **解决方案**：
+
 1. 确认已登录：`npm whoami`
 2. 如果是 scoped package，首次发布需要：
+
    ```bash
    npm publish --access public
    ```
@@ -373,6 +386,7 @@ Version already exists
 ```
 
 **解决方案**：
+
 - 更新版本号：`npm version patch`
 - 或手动编辑 `package.json`
 
@@ -404,6 +418,7 @@ Version already exists
 ## 📞 获取帮助
 
 如果发布过程中遇到问题：
+
 - 查看 [Issues](https://github.com/Lockeysama/TheConn/issues)
 - 参考 [DEVELOPMENT.md](DEVELOPMENT.md)
 - 提交新 Issue

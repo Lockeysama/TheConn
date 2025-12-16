@@ -27,6 +27,7 @@ npx theconn-cli init /path/to/your/project
 ```
 
 **说明：**
+
 - 默认情况下，命令会在当前工作目录初始化 The Conn 框架
 - 如果指定了路径参数，将在目标目录下进行初始化
 - 初始化会创建 `.the_conn/` 目录及其必需的子目录结构
@@ -49,6 +50,7 @@ The Conn 提供了统一的命令入口文件 `tc.md`，让你轻松与 AI 交�
 ```
 
 **查看文档：**
+
 - 📘 [快速开始指南](.the_conn/docs/QUICK_START.md)
 - 📗 [命令参考手册](.the_conn/docs/COMMANDS.md)
 - 📙 [命令映射表](.the_conn/docs/COMMAND_MAPPING.md)

@@ -19,7 +19,7 @@ uvx theconn init
 
 ## Documentation
 
-For full documentation, visit: https://github.com/Lockeysama/TheConn
+For full documentation, visit: <https://github.com/Lockeysama/TheConn>
 
 - [CLI Documentation](https://github.com/Lockeysama/TheConn/blob/main/CLI.md)
 - [Development Guide](https://github.com/Lockeysama/TheConn/blob/main/DEVELOPMENT.md)
