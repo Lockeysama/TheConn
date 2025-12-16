@@ -28,7 +28,27 @@
 
 ## 输出流程
 
-### Phase 1: 需求分析
+### Phase 1: 需求分析与配置确认
+
+**Step 1: 检查公共 Context**
+
+在开始拆解前，AI 必须先检查 `.the_conn/context/global/` 目录：
+
+```
+检查文件：
+- Tech_Stack.md → 编程语言、BDD 框架
+- Testing_Strategy.md → 测试策略
+- Coding_Standard_*.md → 编码规范
+- Architecture.md → 架构信息
+```
+
+**Step 2: 确认测试配置**
+
+- 如果 Context 中有完整信息 → 直接使用
+- 如果缺少信息 → 仅询问缺失部分
+- 确认 BDD 框架的语法支持（自行分析）
+
+**Step 3: 分析需求**
 
 仔细阅读需求文档和技术方案，分析：
 
@@ -36,6 +56,18 @@
 2. **优先级判断**: 哪些是核心功能，哪些是增强功能？
 3. **依赖关系**: 模块之间的依赖关系如何？
 4. **规模估算**: 大致需要多少个 Epic/Feature/Story？
+5. **性能敏感场景识别**: 是否有高并发、大数据、实时性等性能要求？
+
+**Step 4: 应用测试策略**
+
+- **自动应用混合测试策略**（默认，不需要用户决策）：
+  - 用户功能 Story → 规划 BDD + 单元测试
+  - 技术实现 Story → 规划单元测试
+  - Feature ≥3 Story → 自动添加 E2E 测试 Story
+  - Epic ≥3 Feature → 自动添加 Epic E2E 测试 Story
+
+- **性能测试**（按需建议）：
+  - 如果检测到性能敏感场景 → 告知用户并询问是否需要性能测试 Story
 
 ---
 
@@ -73,33 +105,66 @@
 ### FEAT-01: {Feature 名称}
 - **所属 Epic**: EPIC-01
 - **目标**: {目标描述}
-- **包含 Stories**: STORY-01, STORY-02, STORY-03
+- **包含 Stories**: 
+  - 功能 Story: STORY-01, STORY-02, STORY-03
+  - 测试 Story: STORY-99 (E2E 测试，自动建议)
 
 ### FEAT-02: {Feature 名称}
 - **所属 Epic**: EPIC-01
 - **目标**: {目标描述}
-- **包含 Stories**: STORY-04, STORY-05
+- **包含 Stories**: 
+  - 功能 Story: STORY-04, STORY-05
+  - 测试 Story: 无需（<3 个功能 Story）
 
 ### FEAT-03: {Feature 名称}
 - **所属 Epic**: EPIC-02
 - **目标**: {目标描述}
-- **包含 Stories**: STORY-06, STORY-07, STORY-08
+- **包含 Stories**: 
+  - 功能 Story: STORY-06, STORY-07, STORY-08
+  - 测试 Story: STORY-98 (E2E 测试，自动建议)
+  - 性能测试: STORY-97 (如果检测到性能瓶颈)
 
 ## Story 概要
 
+### 功能开发 Story
+
 ### STORY-01: {Story 名称}
 - **Feature**: FEAT-01
+- **类型**: 功能开发
 - **目标**: {简要目标}
+- **测试策略**: BDD + 单元测试（用户可见功能）
 - **依赖**: 无
 - **复杂度**: {1.0-10.0分,如 3.5}
 
 ### STORY-02: {Story 名称}
 - **Feature**: FEAT-01
+- **类型**: 技术实现
 - **目标**: {简要目标}
+- **测试策略**: 单元测试
 - **依赖**: STORY-01
 - **复杂度**: {1.0-10.0分,如 2.0}
 
-...（列出所有 Story）
+...（列出所有功能 Story）
+
+### 测试 Story（自动规划）
+
+### STORY-99: E2E_{FeatureName}_Flow
+- **Feature**: FEAT-01
+- **类型**: E2E 测试
+- **目标**: 验证 STORY-01 ~ STORY-03 的完整集成流程
+- **触发条件**: 所有功能 Story 完成后
+- **依赖**: STORY-01, STORY-02, STORY-03
+- **复杂度**: 4.0
+- **说明**: 自动建议（Feature 包含 ≥3 个功能 Story）
+
+### STORY-97: Performance_{FeatureName}（可选）
+- **Feature**: FEAT-03
+- **类型**: 性能测试
+- **目标**: 验证高并发场景下的性能指标
+- **触发条件**: 功能 Story 完成后
+- **依赖**: STORY-06, STORY-07, STORY-08
+- **复杂度**: 5.0
+- **说明**: 检测到性能瓶颈，需用户确认是否添加
 
 ## 依赖关系图
 
@@ -155,6 +220,12 @@ graph TD
 
 ---
 
+**📋 测试配置确认**（已从 Context 或用户获取）：
+- 编程语言: {语言}
+- BDD 框架: {框架}
+- BDD 关键词: {关键词}
+- 测试策略: 混合策略（自动应用）
+
 **⚠️ 请用户确认：**
 1. **Epic/Feature/Story 的划分是否合理？**
 2. **粒度是否合适？** 
@@ -163,6 +234,9 @@ graph TD
    - 是否拆得太粗？（是否包含多个独立的功能单元，建议拆分）
 3. **依赖关系是否正确？**
 4. **是否便于 AI 编码？**（每个 Story 的输入输出、接口边界是否明确）
+5. **测试 Story 规划是否合理？**
+   - E2E 测试 Story 的位置和时机
+   - 性能测试 Story 是否需要（如果有建议）
 
 请用户确认大纲后，继续 Phase 3
 ```
