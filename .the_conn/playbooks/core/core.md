@@ -154,16 +154,19 @@ PR 合并后，确保"意图"与"实现"的一致性。
 ### Story 类型与状态
 
 **Type (类型)**:
+
 - `dev` - 新功能开发
 - `bug_fix` - 缺陷修复
 
 **Status (状态)**:
+
 - `pending` - 未完成
 - `done` - 已完成
 
 ### Context 类型枚举
 
 **Global Context Types**:
+
 - `architecture` - 系统架构
 - `tech_stack` - 技术栈
 - `coding_standard` - 编码规范
@@ -173,6 +176,7 @@ PR 合并后，确保"意图"与"实现"的一致性。
 - `domain_model` - 核心领域模型
 
 **Epic Context Types**:
+
 - `module_design` - 模块设计
 - `data_model` - 数据模型
 - `api_spec` - API 规范
@@ -184,10 +188,12 @@ PR 合并后，确保"意图"与"实现"的一致性。
 ### Task 与 Story 关系
 
 **关系类型**:
+
 - **1:1** - 正常场景：一个 Story → 一个 Task（首次开发）
 - **1:N** - 迭代场景：一个 Story → 多个 Task（开发 + 优化 + Bug 修复）
 
 **示例**:
+
 ```
 STORY-01 → TASK-01 (首次开发)
         → TASK-02 (补充测试)
@@ -231,11 +237,13 @@ STORY-02 → TASK-03 (首次开发)
 ```
 
 **命令结构**：
+
 ```
 @tc.md <模块> <命令> [参数]
 ```
 
 **支持的模块**：
+
 - `plan` - 规划模块（epic, feature, story, status, next 等）
 - `ctx` - 上下文管理模块（add, update, search, extract）
 - `exec` - 执行模块（task, sync, summary）

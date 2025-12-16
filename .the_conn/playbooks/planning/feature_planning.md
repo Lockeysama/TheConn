@@ -11,6 +11,7 @@
 **专注于**：生成 Feature 规划文档（创建 Feature README.md 文件）
 
 **📋 规范引用**：
+
 - **测试策略**：`@playbooks/core/test_strategy_rules.md`
 - **复杂度评估**：`@playbooks/core/complexity_rules.md`
 
@@ -49,6 +50,7 @@ created: yyyy-mm-dd
 ```
 
 **字段说明**：
+
 - `status`: `pending` (未完成) 或 `done` (已完成)
 - `created`: 格式 `yyyy-mm-dd`
 
@@ -119,6 +121,7 @@ created: yyyy-mm-dd
 ```
 
 **性能测试判断**：
+
 - 明确性能指标（响应时间、吞吐量、并发数）
 - 性能敏感场景（大数据、实时处理、复杂计算）
 - 如果检测到 → 建议性能测试 Story
@@ -163,6 +166,7 @@ created: yyyy-mm-dd
 ### 决策示例
 
 **场景 1: 核心业务 Feature（必须 E2E）**
+
 ```
 FEAT-01: 用户认证（4 个 Story，平均复杂度 5.0）
 
@@ -171,6 +175,7 @@ FEAT-01: 用户认证（4 个 Story，平均复杂度 5.0）
 ```
 
 **场景 2: 技术模块（无需 E2E）**
+
 ```
 FEAT-02: 配置管理（2 个 Story，平均复杂度 2.3）
 

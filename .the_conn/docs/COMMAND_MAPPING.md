@@ -190,6 +190,7 @@
 | `core/bdd_language_rules.md`  | BDD 语言配置   |
 
 这些文件通过 `@` 符号在其他 Playbook 中引用，例如：
+
 - `@playbooks/core/base_rules.md`
 - `@playbooks/core/test_strategy_rules.md`
 
@@ -250,4 +251,3 @@
 **最后更新**：2024年
 
 **维护者**：The Conn Framework
-

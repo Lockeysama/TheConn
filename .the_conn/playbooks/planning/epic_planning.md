@@ -11,6 +11,7 @@
 **专注于**：生成 Epic 规划文档（创建 Epic README.md 文件）
 
 **📋 规范引用**：
+
 - **测试策略**：`@playbooks/core/test_strategy_rules.md`
 
 ---
@@ -48,6 +49,7 @@ created: yyyy-mm-dd
 ```
 
 **字段说明**：
+
 - `status`: `pending` (未完成) 或 `done` (已完成)
 - `created`: 格式 `yyyy-mm-dd`
 

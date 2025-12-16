@@ -13,6 +13,7 @@
 **关键规则**：在执行任何 Playbook 之前，AI 必须使用相应的工具（如 `read_file`）加载所有在当前 Prompt 中被 `@` 引用的文件。
 
 **具体要求**：
+
 - ✅ 必须加载所有被 `@` 引用的文档、配置、规范文件到上下文中
 - ✅ 在开始生成规划或执行任务前，检查是否有遗漏的引用文件
 - ✅ 包括但不限于：
@@ -23,6 +24,7 @@
   - 项目配置文件（如果被引用）
 
 **原因**：只有加载了所有相关文件，AI 才能：
+
 - 做出准确和一致的决策
 - 生成符合项目规范的高质量输出
 - 避免遗漏重要的上下文信息和约束条件
@@ -55,6 +57,7 @@ Task 执行阶段 (唯一允许编写代码的环节)
 ### 2.1 代码实现
 
 **禁止编写以下类型的代码**：
+
 - ❌ 实际的业务逻辑实现代码
 - ❌ 实际的测试实现代码（BDD step definitions、单元测试）
 - ❌ 构建脚本、部署脚本
@@ -65,11 +68,13 @@ Task 执行阶段 (唯一允许编写代码的环节)
 ### 2.2 文件修改限制
 
 **严格禁止修改以下目录/文件**：
+
 - ❌ `.the_conn/docs/` 目录下的所有文件（用户文档）
 - ❌ 项目源代码目录（除 .the_conn 以外的所有文件但不包括用户指定的存储目录）
 - ❌ 已存在的测试代码
 
 **例外**：
+
 - ✅ 可以创建新的规划文档（epics/、context/ 目录）
 - ✅ 可以更新 Story 状态（story_sync.md）
 - ✅ 可以生成临时工作文件（ai_workspace/ 目录）
@@ -77,6 +82,7 @@ Task 执行阶段 (唯一允许编写代码的环节)
 ### 2.3 操作限制
 
 **禁止执行以下操作**：
+
 - ❌ 执行任何开发任务（编译、构建、测试）
 - ❌ 修改项目依赖配置（package.json、requirements.txt、go.mod 等）
 - ❌ 执行 Git 操作（commit、push、branch 等）
@@ -89,6 +95,7 @@ Task 执行阶段 (唯一允许编写代码的环节)
 ### 3.1 设计说明中的代码片段
 
 **允许在文档中使用代码片段来说明设计**：
+
 - ✅ 接口定义（interface、protocol）
 - ✅ 数据结构定义（struct、class、type）
 - ✅ API 签名（function signature）
@@ -96,6 +103,7 @@ Task 执行阶段 (唯一允许编写代码的环节)
 - ✅ 伪代码（用于说明算法）
 
 **关键区别**：
+
 ```markdown
 ✅ 允许（设计说明）：
 ```go
@@ -106,6 +114,7 @@ type Sender interface {
 ```
 
 ❌ 禁止（实际实现）：
+
 ```go
 // 完整的实现代码
 func (s *DefaultSender) Send(event Event) error {
@@ -117,6 +126,7 @@ func (s *DefaultSender) Send(event Event) error {
 ### 3.2 文档操作
 
 **允许创建和修改以下文档**：
+
 - ✅ Epic/Feature/Story 规划文档
 - ✅ Context 文档（设计、架构、技术方案）
 - ✅ Task 工作文档（ai_workspace/ 目录）
@@ -153,6 +163,7 @@ func (s *DefaultSender) Send(event Event) error {
 **核心原则**：AI 默认使用用户对话语言生成所有文档。
 
 **基本规则**：
+
 - 中文对话 → 中文文档
 - 英文对话 → 英文文档
 - 技术术语保持项目约定（通常为英文）
@@ -162,6 +173,7 @@ func (s *DefaultSender) Send(event Event) error {
 ## 6. 专项规范引用
 
 **详细规范文档**：
+
 - **测试策略**：`@playbooks/core/test_strategy_rules.md`
 - **复杂度评估**：`@playbooks/core/complexity_rules.md`
 - **BDD 语言配置**：`@playbooks/core/bdd_language_rules.md`
@@ -228,6 +240,7 @@ func (s *DefaultSender) Send(event Event) error {
 ### 10.2 紧急修复
 
 在极特殊情况下（如安全漏洞修复），可以在用户明确授权后突破某些限制，但必须：
+
 1. 获得用户明确授权
 2. 详细记录例外原因
 3. 事后同步更新文档
@@ -248,4 +261,3 @@ func (s *DefaultSender) Send(event Event) error {
 
 **最后更新**: 2025-12-16
 **维护者**: The Conn Framework Team
-

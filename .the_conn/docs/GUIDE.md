@@ -13,9 +13,11 @@
 **步骤**:
 
 1. **项目初始化**：
+
    ```
    @playbooks/initialization/project_init.md 帮我初始化 The Conn 项目
    ```
+
    → 创建目录结构：`.the_conn/epics/`, `.the_conn/context/`, `.the_conn/ai_workspace/`
 
 2. **定义初始公共 Context**：
@@ -34,27 +36,35 @@
 #### 方案 A: 批量生成（推荐，快速高效）
 
 1. **需求与方案评审**：
+
    ```
    @{需求文档} @playbooks/planning/requirements_review.md 开始评审
    ```
+
    → 与 AI 讨论需求和技术方案，输出确定的技术方案文档
 
 2. **提取 Context 文档**（方案确定后）：
+
    ```
    @{技术方案文档} @playbooks/context/extract.md 帮我提取 Context 文档
    ```
+
    → 输出到 `.the_conn/context/global/` 或 `.the_conn/context/epics/EPIC-XX/`
 
 3. **批量生成规划**：
+
    ```
    @{需求文档} @{技术方案} @playbooks/planning/requirements_breakdown.md 开始拆解
    ```
+
    → AI 展示大纲 → 用户确认 → 批量生成所有 Epic/Feature/Story
 
 4. **提取 Epic 专属 Context**（Epic 规划完成后）：
+
    ```
    @.the_conn/epics/EPIC-XX_Name/README.md @playbooks/context/extract.md 帮我提取 Epic 专属 Context
    ```
+
    → 输出到 `.the_conn/context/epics/EPIC-XX/`
    → 包含模块设计、数据模型、API 规范等 Epic 专属的技术细节
 
@@ -65,27 +75,35 @@
 2. **提取 Context 文档**（同上）
 
 3. **生成 Epic 规划**：
+
    ```
    @{需求文档} @playbooks/planning/epic_planning.md 帮我生成 Epic 规划
    ```
+
    → 输出到 `.the_conn/epics/EPIC-XX_Name/README.md`
 
 4. **生成 Feature 规划**：
+
    ```
    @{需求文档} @playbooks/planning/feature_planning.md 帮我生成 Feature 规划
    ```
+
    → 输出到 `.the_conn/epics/EPIC-XX_Name/features/FEAT-XX_Name/README.md`
 
 5. **生成 Story**：
+
    ```
    @{需求文档} @playbooks/planning/story_writing.md 帮我拆解为 Story
    ```
+
    → 输出到 `.the_conn/epics/.../stories/STORY-XX_Name.md`
 
 6. **提取 Epic 专属 Context**（Epic 规划完成后）：
+
    ```
    @.the_conn/epics/EPIC-XX_Name/README.md @playbooks/context/extract.md 帮我提取 Epic 专属 Context
    ```
+
    → 输出到 `.the_conn/context/epics/EPIC-XX/`
 
 7. 审查 AI 生成的文档，确认后提交
@@ -97,6 +115,7 @@
 **步骤**:
 
 1. 使用 Playbook 生成任务简报：
+
    ```
    @{Story文件} @playbooks/execution/task_generation.md 帮我生成 Task
    ```
@@ -116,6 +135,7 @@
 **步骤**:
 
 1. 启动任务：
+
    ```
    @.the_conn/ai_workspace/EPIC-XX/TASK-XX_STORY-XX_Name/ 开始任务
    ```
@@ -131,9 +151,11 @@
    - 确认符合预期
 
 4. 确认通过后，执行任务闭环（Step 6-7）：
+
    ```
    请继续执行 Step 6 和 Step 7 完成任务闭环
    ```
+
    - AI 自动生成变更摘要
    - AI 自动同步 Story 状态
 
@@ -148,11 +170,13 @@
 如果需要单独执行：
 
 1. 生成变更摘要：
+
    ```
    @playbooks/execution/change_summary.md 生成本次任务的变更摘要
    ```
 
 2. 同步 Story 文档：
+
    ```
    @{原始Story文件} @playbooks/execution/story_sync.md 开始同步
    ```
@@ -166,6 +190,7 @@
 **步骤**:
 
 1. 创建 Bug Fix Story：
+
    ```
    @playbooks/planning/bug_fix_story.md 帮我生成 Bug Fix Story
    
@@ -173,6 +198,7 @@
    发现于: 集成测试
    现象: ...
    ```
+
    → 输出到 `.the_conn/epics/.../stories/STORY-XX.X_Name.md`
 
 2. 后续按流程二到流程四执行修复
@@ -239,6 +265,7 @@
 **格式**: `{ID}_{PascalCaseName}.md`
 
 **示例**:
+
 - Epic 目录: `EPIC-01_Base_Init/`
 - Feature 目录: `FEAT-01_Init_Project/`
 - Story 文件: `STORY-01_Create_Structure.md`
@@ -334,6 +361,7 @@ main (发布新版本)
 #### 3. 分支操作示例
 
 **创建 Epic 分支**:
+
 ```bash
 git checkout main
 git pull origin main
@@ -342,12 +370,14 @@ git push -u origin epic/EPIC-01
 ```
 
 **创建 Story 分支**（可选，适合大团队）:
+
 ```bash
 git checkout epic/EPIC-01
 git checkout -b story/STORY-01
 ```
 
 **合并 Story 回 Epic**:
+
 ```bash
 git checkout epic/EPIC-01
 git merge story/STORY-01
@@ -355,6 +385,7 @@ git push origin epic/EPIC-01
 ```
 
 **合并 Epic 回 main**:
+
 ```bash
 git checkout main
 git merge epic/EPIC-01
@@ -396,6 +427,7 @@ git tag v1.0.0  # 可选：打标签
 ```
 
 **操作流程**:
+
 1. 开发者创建 Story 前，先拉取最新 Epic 分支
 2. 查看 Epic README 获取下一个可用 ID
 3. 使用该 ID 创建 Story
@@ -405,12 +437,14 @@ git tag v1.0.0  # 可选：打标签
 **方案 B: 临时 ID + 合并时重新编号**
 
 开发过程使用临时 ID：
+
 ```
 STORY-TMP-Alice-01
 STORY-TMP-Bob-01
 ```
 
 合并到 Epic 分支时，统一重新编号：
+
 ```
 STORY-TMP-Alice-01 → STORY-03
 STORY-TMP-Bob-01 → STORY-04
@@ -419,6 +453,7 @@ STORY-TMP-Bob-01 → STORY-04
 **方案 C: 预分配 ID 段**
 
 项目启动时，为每个开发者分配 ID 段：
+
 ```
 开发者 A: STORY-01 ~ STORY-20
 开发者 B: STORY-21 ~ STORY-40
@@ -434,8 +469,9 @@ STORY-TMP-Bob-01 → STORY-04
 **冲突场景**: 两人同时修改同一个 Story 文件
 
 **解决方案**:
+
 - **预防**: 使用分支隔离，每人在自己的 Story 分支工作
-- **发生后**: 
+- **发生后**:
   1. 检查 Frontmatter 字段（通常不冲突，因为 `status` 由 story_sync 自动更新）
   2. 检查 BDD 场景（手动合并，保留两人的场景）
   3. 检查实现指导（手动合并，综合两人的指导）
@@ -445,8 +481,9 @@ STORY-TMP-Bob-01 → STORY-04
 **冲突场景**: 两人同时更新 `Architecture.md`
 
 **解决方案**:
+
 - **预防**: 使用 `@playbooks/context/update.md` 时，先拉取最新代码
-- **发生后**: 
+- **发生后**:
   1. Context 是真相源，冲突需谨慎处理
   2. 召集相关人员讨论，确定最终版本
   3. 使用 `status: deprecated` 标记过时版本
@@ -519,6 +556,7 @@ epic/EPIC-01 (Alice 和 Bob 共同工作)
 ```
 
 **流程**:
+
 1. Alice 和 Bob 从 `epic/EPIC-01` 拉取最新代码
 2. Alice 执行 Task for STORY-01，Bob 执行 Task for STORY-02
 3. 完成后，各自运行 `story_sync.md` 更新 Story 状态
@@ -527,6 +565,7 @@ epic/EPIC-01 (Alice 和 Bob 共同工作)
 6. Epic 完成后，合并到 `main`
 
 **关键点**:
+
 - 使用 Epic README 的 ID 分配记录避免 Task ID 冲突
 - 及时同步，避免积累大量冲突
 
@@ -543,6 +582,7 @@ epic/EPIC-01 (Alice 和 Bob 共同工作)
 ```
 
 **流程**:
+
 1. 测试发现 Bug 后，创建 Bug Fix Story（可以由任何人创建）
 2. 开发者 B 使用 `@playbooks/planning/bug_fix_story.md` 创建 `STORY-01.1`
 3. 开发者 B 在 Bug Fix Story 中明确 `depends_on: [STORY-01]`
@@ -566,6 +606,7 @@ epic/EPIC-01 (Alice 和 Bob 共同工作)
 ```
 
 **关键点**:
+
 - Context 更新需谨慎，建议由技术负责人审核
 - 使用 `status: deprecated` 标记过时 Context，而非直接删除
 
@@ -607,6 +648,7 @@ epic/EPIC-01 (Alice 和 Bob 共同工作)
 **Q: 多人同时运行 task_generation.md 会冲突吗？**
 
 A: Task ID 按 Epic 内顺序编号，可能冲突。建议：
+
 - 使用 Epic README 的 ID 分配表
 - 或在 Task 名称中加入开发者标识（如 `TASK-TMP-Alice-01`），合并时重新编号
 
@@ -616,7 +658,8 @@ A: 不需要。`ai_workspace` 是临时工作区，每个人本地使用，不�
 
 **Q: 如何避免 Context 文档冲突？**
 
-A: 
+A:
+
 1. Context 更新前先拉取最新代码
 2. 重要 Context 更新需团队审核
 3. 使用 `updated` 字段记录最后更新时间
@@ -624,7 +667,8 @@ A:
 
 **Q: Epic 合并到 main 前需要做什么？**
 
-A: 
+A:
+
 1. 确认所有 Story 都是 `done` 状态
 2. 运行端到端测试
 3. Code Review

@@ -347,22 +347,26 @@ The Conn 提供了统一的命令入口文件 `tc.md`，让你通过简单的命
 ## 🆘 遇到问题？
 
 1. **不确定用什么命令**：
+
    ```bash
    @tc.md help
    @tc.md list
    ```
 
 2. **不知道下一步**：
+
    ```bash
    @tc.md next
    ```
 
 3. **查看项目状态**：
+
    ```bash
    @tc.md status
    ```
 
 4. **查看模块帮助**：
+
    ```bash
    @tc.md help plan
    @tc.md help ctx
@@ -372,4 +376,3 @@ The Conn 提供了统一的命令入口文件 `tc.md`，让你通过简单的命
 ---
 
 **现在开始使用 `@tc` 命令，开启高效的 AI 协作开发之旅！** 🚀
-

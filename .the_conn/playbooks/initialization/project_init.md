@@ -9,6 +9,7 @@
 ## 本 Playbook 的工作范围
 
 **专注于**：
+
 - ✅ **创建目录结构**：初始化 The Conn 目录结构
 - ✅ **生成初始文档**：创建基础 Context 文档和用户文档
 
@@ -17,6 +18,7 @@
 ## 输入
 
 用户会提供：
+
 - 项目名称
 - 项目简介
 - 主要编程语言
@@ -253,6 +255,7 @@ ai_workspace/*/
 ### Go 项目示例
 
 **用户输入**:
+
 ```
 项目名称: DataStream
 项目简介: 高可靠低延迟的信令传输系统
@@ -261,6 +264,7 @@ ai_workspace/*/
 ```
 
 **生成的 Context**:
+
 - `Architecture.md` - 包含微服务架构说明
 - `Tech_Stack.md` - 列出 Go 1.21, godog, testify 等
 - `Coding_Standard_Go.md` - Go 编码规范（gofmt, golangci-lint）
