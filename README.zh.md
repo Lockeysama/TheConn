@@ -33,6 +33,26 @@ npx theconn-cli init /path/to/your/project
 
 然后阅读 `.the_conn/docs/GUIDE.md` 了解详细的使用方法。
 
+## 🚀 快速命令参考
+
+The Conn 提供了统一的命令入口文件 `tc.md`，让你轻松与 AI 交互：
+
+```bash
+# 在 AI IDE（如 Cursor）中，使用 @ 符号引用 tc.md 文件：
+@tc.md <命令>
+
+# 示例：
+@tc.md init                    # 初始化项目
+@tc.md story 用户登录          # 创建 Story
+@tc.md status                  # 查看项目状态
+@tc.md next                    # 获取下一步建议
+```
+
+**查看文档：**
+- 📘 [快速开始指南](.the_conn/docs/QUICK_START.md)
+- 📗 [命令参考手册](.the_conn/docs/COMMANDS.md)
+- 📙 [命令映射表](.the_conn/docs/COMMAND_MAPPING.md)
+
 ## 🎯 如何使用 The Conn
 
 ### 目录结构
@@ -60,6 +80,7 @@ npx theconn-cli init /path/to/your/project
 │           └── Module_Design.md
 │
 ├── playbooks/          # 🤖 工具层 - AI 操作剧本（从 GitHub 下载）
+│   ├── tc.md           # 🎯 统一命令入口（新功能！）
 │   ├── core/
 │   │   ├── core.md
 │   │   └── base_rules.md
@@ -82,7 +103,8 @@ npx theconn-cli init /path/to/your/project
 **初始化时创建的内容：**
 
 - ✅ `playbooks/` - 从 GitHub 下载（所有 AI 操作剧本可直接使用）
-- ✅ `docs/` - 从 GitHub 下载（README.md, GUIDE.md）
+  - 包含 `tc.md` - 统一命令入口 🎯
+- ✅ `docs/` - 从 GitHub 下载（README.md, GUIDE.md, QUICK_START.md, COMMANDS.md）
 - 📁 `epics/` - 空目录（规划阶段填充）
 - 📁 `context/global/` - 空目录（通过项目初始化 playbook 填充）
 - 📁 `context/epics/` - 空目录（创建 Epic 时填充）
@@ -97,6 +119,11 @@ npx theconn-cli init /path/to/your/project
 ```bash
 # 运行 `uvx theconn init` 或 `npx theconn-cli init` 后：
 # 使用 AI 初始化项目结构
+
+# 新方式（推荐 - 使用 tc.md）：
+@tc.md init
+
+# 或传统方式（使用完整 playbook 路径）：
 @playbooks/initialization/project_init.md 帮我初始化 The Conn 项目
 ```
 
@@ -113,6 +140,10 @@ npx theconn-cli init /path/to/your/project
 ##### 步骤 1：需求评审
 
 ```bash
+# 新方式（推荐）：
+@tc.md plan review
+
+# 或传统方式：
 @{需求文档} @playbooks/planning/requirements_review.md 开始评审
 ```
 
@@ -123,6 +154,10 @@ npx theconn-cli init /path/to/your/project
 ##### 步骤 2：提取上下文
 
 ```bash
+# 新方式（推荐）：
+@tc.md ctx extract
+
+# 或传统方式：
 @{技术方案} @playbooks/context/extract.md 提取上下文
 ```
 
@@ -134,6 +169,12 @@ npx theconn-cli init /path/to/your/project
 ###### 方案 A：批量生成（推荐）
 
 ```bash
+# 新方式（推荐）：
+@tc.md plan breakdown requirements.md
+# 或使用缩写：
+@tc.md plan bd requirements.md
+
+# 或传统方式：
 @{需求文档} @{技术方案} @playbooks/planning/requirements_breakdown.md 开始拆解
 ```
 
@@ -142,19 +183,24 @@ npx theconn-cli init /path/to/your/project
 ###### 方案 B：逐步生成
 
 ```bash
-# 生成 Epic
+# 新方式（推荐）：
+@tc.md epic 用户管理系统
+@tc.md feature 用户认证
+@tc.md story 登录功能
+
+# 或传统方式：
 @{需求文档} @playbooks/planning/epic_planning.md 生成 Epic
-
-# 生成 Feature
 @{需求文档} @playbooks/planning/feature_planning.md 生成 Feature
-
-# 生成 Story
 @{需求文档} @playbooks/planning/story_writing.md 生成 Story
 ```
 
 ##### 步骤 4：提取 Epic 专属上下文
 
 ```bash
+# 新方式（推荐）：
+@tc.md ctx extract
+
+# 或传统方式：
 @.the_conn/epics/EPIC-XX_Name/README.md @playbooks/context/extract.md 提取 Epic 上下文
 ```
 
@@ -166,6 +212,12 @@ npx theconn-cli init /path/to/your/project
 为 AI 准备执行材料。
 
 ```bash
+# 新方式（推荐）：
+@tc.md task STORY-01
+# 或使用缩写：
+@tc.md exec t STORY-01
+
+# 或传统方式：
 @{Story文件} @playbooks/execution/task_generation.md 生成 Task
 ```
 
@@ -214,10 +266,12 @@ AI 自动：
 如果阶段 3 中未执行步骤 6-7，手动执行：
 
 ```bash
-# 生成变更摘要
-@playbooks/execution/change_summary.md 生成变更摘要
+# 新方式（推荐）：
+@tc.md summary
+@tc.md sync STORY-01
 
-# 同步 Story 文档
+# 或传统方式：
+@playbooks/execution/change_summary.md 生成变更摘要
 @{原始Story文件} @playbooks/execution/story_sync.md 开始同步
 ```
 
@@ -226,6 +280,12 @@ AI 自动：
 对于已完成 Story 中发现的 Bug：
 
 ```bash
+# 新方式（推荐）：
+@tc.md bugfix STORY-01 Bug 描述
+# 或使用缩写：
+@tc.md plan bf STORY-01 Bug 描述
+
+# 或传统方式：
 @playbooks/planning/bug_fix_story.md 生成 Bug Fix Story
 
 父 Story: STORY-01
@@ -284,6 +344,35 @@ Epic（业务目标）
 初始化后，典型的第一次会话：
 
 ```bash
+# 新方式（推荐 - 使用 tc.md）：
+# 1. 初始化项目结构
+@tc.md init
+
+# 2. 需求评审
+@tc.md plan review
+
+# 3. 从批准的方案生成规划
+@tc.md plan breakdown requirements.md
+
+# 4. 查看项目状态
+@tc.md status
+
+# 5. 开始实现第一个 Story
+@tc.md task STORY-01
+
+# 6. 导航到工作空间并开始
+@.the_conn/ai_workspace/EPIC-01/TASK-01_STORY-01_Login/ 开始任务
+
+# 7. 审查后，同步 Story
+@tc.md sync STORY-01
+
+# 8. 获取下一步建议
+@tc.md next
+```
+
+**传统方式（使用完整 playbook 路径）：**
+
+```bash
 # 1. 初始化项目结构
 @playbooks/initialization/project_init.md 初始化项目
 
@@ -321,10 +410,20 @@ Epic（业务目标）
 
 ## 📚 文档
 
+### CLI 与开发
+
 - **[CLI.md](CLI.md)** - CLI 使用文档（面向用户）
 - **[DEVELOPMENT.md](DEVELOPMENT.md)** - 开发指南（面向开发者）
 - **[CONTRIBUTING.md](CONTRIBUTING.md)** - 贡献指南
 - **[RELEASING.md](RELEASING.md)** - 发布流程（面向维护者）
+
+### The Conn 命令系统（初始化后）
+
+- **[快速开始指南](.the_conn/docs/QUICK_START.md)** - 5 分钟掌握 `@tc.md` 命令
+- **[命令参考手册](.the_conn/docs/COMMANDS.md)** - 完整命令列表和详细用法
+- **[命令映射表](.the_conn/docs/COMMAND_MAPPING.md)** - `@tc.md` 命令与 Playbook 映射
+- **[迁移指南](.the_conn/docs/MIGRATION_GUIDE.md)** - 从直接使用 Playbook 迁移
+- **[主要README](.the_conn/docs/README.md)** - 综合操作手册
 
 ## 核心思想：在 AI 浪潮中，为人类领航员重夺指挥权
 
