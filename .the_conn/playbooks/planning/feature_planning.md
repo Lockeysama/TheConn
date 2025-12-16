@@ -2,6 +2,14 @@
 
 根据需求文档或 Epic 生成 Feature 规划文件。
 
+## ⚠️ 重要：遵守基础公约
+
+**本 Playbook 严格遵守 `@playbooks/core/base_rules.md` 中定义的所有基础公约。**
+
+## 本 Playbook 的工作范围
+
+**专注于**：生成 Feature 规划文档（创建 Feature README.md 文件）
+
 ---
 
 ## 输出要求

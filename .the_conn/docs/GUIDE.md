@@ -1,6 +1,6 @@
 # The Conn 使用指南
 
-本指南说明如何使用 The Conn 框架完成 AI 辅助开发任务。框架设计理念请参阅 `ai_prompts/core/core.md`。
+本指南说明如何使用 The Conn 框架完成 AI 辅助开发任务。框架设计理念请参阅 `@playbooks/core/core.md`。
 
 ---
 
@@ -14,7 +14,7 @@
 
 1. **项目初始化**：
    ```
-   @prompts/initialization/project_init.md 帮我初始化 The Conn 项目
+   @playbooks/initialization/project_init.md 帮我初始化 The Conn 项目
    ```
    → 创建目录结构：`.the_conn/epics/`, `.the_conn/context/`, `.the_conn/ai_workspace/`
 
@@ -35,25 +35,25 @@
 
 1. **需求与方案评审**：
    ```
-   @{需求文档} @prompts/planning/requirements_review.md 开始评审
+   @{需求文档} @playbooks/planning/requirements_review.md 开始评审
    ```
    → 与 AI 讨论需求和技术方案，输出确定的技术方案文档
 
 2. **提取 Context 文档**（方案确定后）：
    ```
-   @{技术方案文档} @prompts/context/extract.md 帮我提取 Context 文档
+   @{技术方案文档} @playbooks/context/extract.md 帮我提取 Context 文档
    ```
    → 输出到 `.the_conn/context/global/` 或 `.the_conn/context/epics/EPIC-XX/`
 
 3. **批量生成规划**：
    ```
-   @{需求文档} @{技术方案} @prompts/planning/requirements_breakdown.md 开始拆解
+   @{需求文档} @{技术方案} @playbooks/planning/requirements_breakdown.md 开始拆解
    ```
    → AI 展示大纲 → 用户确认 → 批量生成所有 Epic/Feature/Story
 
 4. **提取 Epic 专属 Context**（Epic 规划完成后）：
    ```
-   @.the_conn/epics/EPIC-XX_Name/README.md @prompts/context/extract.md 帮我提取 Epic 专属 Context
+   @.the_conn/epics/EPIC-XX_Name/README.md @playbooks/context/extract.md 帮我提取 Epic 专属 Context
    ```
    → 输出到 `.the_conn/context/epics/EPIC-XX/`
    → 包含模块设计、数据模型、API 规范等 Epic 专属的技术细节
@@ -66,25 +66,25 @@
 
 3. **生成 Epic 规划**：
    ```
-   @{需求文档} @prompts/planning/epic_planning.md 帮我生成 Epic 规划
+   @{需求文档} @playbooks/planning/epic_planning.md 帮我生成 Epic 规划
    ```
    → 输出到 `.the_conn/epics/EPIC-XX_Name/README.md`
 
 4. **生成 Feature 规划**：
    ```
-   @{需求文档} @prompts/planning/feature_planning.md 帮我生成 Feature 规划
+   @{需求文档} @playbooks/planning/feature_planning.md 帮我生成 Feature 规划
    ```
    → 输出到 `.the_conn/epics/EPIC-XX_Name/features/FEAT-XX_Name/README.md`
 
 5. **生成 Story**：
    ```
-   @{需求文档} @prompts/planning/story_writing.md 帮我拆解为 Story
+   @{需求文档} @playbooks/planning/story_writing.md 帮我拆解为 Story
    ```
    → 输出到 `.the_conn/epics/.../stories/STORY-XX_Name.md`
 
 6. **提取 Epic 专属 Context**（Epic 规划完成后）：
    ```
-   @.the_conn/epics/EPIC-XX_Name/README.md @prompts/context/extract.md 帮我提取 Epic 专属 Context
+   @.the_conn/epics/EPIC-XX_Name/README.md @playbooks/context/extract.md 帮我提取 Epic 专属 Context
    ```
    → 输出到 `.the_conn/context/epics/EPIC-XX/`
 
@@ -96,9 +96,9 @@
 
 **步骤**:
 
-1. 使用 Prompt 生成任务简报：
+1. 使用 Playbook 生成任务简报：
    ```
-   @{Story文件} @prompts/execution/task_generation.md 帮我生成 Task
+   @{Story文件} @playbooks/execution/task_generation.md 帮我生成 Task
    ```
 
 2. AI 会在 `.the_conn/ai_workspace/EPIC-XX/TASK-XX_STORY-XX_Name/` 下生成：
@@ -149,12 +149,12 @@
 
 1. 生成变更摘要：
    ```
-   @prompts/execution/change_summary.md 生成本次任务的变更摘要
+   @playbooks/execution/change_summary.md 生成本次任务的变更摘要
    ```
 
 2. 同步 Story 文档：
    ```
-   @{原始Story文件} @prompts/execution/story_sync.md 开始同步
+   @{原始Story文件} @playbooks/execution/story_sync.md 开始同步
    ```
 
 3. 审查并提交所有变更
@@ -167,7 +167,7 @@
 
 1. 创建 Bug Fix Story：
    ```
-   @prompts/planning/bug_fix_story.md 帮我生成 Bug Fix Story
+   @playbooks/planning/bug_fix_story.md 帮我生成 Bug Fix Story
    
    父 Story: STORY-01
    发现于: 集成测试
@@ -181,38 +181,38 @@
 
 ## 模板速查
 
-### 初始化模板
+### 初始化 Playbooks
 
-| Prompt                                   | 用途       | 输入     | 输出位置              |
-| ---------------------------------------- | ---------- | -------- | --------------------- |
-| `prompts/initialization/project_init.md` | 项目初始化 | 项目信息 | `.the_conn/` 目录结构 |
+| Playbook                                   | 用途       | 输入     | 输出位置              |
+| ------------------------------------------ | ---------- | -------- | --------------------- |
+| `playbooks/initialization/project_init.md` | 项目初始化 | 项目信息 | `.the_conn/` 目录结构 |
 
-### Context 管理 Prompts
+### Context 管理 Playbooks
 
-| Prompt                       | 用途              | 输入         | 输出位置             |
-| ---------------------------- | ----------------- | ------------ | -------------------- |
-| `prompts/context/extract.md` | 提取 Context 文档 | 技术方案     | `.the_conn/context/` |
-| `prompts/context/add.md`     | 添加 Context 文档 | Context 内容 | `.the_conn/context/` |
-| `prompts/context/update.md`  | 更新 Context 文档 | Context 变更 | 更新现有 Context     |
+| Playbook                       | 用途              | 输入         | 输出位置             |
+| ------------------------------ | ----------------- | ------------ | -------------------- |
+| `playbooks/context/extract.md` | 提取 Context 文档 | 技术方案     | `.the_conn/context/` |
+| `playbooks/context/add.md`     | 添加 Context 文档 | Context 内容 | `.the_conn/context/` |
+| `playbooks/context/update.md`  | 更新 Context 文档 | Context 变更 | 更新现有 Context     |
 
-### 规划层 Prompts
+### 规划层 Playbooks
 
-| Prompt                                       | 用途                 | 输入              | 输出位置                        |
-| -------------------------------------------- | -------------------- | ----------------- | ------------------------------- |
-| `prompts/planning/requirements_review.md`    | 需求与方案评审       | 需求想法          | 技术方案文档                    |
-| `prompts/planning/requirements_breakdown.md` | 需求拆解（批量生成） | 需求文档+技术方案 | Epic+Feature+Story              |
-| `prompts/planning/epic_planning.md`          | 生成 Epic 规划       | 需求文档          | `.the_conn/epics/EPIC-XX_Name/` |
-| `prompts/planning/feature_planning.md`       | 生成 Feature 规划    | 需求/Epic         | `.the_conn/epics/.../features/` |
-| `prompts/planning/story_writing.md`          | 生成 Story           | 需求/Feature      | `.the_conn/epics/.../stories/`  |
-| `prompts/planning/bug_fix_story.md`          | 生成 Bug Fix Story   | Bug 信息          | `.the_conn/epics/.../stories/`  |
+| Playbook                                       | 用途                 | 输入              | 输出位置                        |
+| ---------------------------------------------- | -------------------- | ----------------- | ------------------------------- |
+| `playbooks/planning/requirements_review.md`    | 需求与方案评审       | 需求想法          | 技术方案文档                    |
+| `playbooks/planning/requirements_breakdown.md` | 需求拆解（批量生成） | 需求文档+技术方案 | Epic+Feature+Story              |
+| `playbooks/planning/epic_planning.md`          | 生成 Epic 规划       | 需求文档          | `.the_conn/epics/EPIC-XX_Name/` |
+| `playbooks/planning/feature_planning.md`       | 生成 Feature 规划    | 需求/Epic         | `.the_conn/epics/.../features/` |
+| `playbooks/planning/story_writing.md`          | 生成 Story           | 需求/Feature      | `.the_conn/epics/.../stories/`  |
+| `playbooks/planning/bug_fix_story.md`          | 生成 Bug Fix Story   | Bug 信息          | `.the_conn/epics/.../stories/`  |
 
-### 执行层 Prompts
+### 执行层 Playbooks
 
-| Prompt                                 | 用途           | 输入         | 输出位置                  |
-| -------------------------------------- | -------------- | ------------ | ------------------------- |
-| `prompts/execution/task_generation.md` | 生成 Task 简报 | Story 文件   | `.the_conn/ai_workspace/` |
-| `prompts/execution/story_sync.md`      | 同步 Story     | Story + 代码 | 更新原 Story              |
-| `prompts/execution/change_summary.md`  | 生成变更摘要   | 任务记录     | `.the_conn/ai_workspace/` |
+| Playbook                                 | 用途           | 输入         | 输出位置                  |
+| ---------------------------------------- | -------------- | ------------ | ------------------------- |
+| `playbooks/execution/task_generation.md` | 生成 Task 简报 | Story 文件   | `.the_conn/ai_workspace/` |
+| `playbooks/execution/story_sync.md`      | 同步 Story     | Story + 代码 | 更新原 Story              |
+| `playbooks/execution/change_summary.md`  | 生成变更摘要   | 任务记录     | `.the_conn/ai_workspace/` |
 
 ---
 
@@ -269,19 +269,25 @@
 │       └── EPIC-01/
 │           └── Module_Design_Core.md
 │
-├── ai_prompts/                         # 工具层
-│   ├── core/core.md
-│   └── prompts/
+├── playbooks/                          # 工具层（AI 操作剧本）
+│   ├── core/
+│   │   ├── core.md
+│   │   └── base_rules.md
+│   ├── initialization/
+│   ├── planning/
+│   ├── context/
+│   └── execution/
 │
-├── ai_workspace/                       # 执行层
-│   └── EPIC-01/
-│       └── TASK-01_STORY-01_Create_Structure/
-│           ├── task.md
-│           ├── context.manifest.json
-│           └── change_summary.md
+├── docs/                               # 用户文档（AI 严禁修改）
+│   ├── README.md
+│   └── GUIDE.md                        # 本文件
 │
-├── README.md
-└── GUIDE.md                            # 本文件
+└── ai_workspace/                       # 执行层（临时工作区）
+    └── EPIC-01/
+        └── TASK-01_STORY-01_Create_Structure/
+            ├── task.md
+            ├── context.manifest.json
+            └── change_summary.md
 ```
 
 ---
@@ -439,7 +445,7 @@ STORY-TMP-Bob-01 → STORY-04
 **冲突场景**: 两人同时更新 `Architecture.md`
 
 **解决方案**:
-- **预防**: 使用 `@prompts/context/update.md` 时，先拉取最新代码
+- **预防**: 使用 `@playbooks/context/update.md` 时，先拉取最新代码
 - **发生后**: 
   1. Context 是真相源，冲突需谨慎处理
   2. 召集相关人员讨论，确定最终版本
@@ -465,21 +471,21 @@ STORY-TMP-Bob-01 → STORY-04
 
 #### 不应提交到 Git
 
-| 目录/文件                 | 说明                 | 原因                             |
-| ------------------------- | -------------------- | -------------------------------- |
-| `.the_conn/ai_workspace/` | 临时工作区           | 每个人的 Task 工作区，不需要共享 |
-| `.the_conn/ai_prompts/`   | Prompts 框架         | 独立项目，通过子模块或依赖引用   |
-| `*.log`, `*.tmp`          | 临时/日志文件        | 运行时产生，不需要版本控制       |
+| 目录/文件                 | 说明                | 原因                             |
+| ------------------------- | ------------------- | -------------------------------- |
+| `.the_conn/ai_workspace/` | 临时工作区          | 每个人的 Task 工作区，不需要共享 |
+| `.the_conn/playbooks/`    | Playbooks 操作剧本  | 独立项目，通过 CLI 工具管理      |
+| `.the_conn/docs/`         | 用户文档            | 独立项目，通过 CLI 工具管理      |
+| `*.log`, `*.tmp`          | 临时/日志文件       | 运行时产生，不需要版本控制       |
 | IDE 配置文件              | `.vscode/`, `.idea/` | 个人 IDE 配置，不强制统一        |
 
 #### .gitignore 推荐配置
 
 ```gitignore
-# The Conn 临时文件
+# The Conn 临时文件和框架文件
 .the_conn/ai_workspace/
-
-# The Conn Prompts（使用 git submodule 管理）
-.the_conn/ai_prompts/
+.the_conn/playbooks/
+.the_conn/docs/
 
 # 日志和临时文件
 *.log
@@ -538,7 +544,7 @@ epic/EPIC-01 (Alice 和 Bob 共同工作)
 
 **流程**:
 1. 测试发现 Bug 后，创建 Bug Fix Story（可以由任何人创建）
-2. 开发者 B 使用 `@prompts/planning/bug_fix_story.md` 创建 `STORY-01.1`
+2. 开发者 B 使用 `@playbooks/planning/bug_fix_story.md` 创建 `STORY-01.1`
 3. 开发者 B 在 Bug Fix Story 中明确 `depends_on: [STORY-01]`
 4. 完成修复后，运行 `story_sync.md` 更新状态
 5. 原 STORY-01 保持 `done` 状态不变
@@ -556,7 +562,7 @@ epic/EPIC-01 (Alice 和 Bob 共同工作)
          ↓
 团队评审: 确认 Context 更新是否合理
          ↓
-开发者 A 或技术负责人: 使用 @prompts/context/update.md 更新
+开发者 A 或技术负责人: 使用 @playbooks/context/update.md 更新
 ```
 
 **关键点**:
@@ -587,12 +593,12 @@ epic/EPIC-01 (Alice 和 Bob 共同工作)
 
 ### 推荐工具
 
-| 工具                                  | 用途     | 说明                           |
-| ------------------------------------- | -------- | ------------------------------ |
-| Git                                   | 版本控制 | 分支管理、合并、冲突解决       |
-| GitHub/GitLab                         | 代码托管 | PR/MR 流程、Code Review        |
-| Slack/钉钉                            | 沟通工具 | 及时沟通 ID 分配、Context 更新 |
-| `@prompts/planning/project_status.md` | 进度查看 | 了解团队整体进度和阻塞项       |
+| 工具                                    | 用途     | 说明                           |
+| --------------------------------------- | -------- | ------------------------------ |
+| Git                                     | 版本控制 | 分支管理、合并、冲突解决       |
+| GitHub/GitLab                           | 代码托管 | PR/MR 流程、Code Review        |
+| Slack/钉钉                              | 沟通工具 | 及时沟通 ID 分配、Context 更新 |
+| `@playbooks/planning/project_status.md` | 进度查看 | 了解团队整体进度和阻塞项       |
 
 ---
 

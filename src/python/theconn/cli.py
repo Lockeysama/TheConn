@@ -14,7 +14,7 @@ console = Console()
 
 
 @click.group()
-@click.version_option(version="0.1.4", prog_name="theconn")
+@click.version_option(version="0.1.5", prog_name="theconn")
 def main():
     """The Conn - AI-powered development framework.
     
@@ -49,8 +49,11 @@ def init_cmd(branch: str, path: str):
                 f"📁 Location: {target_path / '.the_conn'}\n"
                 f"🌿 Branch: {branch}\n\n"
                 f"📖 Next steps:\n"
-                f"   1. Read .the_conn/GUIDE.md for usage instructions\n"
-                f"   2. Add '.the_conn/ai_workspace/' to your .gitignore",
+                f"   1. Read .the_conn/docs/GUIDE.md for usage instructions\n"
+                f"   2. Add the following to your .gitignore:\n"
+                f"      .the_conn/ai_workspace/\n"
+                f"      .the_conn/playbooks/\n"
+                f"      .the_conn/docs/",
                 title="🎉 Installation Complete",
                 border_style="green",
             )

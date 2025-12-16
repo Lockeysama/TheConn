@@ -16,7 +16,7 @@
 
 4. **双向同步**: 不仅从"意图"驱动"实现"，也要在"实现"完成后，将变更同步回"意图"，确保文档与代码的持续一致。
 
-5. **用户文档保护**: `.the_conn/README.md` 和 `.the_conn/GUIDE.md` 是用户使用文档，任何 AI Prompt 模板**禁止修改**这些文件。
+5. **用户文档保护**: `.the_conn/docs/` 目录下的所有文档（README.md、GUIDE.md）是用户使用文档，任何 AI Playbook **严格禁止修改** `docs/` 目录中的任何文件。
 
 ---
 
@@ -25,6 +25,10 @@
 ```
 my_project/
 ├── .the_conn/                  # [The Conn 框架完整工作区]
+│   ├── docs/                   # [文档层] 用户文档（AI 禁止修改）
+│   │   ├── README.md           # 框架使用说明
+│   │   └── GUIDE.md            # 详细使用指南
+│   │
 │   ├── epics/                  # [规划层] 所有规划文档
 │   │   └── EPIC-01_Base_Init/
 │   │       ├── README.md
@@ -48,37 +52,33 @@ my_project/
 │   │       └── EPIC-02/
 │   │           └── Module_Design_DataStream.md
 │   │
-│   ├── ai_prompts/             # [工具层] AI Prompts 库
+│   ├── playbooks/              # [工具层] AI 操作剧本
 │   │   ├── core/
 │   │   │   └── core.md
-│   │   └── prompts/
-│   │       ├── initialization/
-│   │       │   └── project_init.md
-│   │       ├── context/
-│   │       │   ├── extract.md
-│   │       │   ├── add.md
-│   │       │   └── update.md
-│   │       ├── planning/
-│   │       │   ├── epic.md
-│   │       │   ├── feature.md
-│   │       │   ├── story.md
-│   │       │   └── bug_story.md
-│   │       └── execution/
-│   │           ├── task_generation.md
-│   │           ├── story_sync.md
-│   │           └── change_summary.md
+│   │   ├── initialization/
+│   │   │   └── project_init.md
+│   │   ├── context/
+│   │   │   ├── extract.md
+│   │   │   ├── add.md
+│   │   │   └── update.md
+│   │   ├── planning/
+│   │   │   ├── requirements_review.md
+│   │   │   ├── epic_planning.md
+│   │   │   ├── feature_planning.md
+│   │   │   ├── story_writing.md
+│   │   │   └── bug_fix_story.md
+│   │   └── execution/
+│   │       ├── task_generation.md
+│   │       ├── story_sync.md
+│   │       └── change_summary.md
 │   │
-│   ├── ai_workspace/           # [执行层] AI 任务工作区（临时，可 .gitignore）
-│   │   └── EPIC-01/
-│   │       ├── TASK-01_STORY-01_Create_Structure/
-│   │       │   ├── task.md
-│   │       │   ├── context.manifest.json
-│   │       │   └── change_summary.md
-│   │       └── TASK-02_STORY-01_Add_Tests/
-│   │
-│   ├── README.md
-│   ├── GUIDE.md
-│   └── BUG_WORKFLOW_GUIDE.md
+│   └── ai_workspace/           # [执行层] AI 任务工作区（临时，可 .gitignore）
+│       └── EPIC-01/
+│           ├── TASK-01_STORY-01_Create_Structure/
+│           │   ├── task.md
+│           │   ├── context.manifest.json
+│           │   └── change_summary.md
+│           └── TASK-02_STORY-01_Add_Tests/
 │
 ├── src/                        # [实现层] 项目源代码
 │
@@ -197,40 +197,40 @@ STORY-02 → TASK-03 (首次开发)
 
 ---
 
-## 附录：模板索引
+## 附录：Playbook 索引
 
-### 初始化 Prompts
+### 初始化 Playbooks
 
-| 用途       | Prompt 文件                              |
-| ---------- | ---------------------------------------- |
-| 项目初始化 | `prompts/initialization/project_init.md` |
+| 用途       | Playbook 文件                     |
+| ---------- | --------------------------------- |
+| 项目初始化 | `initialization/project_init.md` |
 
-### 规划层 Prompts
+### 规划层 Playbooks
 
-| 用途                 | Prompt 文件                                  |
-| -------------------- | -------------------------------------------- |
-| 需求与方案评审       | `prompts/planning/requirements_review.md`    |
-| 需求拆解（批量生成） | `prompts/planning/requirements_breakdown.md` |
-| 需求变更管理         | `prompts/planning/requirements_change.md`    |
-| 项目状态查看         | `prompts/planning/project_status.md`         |
-| 生成 Epic            | `prompts/planning/epic_planning.md`          |
-| 生成 Feature         | `prompts/planning/feature_planning.md`       |
-| 生成 Story           | `prompts/planning/story_writing.md`          |
-| 生成 Bug Fix Story   | `prompts/planning/bug_fix_story.md`          |
+| 用途                 | Playbook 文件                         |
+| -------------------- | ------------------------------------- |
+| 需求与方案评审       | `planning/requirements_review.md`    |
+| 需求拆解（批量生成） | `planning/requirements_breakdown.md` |
+| 需求变更管理         | `planning/requirements_change.md`    |
+| 项目状态查看         | `planning/project_status.md`         |
+| 生成 Epic            | `planning/epic_planning.md`          |
+| 生成 Feature         | `planning/feature_planning.md`       |
+| 生成 Story           | `planning/story_writing.md`          |
+| 生成 Bug Fix Story   | `planning/bug_fix_story.md`          |
 
-### Context 管理 Prompts
+### Context 管理 Playbooks
 
-| 用途              | Prompt 文件                  |
-| ----------------- | ---------------------------- |
-| 提取 Context 文档 | `prompts/context/extract.md` |
-| 添加 Context 文档 | `prompts/context/add.md`     |
-| 更新 Context 文档 | `prompts/context/update.md`  |
-| 搜索 Context 文档 | `prompts/context/search.md`  |
+| 用途              | Playbook 文件           |
+| ----------------- | ----------------------- |
+| 提取 Context 文档 | `context/extract.md`   |
+| 添加 Context 文档 | `context/add.md`       |
+| 更新 Context 文档 | `context/update.md`    |
+| 搜索 Context 文档 | `context/search.md`    |
 
-### 执行层 Prompts
+### 执行层 Playbooks
 
-| 用途           | Prompt 文件                            |
-| -------------- | -------------------------------------- |
-| 生成 Task 简报 | `prompts/execution/task_generation.md` |
-| 同步 Story     | `prompts/execution/story_sync.md`      |
-| 生成变更摘要   | `prompts/execution/change_summary.md`  |
+| 用途           | Playbook 文件                     |
+| -------------- | --------------------------------- |
+| 生成 Task 简报 | `execution/task_generation.md`   |
+| 同步 Story     | `execution/story_sync.md`        |
+| 生成变更摘要   | `execution/change_summary.md`    |

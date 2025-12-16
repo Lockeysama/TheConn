@@ -12,7 +12,7 @@ const program = new Command();
 program
     .name('theconn')
     .description('The Conn - AI-powered development framework')
-    .version('0.1.0');
+    .version('0.1.5');
 
 program
     .command('init')
@@ -26,8 +26,11 @@ program
             console.log(chalk.cyan('\n📁 Location:'), `${options.path}/.the_conn`);
             console.log(chalk.cyan('🌿 Branch:'), options.branch);
             console.log(chalk.yellow('\n📖 Next steps:'));
-            console.log('   1. Read .the_conn/GUIDE.md for usage instructions');
-            console.log('   2. Add \'.the_conn/ai_workspace/\' to your .gitignore');
+            console.log('   1. Read .the_conn/docs/GUIDE.md for usage instructions');
+            console.log('   2. Add the following to your .gitignore:');
+            console.log('      .the_conn/ai_workspace/');
+            console.log('      .the_conn/playbooks/');
+            console.log('      .the_conn/docs/');
         } catch (error) {
             console.error(chalk.red('❌ Error:'), error.message);
             process.exit(1);

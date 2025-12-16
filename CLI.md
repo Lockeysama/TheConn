@@ -53,15 +53,20 @@ npx theconn-cli init [--branch=BRANCH] [--path=PATH]
 **创建的目录结构:**
 ```
 .the_conn/
-├── ai_prompts/         # AI Prompt 模板系统
+├── playbooks/          # AI 操作剧本系统
+│   ├── core/
+│   ├── initialization/
+│   ├── planning/
+│   ├── context/
+│   └── execution/
+├── docs/               # 用户文档
+│   ├── README.md
+│   └── GUIDE.md
 ├── epics/              # 你的项目 Epic（空）
 ├── context/
 │   ├── global/         # 全局上下文（空）
 │   └── epics/          # Epic 专属上下文（空）
-├── ai_workspace/       # 临时工作区（空）
-├── GUIDE.md            # 使用指南
-├── README.md           # 框架文档
-└── .version            # 版本信息
+└── ai_workspace/       # 临时工作区（空）
 ```
 
 ---
@@ -85,10 +90,8 @@ npx theconn-cli update [--branch=BRANCH] [--path=PATH]
 - `--path` - 目标目录（默认: 当前目录）
 
 **更新内容:**
-- ✅ 更新 `ai_prompts/`
-- ✅ 更新 `GUIDE.md`
-- ✅ 更新 `README.md`
-- ✅ 更新 `.version`
+- ✅ 更新 `playbooks/`
+- ✅ 更新 `docs/`
 
 **保留内容:**
 - 📁 `epics/` - 你的项目规划
@@ -116,10 +119,8 @@ npx theconn-cli uninstall [--path=PATH] [--yes]
 - `--yes` - 跳过确认提示（仅 Node.js）
 
 **删除内容:**
-- 🗑️ `ai_prompts/`
-- 🗑️ `GUIDE.md`
-- 🗑️ `README.md`
-- 🗑️ `.version`
+- 🗑️ `playbooks/`
+- 🗑️ `docs/`
 
 **保留内容:**
 - 📁 `epics/`
@@ -177,23 +178,41 @@ npx theconn-cli init
 ### 2. 添加到 .gitignore
 
 ```bash
+# 添加临时工作区
 echo ".the_conn/ai_workspace/" >> .gitignore
+# 添加框架文件（由 CLI 管理）
+echo ".the_conn/playbooks/" >> .gitignore
+echo ".the_conn/docs/" >> .gitignore
 ```
 
 ### 3. 开始使用
 
-阅读 `.the_conn/GUIDE.md` 了解如何使用框架。
+阅读 `.the_conn/docs/GUIDE.md` 了解如何使用框架。
 
-### 4. 定期检查更新
+### 4. 定期更新 CLI 工具
+
+```bash
+# Python: 强制更新 CLI 工具到最新版本
+uvx --force theconn --version
+
+# Node.js: 使用最新版本的 CLI 工具
+npx theconn-cli@latest --version
+```
+
+### 5. 检查框架更新
 
 ```bash
 uvx theconn check
+# 或
+npx theconn-cli check
 ```
 
-### 5. 更新框架
+### 6. 更新框架内容
 
 ```bash
 uvx theconn update
+# 或
+npx theconn-cli update
 ```
 
 ---
@@ -213,18 +232,52 @@ uvx theconn update --branch=v2.0.0
 uvx theconn update --branch=develop
 ```
 
-### 版本文件
+### CLI 工具版本管理
 
-框架会在 `.the_conn/.version` 文件中保存版本信息：
+The Conn CLI 工具本身也会定期更新。查看和更新 CLI 工具：
 
-```json
-{
-  "branch": "main",
-  "commit": "a1b2c3d4e5f6g7h8i9j0",
-  "installed_at": "2025-12-12T10:00:00.000Z",
-  "updated_at": "2025-12-12T15:30:00.000Z"
-}
+**Python (uvx):**
+```bash
+# 查看当前版本
+uvx theconn --version
+
+# 首次使用会自动下载最新版本
+uvx theconn init
+
+# 如果本地已有缓存，强制更新到最新版本
+uvx --force theconn --version
+uvx --force theconn init
+
+# 或清除缓存后重新下载
+uv cache clean theconn
+uvx theconn init
 ```
+
+**Node.js (npx):**
+```bash
+# 查看当前版本
+npx theconn-cli --version
+
+# 首次使用会自动下载最新版本
+npx theconn-cli init
+
+# 如果本地已有缓存，清除缓存后使用最新版本
+npm cache clean --force
+npx theconn-cli init
+
+# 或直接指定使用最新版本（推荐）
+npx theconn-cli@latest init
+
+# 使用特定版本
+npx theconn-cli@0.1.5 init
+```
+
+**当前版本: 0.1.5**
+
+**💡 提示：** 
+- `uvx` 和 `npx` 在首次使用后会缓存下载的包
+- 如果发现使用的不是最新版本，使用上述命令强制更新
+- 推荐定期运行 `uvx --force theconn --version` 或 `npx theconn-cli@latest --version` 检查并更新
 
 ---
 
@@ -265,6 +318,38 @@ done
 ---
 
 ## 🐛 故障排除
+
+### 问题: CLI 工具版本不是最新的
+
+**原因:** `uvx` 或 `npx` 使用了缓存的旧版本。
+
+**解决方案:**
+
+**Python (uvx):**
+```bash
+# 方法 1: 使用 --force 参数强制更新
+uvx --force theconn --version
+
+# 方法 2: 清除缓存
+uv cache clean theconn
+uvx theconn --version
+```
+
+**Node.js (npx):**
+```bash
+# 方法 1: 指定使用 latest 版本（推荐）
+npx theconn-cli@latest --version
+
+# 方法 2: 清除 npm 缓存
+npm cache clean --force
+npx theconn-cli --version
+
+# 方法 3: 删除 npx 缓存目录
+rm -rf ~/.npm/_npx
+npx theconn-cli --version
+```
+
+---
 
 ### 问题: "Branch not found"
 
@@ -307,7 +392,7 @@ uvx theconn init
 ## 📚 相关链接
 
 - [The Conn 项目主页](https://github.com/Lockeysama/TheConn)
-- [使用指南](.the_conn/GUIDE.md)
+- [使用指南](.the_conn/docs/GUIDE.md)
 - [提交问题](https://github.com/Lockeysama/TheConn/issues)
 
 ---

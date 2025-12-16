@@ -1,6 +1,6 @@
 # The Conn: 项目命名哲学与使命
 
-[English Version](README.md) | [CLI 文档](CLI.md) | [使用指南](.the_conn/GUIDE.md) | [开发指南](DEVELOPMENT.md)
+[English Version](README.md) | [CLI 文档](CLI.md) | [使用指南](.the_conn/docs/GUIDE.md) | [开发指南](DEVELOPMENT.md)
 
 ## 🚀 快速开始
 
@@ -31,7 +31,7 @@ npx theconn-cli init /path/to/your/project
 - 如果指定了路径参数，将在目标目录下进行初始化
 - 初始化会创建 `.the_conn/` 目录及其必需的子目录结构
 
-然后阅读 `.the_conn/GUIDE.md` 了解详细的使用方法。
+然后阅读 `.the_conn/docs/GUIDE.md` 了解详细的使用方法。
 
 ## 🎯 如何使用 The Conn
 
@@ -59,34 +59,32 @@ npx theconn-cli init /path/to/your/project
 │       └── EPIC-01/                       # Epic 规划时创建
 │           └── Module_Design.md
 │
-├── ai_prompts/         # 🤖 工具层 - AI 提示词模板（从 GitHub 下载）
+├── playbooks/          # 🤖 工具层 - AI 操作剧本（从 GitHub 下载）
 │   ├── core/
-│   ├── prompts/
-│   │   ├── initialization/
-│   │   ├── planning/
-│   │   ├── context/
-│   │   └── execution/
-│   └── README.md
+│   │   ├── core.md
+│   │   └── base_rules.md
+│   ├── initialization/
+│   ├── planning/
+│   ├── context/
+│   └── execution/
 │
-├── ai_workspace/       # 🔧 执行层 - 临时工作区（初始为空）
-│   └── EPIC-01/                           # 任务执行时创建
-│       └── TASK-01_STORY-01_Name/
-│           ├── task.md
-│           └── context.manifest.json
+├── docs/               # 📚 用户文档（从 GitHub 下载）
+│   ├── README.md
+│   └── GUIDE.md
 │
-├── GUIDE.md            # 完整使用指南（从 GitHub 下载）
-├── README.md           # 框架文档（从 GitHub 下载）
-└── .version            # 版本跟踪（自动创建）
+└── ai_workspace/       # 🔧 执行层 - 临时工作区（初始为空）
+    └── EPIC-01/                           # 任务执行时创建
+        └── TASK-01_STORY-01_Name/
+            ├── task.md
+            └── context.manifest.json
 ```
 
 **初始化时创建的内容：**
 
-- ✅ `ai_prompts/` - 从 GitHub 下载（所有模板可直接使用）
-- ✅ `GUIDE.md` - 从 GitHub 下载（完整使用指南）
-- ✅ `README.md` - 从 GitHub 下载（框架文档）
-- ✅ `.version` - 自动创建（跟踪安装版本）
+- ✅ `playbooks/` - 从 GitHub 下载（所有 AI 操作剧本可直接使用）
+- ✅ `docs/` - 从 GitHub 下载（README.md, GUIDE.md）
 - 📁 `epics/` - 空目录（规划阶段填充）
-- 📁 `context/global/` - 空目录（通过项目初始化 prompt 填充）
+- 📁 `context/global/` - 空目录（通过项目初始化 playbook 填充）
 - 📁 `context/epics/` - 空目录（创建 Epic 时填充）
 - 📁 `ai_workspace/` - 空目录（临时工作区，建议添加到 `.gitignore`）
 
@@ -99,7 +97,7 @@ npx theconn-cli init /path/to/your/project
 ```bash
 # 运行 `uvx theconn init` 或 `npx theconn-cli init` 后：
 # 使用 AI 初始化项目结构
-@prompts/initialization/project_init.md 帮我初始化 The Conn 项目
+@playbooks/initialization/project_init.md 帮我初始化 The Conn 项目
 ```
 
 这会创建：
@@ -115,7 +113,7 @@ npx theconn-cli init /path/to/your/project
 ##### 步骤 1：需求评审
 
 ```bash
-@{需求文档} @prompts/planning/requirements_review.md 开始评审
+@{需求文档} @playbooks/planning/requirements_review.md 开始评审
 ```
 
 - 与 AI 讨论需求
@@ -125,7 +123,7 @@ npx theconn-cli init /path/to/your/project
 ##### 步骤 2：提取上下文
 
 ```bash
-@{技术方案} @prompts/context/extract.md 提取上下文
+@{技术方案} @playbooks/context/extract.md 提取上下文
 ```
 
 - 将可复用知识提取到 `.the_conn/context/global/`
@@ -136,7 +134,7 @@ npx theconn-cli init /path/to/your/project
 ###### 方案 A：批量生成（推荐）
 
 ```bash
-@{需求文档} @{技术方案} @prompts/planning/requirements_breakdown.md 开始拆解
+@{需求文档} @{技术方案} @playbooks/planning/requirements_breakdown.md 开始拆解
 ```
 
 - AI 展示大纲 → 你确认 → AI 生成所有 Epic/Feature/Story 文件
@@ -145,19 +143,19 @@ npx theconn-cli init /path/to/your/project
 
 ```bash
 # 生成 Epic
-@{需求文档} @prompts/planning/epic_planning.md 生成 Epic
+@{需求文档} @playbooks/planning/epic_planning.md 生成 Epic
 
 # 生成 Feature
-@{需求文档} @prompts/planning/feature_planning.md 生成 Feature
+@{需求文档} @playbooks/planning/feature_planning.md 生成 Feature
 
 # 生成 Story
-@{需求文档} @prompts/planning/story_writing.md 生成 Story
+@{需求文档} @playbooks/planning/story_writing.md 生成 Story
 ```
 
 ##### 步骤 4：提取 Epic 专属上下文
 
 ```bash
-@.the_conn/epics/EPIC-XX_Name/README.md @prompts/context/extract.md 提取 Epic 上下文
+@.the_conn/epics/EPIC-XX_Name/README.md @playbooks/context/extract.md 提取 Epic 上下文
 ```
 
 - 输出到 `.the_conn/context/epics/EPIC-XX/`
@@ -168,7 +166,7 @@ npx theconn-cli init /path/to/your/project
 为 AI 准备执行材料。
 
 ```bash
-@{Story文件} @prompts/execution/task_generation.md 生成 Task
+@{Story文件} @playbooks/execution/task_generation.md 生成 Task
 ```
 
 在 `.the_conn/ai_workspace/EPIC-XX/TASK-XX_STORY-XX_Name/` 创建：
@@ -217,10 +215,10 @@ AI 自动：
 
 ```bash
 # 生成变更摘要
-@prompts/execution/change_summary.md 生成变更摘要
+@playbooks/execution/change_summary.md 生成变更摘要
 
 # 同步 Story 文档
-@{原始Story文件} @prompts/execution/story_sync.md 开始同步
+@{原始Story文件} @playbooks/execution/story_sync.md 开始同步
 ```
 
 #### 阶段 5：Bug 修复工作流
@@ -228,7 +226,7 @@ AI 自动：
 对于已完成 Story 中发现的 Bug：
 
 ```bash
-@prompts/planning/bug_fix_story.md 生成 Bug Fix Story
+@playbooks/planning/bug_fix_story.md 生成 Bug Fix Story
 
 父 Story: STORY-01
 发现于: 集成测试
@@ -287,16 +285,16 @@ Epic（业务目标）
 
 ```bash
 # 1. 初始化项目结构
-@prompts/initialization/project_init.md 初始化项目
+@playbooks/initialization/project_init.md 初始化项目
 
 # 2. 定义你的第一个 Epic（例如：用户认证）
-@{auth_requirements.md} @prompts/planning/requirements_review.md 评审
+@{auth_requirements.md} @playbooks/planning/requirements_review.md 评审
 
 # 3. 从批准的方案生成规划
-@{requirements.md} @{tech_solution.md} @prompts/planning/requirements_breakdown.md 拆解
+@{requirements.md} @{tech_solution.md} @playbooks/planning/requirements_breakdown.md 拆解
 
 # 4. 开始实现第一个 Story
-@{STORY-01_Login.md} @prompts/execution/task_generation.md 生成 Task
+@{STORY-01_Login.md} @playbooks/execution/task_generation.md 生成 Task
 @.the_conn/ai_workspace/EPIC-01/TASK-01_STORY-01_Login/ 开始任务
 
 # 5. 审查、批准，让 AI 完成闭环
@@ -319,7 +317,7 @@ Epic（业务目标）
 - 批判性地审查 AI 输出 - 你是舰长
 - 随着项目演进保持上下文更新
 
-关于完整的工作流程、故障排除和高级功能，请在初始化后查看 `.the_conn/GUIDE.md`。
+关于完整的工作流程、故障排除和高级功能，请在初始化后查看 `.the_conn/docs/GUIDE.md`。
 
 ## 📚 文档
 

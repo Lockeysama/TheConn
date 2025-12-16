@@ -1,6 +1,6 @@
 # The Conn: Naming Philosophy & Mission
 
-[中文版](README.zh.md) | [CLI Documentation](CLI.md) | [Usage Guide](.the_conn/GUIDE.md) | [Development Guide](DEVELOPMENT.md)
+[中文版](README.zh.md) | [CLI Documentation](CLI.md) | [Usage Guide](.the_conn/docs/GUIDE.md) | [Development Guide](DEVELOPMENT.md)
 
 ## 🚀 Quick Start
 
@@ -31,7 +31,7 @@ npx theconn-cli init /path/to/your/project
 - If a path argument is specified, initialization will be performed in the target directory
 - Initialization creates the `.the_conn/` directory and its required subdirectory structure
 
-Then read `.the_conn/GUIDE.md` for detailed usage instructions.
+Then read `.the_conn/docs/GUIDE.md` for detailed usage instructions.
 
 ## 🎯 How to Use The Conn
 
@@ -59,34 +59,32 @@ After initialization, The Conn creates a `.the_conn/` directory in your project:
 │       └── EPIC-01/                       # Created during Epic planning
 │           └── Module_Design.md
 │
-├── ai_prompts/         # 🤖 Tool Layer - AI prompt templates (Downloaded from GitHub)
+├── playbooks/          # 🤖 Tool Layer - AI operation playbooks (Downloaded from GitHub)
 │   ├── core/
-│   ├── prompts/
-│   │   ├── initialization/
-│   │   ├── planning/
-│   │   ├── context/
-│   │   └── execution/
-│   └── README.md
+│   │   ├── core.md
+│   │   └── base_rules.md
+│   ├── initialization/
+│   ├── planning/
+│   ├── context/
+│   └── execution/
 │
-├── ai_workspace/       # 🔧 Execution Layer - Temporary work area (EMPTY initially)
-│   └── EPIC-01/                           # Created during task execution
-│       └── TASK-01_STORY-01_Name/
-│           ├── task.md
-│           └── context.manifest.json
+├── docs/               # 📚 User Documentation (Downloaded from GitHub)
+│   ├── README.md
+│   └── GUIDE.md
 │
-├── GUIDE.md            # Complete usage guide (Downloaded from GitHub)
-├── README.md           # Framework documentation (Downloaded from GitHub)
-└── .version            # Version tracking (Created automatically)
+└── ai_workspace/       # 🔧 Execution Layer - Temporary work area (EMPTY initially)
+    └── EPIC-01/                           # Created during task execution
+        └── TASK-01_STORY-01_Name/
+            ├── task.md
+            └── context.manifest.json
 ```
 
 **What's created during initialization:**
 
-- ✅ `ai_prompts/` - Downloaded from GitHub (all templates ready to use)
-- ✅ `GUIDE.md` - Downloaded from GitHub (complete usage guide)
-- ✅ `README.md` - Downloaded from GitHub (framework documentation)
-- ✅ `.version` - Created automatically (tracks installation version)
+- ✅ `playbooks/` - Downloaded from GitHub (all AI operation playbooks ready to use)
+- ✅ `docs/` - Downloaded from GitHub (README.md, GUIDE.md)
 - 📁 `epics/` - Empty directory (you'll populate this during planning)
-- 📁 `context/global/` - Empty directory (populated via project initialization prompt)
+- 📁 `context/global/` - Empty directory (populated via project initialization playbook)
 - 📁 `context/epics/` - Empty directory (populated as you create Epics)
 - 📁 `ai_workspace/` - Empty directory (temporary work area, add to `.gitignore`)
 
@@ -99,7 +97,7 @@ First-time setup to create structure and foundational context.
 ```bash
 # After running `uvx theconn init` or `npx theconn-cli init`:
 # Use AI to initialize the project structure
-@prompts/initialization/project_init.md Help me initialize The Conn project
+@playbooks/initialization/project_init.md Help me initialize The Conn project
 ```
 
 This creates:
@@ -115,7 +113,7 @@ Convert external requirements into actionable development tasks.
 ##### Step 1: Requirements Review
 
 ```bash
-@{requirements_doc} @prompts/planning/requirements_review.md Start review
+@{requirements_doc} @playbooks/planning/requirements_review.md Start review
 ```
 
 - Discuss requirements with AI
@@ -125,7 +123,7 @@ Convert external requirements into actionable development tasks.
 ##### Step 2: Extract Context
 
 ```bash
-@{technical_solution} @prompts/context/extract.md Extract context
+@{technical_solution} @playbooks/context/extract.md Extract context
 ```
 
 - Extracts reusable knowledge to `.the_conn/context/global/`
@@ -136,7 +134,7 @@ Convert external requirements into actionable development tasks.
 ###### Option A: Batch Generation (Recommended)
 
 ```bash
-@{requirements} @{technical_solution} @prompts/planning/requirements_breakdown.md Start breakdown
+@{requirements} @{technical_solution} @playbooks/planning/requirements_breakdown.md Start breakdown
 ```
 
 - AI shows outline → You approve → AI generates all Epic/Feature/Story files
@@ -145,19 +143,19 @@ Convert external requirements into actionable development tasks.
 
 ```bash
 # Generate Epic
-@{requirements} @prompts/planning/epic_planning.md Generate Epic
+@{requirements} @playbooks/planning/epic_planning.md Generate Epic
 
 # Generate Features
-@{requirements} @prompts/planning/feature_planning.md Generate Features
+@{requirements} @playbooks/planning/feature_planning.md Generate Features
 
 # Generate Stories
-@{requirements} @prompts/planning/story_writing.md Generate Stories
+@{requirements} @playbooks/planning/story_writing.md Generate Stories
 ```
 
 ##### Step 4: Extract Epic-Specific Context
 
 ```bash
-@.the_conn/epics/EPIC-XX_Name/README.md @prompts/context/extract.md Extract Epic context
+@.the_conn/epics/EPIC-XX_Name/README.md @playbooks/context/extract.md Extract Epic context
 ```
 
 - Outputs to `.the_conn/context/epics/EPIC-XX/`
@@ -168,7 +166,7 @@ Convert external requirements into actionable development tasks.
 Prepare execution materials for AI.
 
 ```bash
-@{Story_file} @prompts/execution/task_generation.md Generate Task
+@{Story_file} @playbooks/execution/task_generation.md Generate Task
 ```
 
 Creates in `.the_conn/ai_workspace/EPIC-XX/TASK-XX_STORY-XX_Name/`:
@@ -217,10 +215,10 @@ If Steps 6-7 weren't executed in Stage 3, run manually:
 
 ```bash
 # Generate change summary
-@prompts/execution/change_summary.md Generate change summary
+@playbooks/execution/change_summary.md Generate change summary
 
 # Sync Story document
-@{original_Story_file} @prompts/execution/story_sync.md Start sync
+@{original_Story_file} @playbooks/execution/story_sync.md Start sync
 ```
 
 #### Stage 5: Bug Fix Workflow
@@ -228,7 +226,7 @@ If Steps 6-7 weren't executed in Stage 3, run manually:
 For bugs discovered in completed Stories:
 
 ```bash
-@prompts/planning/bug_fix_story.md Generate Bug Fix Story
+@playbooks/planning/bug_fix_story.md Generate Bug Fix Story
 
 Parent Story: STORY-01
 Found in: Integration testing
@@ -287,16 +285,16 @@ After initialization, here's a typical first session:
 
 ```bash
 # 1. Initialize project structure
-@prompts/initialization/project_init.md Initialize project
+@playbooks/initialization/project_init.md Initialize project
 
 # 2. Define your first Epic (e.g., User Authentication)
-@{auth_requirements.md} @prompts/planning/requirements_review.md Review
+@{auth_requirements.md} @playbooks/planning/requirements_review.md Review
 
 # 3. Generate planning from approved solution
-@{requirements.md} @{tech_solution.md} @prompts/planning/requirements_breakdown.md Breakdown
+@{requirements.md} @{tech_solution.md} @playbooks/planning/requirements_breakdown.md Breakdown
 
 # 4. Start implementing first Story
-@{STORY-01_Login.md} @prompts/execution/task_generation.md Generate Task
+@{STORY-01_Login.md} @playbooks/execution/task_generation.md Generate Task
 @.the_conn/ai_workspace/EPIC-01/TASK-01_STORY-01_Login/ Start task
 
 # 5. Review, approve, and let AI close the loop
@@ -319,7 +317,7 @@ Please continue with Steps 6-7
 - Review AI output critically - you're the captain
 - Keep Context updated as project evolves
 
-For comprehensive workflows, troubleshooting, and advanced features, see `.the_conn/GUIDE.md` after initialization.
+For comprehensive workflows, troubleshooting, and advanced features, see `.the_conn/docs/GUIDE.md` after initialization.
 
 ## 📚 Documentation
 

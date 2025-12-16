@@ -2,6 +2,14 @@
 
 你的任务是根据用户提供的变更内容，更新现有的 Context 文档。
 
+## ⚠️ 重要：遵守基础公约
+
+**本 Playbook 严格遵守 `@playbooks/core/base_rules.md` 中定义的所有基础公约。**
+
+## 本 Playbook 的工作范围
+
+**专注于**：更新现有 Context 文档
+
 ---
 
 ## 输入
