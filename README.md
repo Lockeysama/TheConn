@@ -33,6 +33,26 @@ npx theconn-cli init /path/to/your/project
 
 Then read `.the_conn/docs/GUIDE.md` for detailed usage instructions.
 
+## 🚀 Quick Command Reference
+
+The Conn provides a unified command entry point `tc.md` for easy interaction with AI:
+
+```bash
+# In your AI IDE (e.g., Cursor), reference the tc.md file with @ symbol:
+@tc.md <command>
+
+# Examples:
+@tc.md init                    # Initialize project
+@tc.md story User Login        # Create a story
+@tc.md status                  # View project status
+@tc.md next                    # Get next step suggestions
+```
+
+**See documentation:**
+- 📘 [Quick Start Guide](.the_conn/docs/QUICK_START.md)
+- 📗 [Command Reference](.the_conn/docs/COMMANDS.md)
+- 📙 [Command Mapping](.the_conn/docs/COMMAND_MAPPING.md)
+
 ## 🎯 How to Use The Conn
 
 ### Directory Structure
@@ -60,6 +80,7 @@ After initialization, The Conn creates a `.the_conn/` directory in your project:
 │           └── Module_Design.md
 │
 ├── playbooks/          # 🤖 Tool Layer - AI operation playbooks (Downloaded from GitHub)
+│   ├── tc.md           # 🎯 Unified command entry point (NEW!)
 │   ├── core/
 │   │   ├── core.md
 │   │   └── base_rules.md
@@ -82,7 +103,8 @@ After initialization, The Conn creates a `.the_conn/` directory in your project:
 **What's created during initialization:**
 
 - ✅ `playbooks/` - Downloaded from GitHub (all AI operation playbooks ready to use)
-- ✅ `docs/` - Downloaded from GitHub (README.md, GUIDE.md)
+  - Including `tc.md` - Unified command entry point 🎯
+- ✅ `docs/` - Downloaded from GitHub (README.md, GUIDE.md, QUICK_START.md, COMMANDS.md)
 - 📁 `epics/` - Empty directory (you'll populate this during planning)
 - 📁 `context/global/` - Empty directory (populated via project initialization playbook)
 - 📁 `context/epics/` - Empty directory (populated as you create Epics)
@@ -97,6 +119,11 @@ First-time setup to create structure and foundational context.
 ```bash
 # After running `uvx theconn init` or `npx theconn-cli init`:
 # Use AI to initialize the project structure
+
+# New way (recommended - using tc.md):
+@tc.md init
+
+# Or traditional way (using full playbook path):
 @playbooks/initialization/project_init.md Help me initialize The Conn project
 ```
 
@@ -113,6 +140,10 @@ Convert external requirements into actionable development tasks.
 ##### Step 1: Requirements Review
 
 ```bash
+# New way (recommended):
+@tc.md plan review
+
+# Or traditional way:
 @{requirements_doc} @playbooks/planning/requirements_review.md Start review
 ```
 
@@ -123,6 +154,10 @@ Convert external requirements into actionable development tasks.
 ##### Step 2: Extract Context
 
 ```bash
+# New way (recommended):
+@tc.md ctx extract
+
+# Or traditional way:
 @{technical_solution} @playbooks/context/extract.md Extract context
 ```
 
@@ -134,6 +169,12 @@ Convert external requirements into actionable development tasks.
 ###### Option A: Batch Generation (Recommended)
 
 ```bash
+# New way (recommended):
+@tc.md plan breakdown requirements.md
+# Or using shorthand:
+@tc.md plan bd requirements.md
+
+# Or traditional way:
 @{requirements} @{technical_solution} @playbooks/planning/requirements_breakdown.md Start breakdown
 ```
 
@@ -142,19 +183,24 @@ Convert external requirements into actionable development tasks.
 ###### Option B: Step-by-Step Generation
 
 ```bash
-# Generate Epic
+# New way (recommended):
+@tc.md epic User Management System
+@tc.md feature User Authentication
+@tc.md story Login Functionality
+
+# Or traditional way:
 @{requirements} @playbooks/planning/epic_planning.md Generate Epic
-
-# Generate Features
 @{requirements} @playbooks/planning/feature_planning.md Generate Features
-
-# Generate Stories
 @{requirements} @playbooks/planning/story_writing.md Generate Stories
 ```
 
 ##### Step 4: Extract Epic-Specific Context
 
 ```bash
+# New way (recommended):
+@tc.md ctx extract
+
+# Or traditional way:
 @.the_conn/epics/EPIC-XX_Name/README.md @playbooks/context/extract.md Extract Epic context
 ```
 
@@ -166,6 +212,12 @@ Convert external requirements into actionable development tasks.
 Prepare execution materials for AI.
 
 ```bash
+# New way (recommended):
+@tc.md task STORY-01
+# Or using shorthand:
+@tc.md exec t STORY-01
+
+# Or traditional way:
 @{Story_file} @playbooks/execution/task_generation.md Generate Task
 ```
 
@@ -214,10 +266,12 @@ AI automatically:
 If Steps 6-7 weren't executed in Stage 3, run manually:
 
 ```bash
-# Generate change summary
-@playbooks/execution/change_summary.md Generate change summary
+# New way (recommended):
+@tc.md summary
+@tc.md sync STORY-01
 
-# Sync Story document
+# Or traditional way:
+@playbooks/execution/change_summary.md Generate change summary
 @{original_Story_file} @playbooks/execution/story_sync.md Start sync
 ```
 
@@ -226,6 +280,12 @@ If Steps 6-7 weren't executed in Stage 3, run manually:
 For bugs discovered in completed Stories:
 
 ```bash
+# New way (recommended):
+@tc.md bugfix STORY-01 Description of the bug
+# Or using shorthand:
+@tc.md plan bf STORY-01 Description of the bug
+
+# Or traditional way:
 @playbooks/planning/bug_fix_story.md Generate Bug Fix Story
 
 Parent Story: STORY-01
@@ -284,6 +344,35 @@ Context is the "knowledge base" that guides AI to generate code matching your vi
 After initialization, here's a typical first session:
 
 ```bash
+# New way (recommended - using tc.md):
+# 1. Initialize project structure
+@tc.md init
+
+# 2. Review requirements
+@tc.md plan review
+
+# 3. Generate planning from approved solution
+@tc.md plan breakdown requirements.md
+
+# 4. Check project status
+@tc.md status
+
+# 5. Start implementing first Story
+@tc.md task STORY-01
+
+# 6. Navigate to workspace and start
+@.the_conn/ai_workspace/EPIC-01/TASK-01_STORY-01_Login/ Start task
+
+# 7. After review, sync the Story
+@tc.md sync STORY-01
+
+# 8. Get next step suggestions
+@tc.md next
+```
+
+**Traditional way (using full playbook paths):**
+
+```bash
 # 1. Initialize project structure
 @playbooks/initialization/project_init.md Initialize project
 
@@ -321,10 +410,20 @@ For comprehensive workflows, troubleshooting, and advanced features, see `.the_c
 
 ## 📚 Documentation
 
+### CLI & Development
+
 - **[CLI.md](CLI.md)** - CLI usage guide (for users)
 - **[DEVELOPMENT.md](DEVELOPMENT.md)** - Development guide (for contributors)
 - **[CONTRIBUTING.md](CONTRIBUTING.md)** - Contribution guidelines
 - **[RELEASING.md](RELEASING.md)** - Release process (for maintainers)
+
+### The Conn Command System (After initialization)
+
+- **[Quick Start Guide](.the_conn/docs/QUICK_START.md)** - 5-minute guide to `@tc.md` commands
+- **[Command Reference](.the_conn/docs/COMMANDS.md)** - Complete command list and detailed usage
+- **[Command Mapping](.the_conn/docs/COMMAND_MAPPING.md)** - `@tc.md` command to Playbook mapping
+- **[Migration Guide](.the_conn/docs/MIGRATION_GUIDE.md)** - Migrating from direct Playbook usage
+- **[Main README](.the_conn/docs/README.md)** - Comprehensive operation manual
 
 ## Core Idea: Reclaiming Command for the Human Navigator in the Age of AI
 

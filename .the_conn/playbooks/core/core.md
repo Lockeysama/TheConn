@@ -199,6 +199,49 @@ STORY-02 → TASK-03 (首次开发)
 
 ## 附录：Playbook 索引
 
+### 🚀 统一命令入口（推荐使用）
+
+| 用途             | 文件路径              | 说明                                        |
+| ---------------- | --------------------- | ------------------------------------------- |
+| **统一命令入口** | `playbooks/tc.md`     | 通过 @tc 命令路由到所有 playbooks，新手友好 |
+| 快速开始指南     | `docs/QUICK_START.md` | @tc 命令的快速参考指南                      |
+| 命令参考手册     | `docs/COMMANDS.md`    | 完整的命令列表和详细说明                    |
+
+**推荐使用方式**：
+
+使用 `@tc.md` 命令而不是直接 @ 具体的 playbook 文件：
+
+```bash
+# 在 AI IDE 中使用 @ 符号引用 tc.md 文件
+# 一级快捷命令
+@tc.md init                    # 代替 @initialization/project_init.md
+@tc.md story 用户登录          # 代替 @planning/story_writing.md
+@tc.md next                    # 代替 @planning/next_step_advisor.md
+@tc.md status                  # 代替 @planning/project_status.md
+
+# 二级命令
+@tc.md plan breakdown          # 代替 @planning/requirements_breakdown.md
+@tc.md ctx add                 # 代替 @context/add.md
+@tc.md exec task STORY-01      # 代替 @execution/task_generation.md
+
+# 使用缩写
+@tc.md plan bd                 # breakdown 的缩写
+@tc.md plan s 用户注册         # story 的缩写
+@tc.md ctx a                   # add 的缩写
+```
+
+**命令结构**：
+```
+@tc.md <模块> <命令> [参数]
+```
+
+**支持的模块**：
+- `plan` - 规划模块（epic, feature, story, status, next 等）
+- `ctx` - 上下文管理模块（add, update, search, extract）
+- `exec` - 执行模块（task, sync, summary）
+
+详见：`docs/QUICK_START.md` 和 `docs/COMMANDS.md`
+
 ### 核心规范文件
 
 | 用途           | 文件                          |
