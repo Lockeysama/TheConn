@@ -110,7 +110,7 @@ export class GitHubClient {
 /**
  * Download The Conn framework files from GitHub
  */
-export async function downloadFrameworkFiles (targetDir, branch = 'main', updateMode = false) {
+export async function downloadFrameworkFiles (targetDir, branch = 'stable', updateMode = false) {
     const client = new GitHubClient();
     const spinner = ora();
 
@@ -120,27 +120,29 @@ export async function downloadFrameworkFiles (targetDir, branch = 'main', update
         const commitSha = await client.getBranchCommit(branch);
         spinner.succeed(`Branch: ${branch} (${commitSha.substring(0, 7)})`);
 
-        // Download ai_prompts/
-        spinner.start('Downloading ai_prompts...');
-        const promptsDir = join(targetDir, 'ai_prompts');
+        // Download playbooks/
+        spinner.start('Downloading playbooks...');
+        const playbooksDir = join(targetDir, 'playbooks');
         try {
-            await rm(promptsDir, { recursive: true, force: true });
+            await rm(playbooksDir, { recursive: true, force: true });
         } catch (error) {
             // Ignore if doesn't exist
         }
-        await mkdir(promptsDir, { recursive: true });
-        await client.downloadDirectory(branch, '.the_conn/ai_prompts', promptsDir, []);
-        spinner.succeed('Downloaded ai_prompts');
+        await mkdir(playbooksDir, { recursive: true });
+        await client.downloadDirectory(branch, '.the_conn/playbooks', playbooksDir, []);
+        spinner.succeed('Downloaded playbooks');
 
-        // Download GUIDE.md
-        spinner.start('Downloading GUIDE.md...');
-        await client.downloadFile(branch, '.the_conn/GUIDE.md', join(targetDir, 'GUIDE.md'));
-        spinner.succeed('Downloaded GUIDE.md');
-
-        // Download README.md
-        spinner.start('Downloading README.md...');
-        await client.downloadFile(branch, '.the_conn/README.md', join(targetDir, 'README.md'));
-        spinner.succeed('Downloaded README.md');
+        // Download docs/
+        spinner.start('Downloading docs...');
+        const docsDir = join(targetDir, 'docs');
+        try {
+            await rm(docsDir, { recursive: true, force: true });
+        } catch (error) {
+            // Ignore if doesn't exist
+        }
+        await mkdir(docsDir, { recursive: true });
+        await client.downloadDirectory(branch, '.the_conn/docs', docsDir, []);
+        spinner.succeed('Downloaded docs');
 
         // Create directory structure (only in init mode)
         if (!updateMode) {

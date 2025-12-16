@@ -129,7 +129,7 @@ class GitHubClient:
 
 def download_framework_files(
     target_dir: Path,
-    branch: str = "main",
+    branch: str = "stable",
     update_mode: bool = False,
 ) -> dict:
     """Download The Conn framework files from GitHub.
@@ -154,21 +154,21 @@ def download_framework_files(
         commit_sha = client.get_branch_commit(branch)
         progress.update(task, description=f"✓ Branch: {branch} ({commit_sha[:7]})")
         
-        # Download ai_prompts/
-        progress.add_task("Downloading ai_prompts...", total=None)
-        prompts_dir = target_dir / "ai_prompts"
-        if prompts_dir.exists():
-            shutil.rmtree(prompts_dir)
-        prompts_dir.mkdir(parents=True, exist_ok=True)
-        client.download_directory(branch, ".the_conn/ai_prompts", prompts_dir, exclude=[])
+        # Download playbooks/
+        progress.add_task("Downloading playbooks...", total=None)
+        playbooks_dir = target_dir / "playbooks"
+        if playbooks_dir.exists():
+            shutil.rmtree(playbooks_dir)
+        playbooks_dir.mkdir(parents=True, exist_ok=True)
+        client.download_directory(branch, ".the_conn/playbooks", playbooks_dir, exclude=[])
         
-        # Download GUIDE.md
-        progress.add_task("Downloading GUIDE.md...", total=None)
-        client.download_file(branch, ".the_conn/GUIDE.md", target_dir / "GUIDE.md")
-        
-        # Download README.md
-        progress.add_task("Downloading README.md...", total=None)
-        client.download_file(branch, ".the_conn/README.md", target_dir / "README.md")
+        # Download docs/
+        progress.add_task("Downloading docs...", total=None)
+        docs_dir = target_dir / "docs"
+        if docs_dir.exists():
+            shutil.rmtree(docs_dir)
+        docs_dir.mkdir(parents=True, exist_ok=True)
+        client.download_directory(branch, ".the_conn/docs", docs_dir, exclude=[])
         
         # Create directory structure (only in init mode)
         if not update_mode:
