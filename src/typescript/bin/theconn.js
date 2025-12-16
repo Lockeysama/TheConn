@@ -12,12 +12,12 @@ const program = new Command();
 program
     .name('theconn')
     .description('The Conn - AI-powered development framework')
-    .version('0.1.5');
+    .version('0.1.6');
 
 program
     .command('init')
     .description('Initialize The Conn framework in a project')
-    .option('--branch <branch>', 'GitHub branch to use', 'main')
+    .option('--branch <branch>', 'GitHub branch to use', 'stable')
     .option('--path <path>', 'Target directory', '.')
     .action(async (options) => {
         try {

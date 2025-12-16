@@ -10,7 +10,7 @@ The Conn 提供了两种 CLI 工具，分别针对 Python 和 Node.js 生态系�
 # 初始化 The Conn 框架到当前目录
 uvx theconn init
 
-# 使用特定分支
+# 使用特定分支（默认使用 stable 分支）
 uvx theconn init --branch=v1.0.0
 
 # 指定目标目录
@@ -23,7 +23,7 @@ uvx theconn init --path=./my-project
 # 初始化 The Conn 框架到当前目录
 npx theconn-cli init
 
-# 使用特定分支
+# 使用特定分支（默认使用 stable 分支）
 npx theconn-cli init --branch=v1.0.0
 
 # 指定目标目录
@@ -47,19 +47,19 @@ npx theconn-cli init [--branch=BRANCH] [--path=PATH]
 ```
 
 **选项:**
-- `--branch` - 指定 GitHub 分支（默认: `main`）
+- `--branch` - 指定 GitHub 分支（默认: `stable`）
 - `--path` - 目标目录（默认: 当前目录）
 
 **创建的目录结构:**
 ```
 .the_conn/
-├── playbooks/          # AI 操作剧本系统
+├── playbooks/          # AI 操作剧本系统（从 GitHub 下载）
 │   ├── core/
 │   ├── initialization/
 │   ├── planning/
 │   ├── context/
 │   └── execution/
-├── docs/               # 用户文档
+├── docs/               # 用户文档（从 GitHub 下载）
 │   ├── README.md
 │   └── GUIDE.md
 ├── epics/              # 你的项目 Epic（空）
@@ -68,6 +68,8 @@ npx theconn-cli init [--branch=BRANCH] [--path=PATH]
 │   └── epics/          # Epic 专属上下文（空）
 └── ai_workspace/       # 临时工作区（空）
 ```
+
+**注意:** 默认从 `stable` 分支下载框架文件，确保稳定性。
 
 ---
 
@@ -192,8 +194,8 @@ echo ".the_conn/docs/" >> .gitignore
 ### 4. 定期更新 CLI 工具
 
 ```bash
-# Python: 强制更新 CLI 工具到最新版本
-uvx --force theconn --version
+# Python: 强制重新安装 CLI 工具到最新版本
+uvx --force-reinstall theconn --version
 
 # Node.js: 使用最新版本的 CLI 工具
 npx theconn-cli@latest --version
@@ -222,15 +224,23 @@ npx theconn-cli update
 ### 使用特定分支
 
 ```bash
-# 初始化时指定分支
+# 默认使用 stable 分支（推荐）
+uvx theconn init
+
+# 使用 main 分支（最新开发版本）
+uvx theconn init --branch=main
+
+# 使用特定版本标签
 uvx theconn init --branch=v1.0.0
 
 # 更新到特定分支
 uvx theconn update --branch=v2.0.0
-
-# 切换到开发分支
-uvx theconn update --branch=develop
 ```
+
+**分支说明:**
+- `stable` - 稳定版本（默认，推荐用于生产）
+- `main` - 最新开发版本（可能包含未稳定的功能）
+- `v*.*.*` - 特定版本标签（用于锁定版本）
 
 ### CLI 工具版本管理
 
@@ -244,9 +254,9 @@ uvx theconn --version
 # 首次使用会自动下载最新版本
 uvx theconn init
 
-# 如果本地已有缓存，强制更新到最新版本
-uvx --force theconn --version
-uvx --force theconn init
+# 如果本地已有缓存，强制重新安装最新版本
+uvx --force-reinstall theconn --version
+uvx --force-reinstall theconn init
 
 # 或清除缓存后重新下载
 uv cache clean theconn
@@ -269,15 +279,15 @@ npx theconn-cli init
 npx theconn-cli@latest init
 
 # 使用特定版本
-npx theconn-cli@0.1.5 init
+npx theconn-cli@0.1.6 init
 ```
 
-**当前版本: 0.1.5**
+**当前版本: 0.1.6**
 
 **💡 提示：** 
 - `uvx` 和 `npx` 在首次使用后会缓存下载的包
 - 如果发现使用的不是最新版本，使用上述命令强制更新
-- 推荐定期运行 `uvx --force theconn --version` 或 `npx theconn-cli@latest --version` 检查并更新
+- 推荐定期运行 `uvx --force-reinstall theconn --version` 或 `npx theconn-cli@latest --version` 检查并更新
 
 ---
 
@@ -327,8 +337,9 @@ done
 
 **Python (uvx):**
 ```bash
-# 方法 1: 使用 --force 参数强制更新
-uvx --force theconn --version
+# 方法 1: 使用 --force-reinstall 参数强制重新安装（推荐）
+uvx --force-reinstall theconn --version
+uvx --force-reinstall theconn init
 
 # 方法 2: 清除缓存
 uv cache clean theconn
@@ -357,10 +368,13 @@ npx theconn-cli --version
 
 **解决方案:**
 ```bash
-# 使用默认分支
+# 使用默认 stable 分支
 uvx theconn init
 
-# 或检查可用分支
+# 或使用 main 分支
+uvx theconn init --branch=main
+
+# 检查可用分支
 # GitHub 仓库: https://github.com/Lockeysama/TheConn/branches
 ```
 

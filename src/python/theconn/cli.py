@@ -14,7 +14,7 @@ console = Console()
 
 
 @click.group()
-@click.version_option(version="0.1.5", prog_name="theconn")
+@click.version_option(version="0.1.6", prog_name="theconn")
 def main():
     """The Conn - AI-powered development framework.
     
@@ -26,8 +26,8 @@ def main():
 @main.command()
 @click.option(
     "--branch",
-    default="main",
-    help="GitHub branch to use (default: main)",
+    default="stable",
+    help="GitHub branch to use (default: stable)",
     show_default=True,
 )
 @click.option(
