@@ -16,6 +16,13 @@
 
 **原因**：本阶段是**规划阶段**，重点是"拆解需求"。
 
+**📋 规范引用**：
+- **测试策略**：`@playbooks/core/test_strategy_rules.md`
+- **复杂度评估**：`@playbooks/core/complexity_rules.md`
+- **BDD 语言配置**：`@playbooks/core/bdd_language_rules.md`
+
+**命名规范说明**：详见各规划 Playbook（`epic_planning.md`、`feature_planning.md`、`story_writing.md`）
+
 ---
 
 ## 输入
@@ -88,43 +95,18 @@ AI 综合以下维度分析每个 Feature：
 ❌ 无需 E2E: 不满足任何条件
 ```
 
-**示例分析输出**：
+**示例输出**：
 
 ```markdown
 📊 Feature E2E 测试分析：
 
 FEAT-01: 用户认证
-- ✅ 功能完整性: 是（注册→登录→权限验证完整流程）
-- ✅ 集成复杂度: 高（数据库 + Redis + JWT 服务）
-- ⚠️ 任务复杂度: 中等（平均 4.2 分）
-- ✅ 风险等级: 高（核心安全功能）
-- ✅ 用户可见性: 是（用户直接交互）
-- ✅ Story 数量: 4 个
-
-💡 决策: ✅ 必须添加 E2E 测试
-理由: 满足多个高权重条件（完整性+集成+风险）
+分析: ✅ 完整流程 + 高集成 + 高风险
+决策: ✅ 必须 E2E (STORY-99)
 
 FEAT-02: 配置管理
-- ❌ 功能完整性: 否（内部技术模块）
-- ❌ 集成复杂度: 低（单一模块）
-- ⚠️ 任务复杂度: 低（平均 2.5 分）
-- ❌ 风险等级: 低
-- ❌ 用户可见性: 否
-- ⚠️ Story 数量: 2 个
-
-💡 决策: ❌ 无需 E2E 测试
-理由: 仅为内部技术模块，单元测试已足够
-
-FEAT-03: 数据同步
-- ⚠️ 功能完整性: 部分（后台任务）
-- ✅ 集成复杂度: 高（多数据源集成）
-- ✅ 任务复杂度: 高（平均 6.5 分）
-- ⚠️ 风险等级: 中（数据一致性要求）
-- ❌ 用户可见性: 否
-- ✅ Story 数量: 4 个
-
-💡 决策: ✅ 建议添加 E2E 测试
-理由: 集成复杂 + 任务复杂 + 数据一致性要求
+分析: ❌ 内部模块 + 低复杂度
+决策: ❌ 无需 E2E
 ```
 
 **Epic 级 E2E 测试判断**：
@@ -233,57 +215,17 @@ FEAT-03: 数据同步
 - **复杂度**: 5.0
 - **说明**: 检测到性能瓶颈，需用户确认是否添加
 
-## 依赖关系图
+## 依赖关系与开发顺序
 
-**文本格式**:
 ```
-STORY-01 (无依赖)
+STORY-01, STORY-04 (无依赖，可并行)
   ↓
-STORY-02 (依赖 STORY-01)
+STORY-02, STORY-05
   ↓
-STORY-03 (依赖 STORY-02)
-
-STORY-04 (无依赖)
+STORY-03, STORY-06
   ↓
-STORY-05 (依赖 STORY-04)
-
-STORY-06 (依赖 STORY-05)
-  ↓
-STORY-07, STORY-08 (依赖 STORY-06)
+STORY-07, STORY-08
 ```
-
-**Mermaid 可视化**:
-```mermaid
-graph TD
-  STORY-01[STORY-01: 创建缓冲队列] --> STORY-02[STORY-02: 添加线程安全]
-  STORY-02 --> STORY-03[STORY-03: 实现冗余控制]
-  
-  STORY-04[STORY-04: Packet 去重] --> STORY-05[STORY-05: Event 排序]
-  
-  STORY-05 --> STORY-06[STORY-06: 端到端集成]
-  STORY-03 --> STORY-06
-  
-  STORY-06 --> STORY-07[STORY-07: 性能测试]
-  STORY-06 --> STORY-08[STORY-08: 文档完善]
-  
-  style STORY-01 fill:#a8e6cf
-  style STORY-04 fill:#a8e6cf
-  style STORY-06 fill:#ffd3b6
-  style STORY-07 fill:#ffaaa5
-  style STORY-08 fill:#ffaaa5
-```
-
-**图例**:
-- 绿色：无依赖，可立即开始
-- 橙色：关键路径上的节点
-- 红色：依赖多个前置 Story
-
-## 建议开发顺序
-
-1. **第一批** (并行): STORY-01, STORY-04
-2. **第二批**: STORY-02, STORY-05
-3. **第三批**: STORY-03, STORY-06
-4. **第四批**: STORY-07, STORY-08
 
 ---
 

@@ -199,16 +199,27 @@ STORY-02 → TASK-03 (首次开发)
 
 ## 附录：Playbook 索引
 
+### 核心规范文件
+
+| 用途           | 文件                          |
+| -------------- | ----------------------------- |
+| 基础公约       | `core/base_rules.md`          |
+| 测试策略规范   | `core/test_strategy_rules.md` |
+| 复杂度评估规范 | `core/complexity_rules.md`    |
+| BDD 语言配置   | `core/bdd_language_rules.md`  |
+
+**说明**：命名规范已内嵌到各规划 Playbook 中（`epic_planning.md`、`feature_planning.md`、`story_writing.md`、`task_generation.md`、`context/add.md`）
+
 ### 初始化 Playbooks
 
-| 用途       | Playbook 文件                     |
-| ---------- | --------------------------------- |
+| 用途       | Playbook 文件                    |
+| ---------- | -------------------------------- |
 | 项目初始化 | `initialization/project_init.md` |
 
 ### 规划层 Playbooks
 
-| 用途                 | Playbook 文件                         |
-| -------------------- | ------------------------------------- |
+| 用途                 | Playbook 文件                        |
+| -------------------- | ------------------------------------ |
 | 需求与方案评审       | `planning/requirements_review.md`    |
 | 需求拆解（批量生成） | `planning/requirements_breakdown.md` |
 | 需求变更管理         | `planning/requirements_change.md`    |
@@ -221,17 +232,17 @@ STORY-02 → TASK-03 (首次开发)
 
 ### Context 管理 Playbooks
 
-| 用途              | Playbook 文件           |
-| ----------------- | ----------------------- |
-| 提取 Context 文档 | `context/extract.md`   |
-| 添加 Context 文档 | `context/add.md`       |
-| 更新 Context 文档 | `context/update.md`    |
-| 搜索 Context 文档 | `context/search.md`    |
+| 用途              | Playbook 文件        |
+| ----------------- | -------------------- |
+| 提取 Context 文档 | `context/extract.md` |
+| 添加 Context 文档 | `context/add.md`     |
+| 更新 Context 文档 | `context/update.md`  |
+| 搜索 Context 文档 | `context/search.md`  |
 
 ### 执行层 Playbooks
 
-| 用途           | Playbook 文件                     |
-| -------------- | --------------------------------- |
-| 生成 Task 简报 | `execution/task_generation.md`   |
-| 同步 Story     | `execution/story_sync.md`        |
-| 生成变更摘要   | `execution/change_summary.md`    |
+| 用途           | Playbook 文件                  |
+| -------------- | ------------------------------ |
+| 生成 Task 简报 | `execution/task_generation.md` |
+| 同步 Story     | `execution/story_sync.md`      |
+| 生成变更摘要   | `execution/change_summary.md`  |
