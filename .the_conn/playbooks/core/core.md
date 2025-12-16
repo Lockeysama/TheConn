@@ -217,6 +217,7 @@ STORY-02 → TASK-03 (首次开发)
 | 生成 Feature         | `planning/feature_planning.md`       |
 | 生成 Story           | `planning/story_writing.md`          |
 | 生成 Bug Fix Story   | `planning/bug_fix_story.md`          |
+| **下一步行动建议**   | `planning/next_step_advisor.md`      |
 
 ### Context 管理 Playbooks
 
