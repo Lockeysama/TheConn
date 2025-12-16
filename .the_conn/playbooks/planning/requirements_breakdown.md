@@ -72,8 +72,9 @@
 
 **Story 级测试策略**：
 
-- 用户功能 Story → 规划 BDD + 单元测试
-- 技术实现 Story → 规划单元测试
+- 用户功能 Story → 规划单元测试（功能清单验收）
+- 技术实现 Story → 规划单元测试（技术清单验收）
+- E2E Story → 规划 BDD E2E 测试（BDD 场景验收）
 
 **Feature 级 E2E 测试判断**：
 
@@ -186,9 +187,9 @@ FEAT-02: 配置管理
 
 ### STORY-01: {Story 名称}
 - **Feature**: FEAT-01
-- **类型**: 功能开发
+- **类型**: 功能开发 (type: dev)
 - **目标**: {简要目标}
-- **测试策略**: BDD + 单元测试（用户可见功能）
+- **测试策略**: 单元测试（功能清单验收）
 - **依赖**: 无
 - **复杂度**: {1.0-10.0分,如 3.5}
 
@@ -206,21 +207,33 @@ FEAT-02: 配置管理
 
 ### STORY-99: E2E_{FeatureName}_Flow
 - **Feature**: FEAT-01
-- **类型**: E2E 测试
+- **类型**: E2E 测试 (type: e2e_test)
 - **目标**: 验证 STORY-01 ~ STORY-03 的完整集成流程
+- **测试策略**: BDD E2E 测试（BDD 场景验收）
 - **触发条件**: 所有功能 Story 完成后
 - **依赖**: STORY-01, STORY-02, STORY-03
 - **复杂度**: 4.0
+- **测试路径**: 
+  - Feature 文件: `tests/bdd/features/{module}/{feature_name}_flow.feature`
+  - Step Definitions: `tests/bdd/{language}_test.{ext}`
 - **说明**: 自动建议（Feature 包含 ≥3 个功能 Story）
+- **生成方式**: 使用 `@playbooks/planning/e2e_story.md` 生成
 
-### STORY-97: Performance_{FeatureName}（可选）
+### STORY-97: Performance_{FeatureName}（按需添加）
 - **Feature**: FEAT-03
-- **类型**: 性能测试
+- **类型**: 性能测试 (type: perf_test)
 - **目标**: 验证高并发场景下的性能指标
+- **测试策略**: 性能测试（性能指标验收）
 - **触发条件**: 功能 Story 完成后
 - **依赖**: STORY-06, STORY-07, STORY-08
 - **复杂度**: 5.0
-- **说明**: 检测到性能瓶颈，需用户确认是否添加
+- **性能指标**: 
+  - 响应时间: P95 < {X}ms, P99 < {Y}ms
+  - 吞吐量: TPS ≥ {N}
+  - 并发能力: 支持 {M} 并发用户
+- **测试场景**: 负载测试、压力测试、容量测试
+- **说明**: 检测到性能敏感场景，建议添加性能测试
+- **生成方式**: 使用 `@playbooks/planning/performance_test_story.md` 生成
 
 ## 依赖关系与开发顺序
 

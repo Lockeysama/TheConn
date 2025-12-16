@@ -29,9 +29,9 @@
 ### 文件变更检查
 
 - [ ] **业务代码**: 新增/修改的核心实现文件
-- [ ] **单元测试**: 对应的 `*_test.go` 文件
-- [ ] **BDD 特性文件**: `tests/bdd/features/**/*.feature`
-- [ ] **BDD Step Definitions**: `tests/bdd/*_test.go`
+- [ ] **单元测试**: 对应的测试文件（按语言习惯组织）
+- [ ] **BDD 特性文件**: `tests/bdd/features/**/*.feature` (仅 E2E Story)
+- [ ] **BDD Step Definitions**: `tests/bdd/*_test.go` (仅 E2E Story)
 - [ ] **配置文件**: 新增的配置项或环境变量
 - [ ] **文档更新**: Story 文件状态同步
 
@@ -42,8 +42,8 @@
 
 ### 测试结果检查
 
-- [ ] **单元测试**: 测试数量和通过情况
-- [ ] **BDD 测试**: 场景数量和步骤通过情况
+- [ ] **单元测试**: 测试数量和通过情况（所有 Story）
+- [ ] **BDD 测试**: 场景数量和步骤通过情况（仅 E2E Story）
 - [ ] **集成测试**: 如有，记录执行结果
 
 ---

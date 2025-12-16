@@ -38,9 +38,9 @@
    - 检查是否有阻塞依赖（`depends_on`）
 
 3. **测试覆盖情况**
-   - 是否有 E2E 测试 Story？
-   - 是否有集成测试 Story？
-   - 各 Story 是否有 BDD 场景？
+   - 是否有 E2E 测试 Story（`type: e2e_test`）？
+   - 是否有性能测试 Story（`type: perf_test`）？
+   - 各普通 Story 是否有单元测试计划？
 
 4. **最近的代码变更**
    - 最近修改了哪些文件？

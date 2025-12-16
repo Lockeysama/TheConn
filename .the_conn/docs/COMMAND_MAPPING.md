@@ -16,44 +16,51 @@
 
 #### 完整命令
 
-| @tc.md 命令             | Playbook 路径                         |
-| ----------------------- | ------------------------------------- |
-| `@tc.md plan review`    | `@planning/requirements_review.md`    |
-| `@tc.md plan breakdown` | `@planning/requirements_breakdown.md` |
-| `@tc.md plan change`    | `@planning/requirements_change.md`    |
-| `@tc.md plan status`    | `@planning/project_status.md`         |
-| `@tc.md plan next`      | `@planning/next_step_advisor.md`      |
-| `@tc.md plan epic`      | `@planning/epic_planning.md`          |
-| `@tc.md plan feature`   | `@planning/feature_planning.md`       |
-| `@tc.md plan story`     | `@planning/story_writing.md`          |
-| `@tc.md plan bugfix`    | `@planning/bug_fix_story.md`          |
+| @tc.md 命令                | Playbook 路径                            |
+| -------------------------- | ---------------------------------------- |
+| `@tc.md plan review`       | `@planning/requirements_review.md`       |
+| `@tc.md plan breakdown`    | `@planning/requirements_breakdown.md`    |
+| `@tc.md plan change`       | `@planning/requirements_change.md`       |
+| `@tc.md plan status`       | `@planning/project_status.md`            |
+| `@tc.md plan next`         | `@planning/next_step_advisor.md`         |
+| `@tc.md plan epic`         | `@planning/epic_planning.md`             |
+| `@tc.md plan feature`      | `@planning/feature_planning.md`          |
+| `@tc.md plan story`        | `@planning/story_writing.md`             |
+| `@tc.md plan e2e`          | `@planning/e2e_story.md`                 |
+| `@tc.md plan perf`         | `@planning/performance_test_story.md`    |
+| `@tc.md plan bugfix`       | `@planning/bug_fix_story.md`             |
 
 #### 缩写命令
 
-| @tc.md 缩写        | 原命令                  | Playbook 路径                         |
-| ------------------ | ----------------------- | ------------------------------------- |
-| `@tc.md plan rv`   | `@tc.md plan review`    | `@planning/requirements_review.md`    |
-| `@tc.md plan bd`   | `@tc.md plan breakdown` | `@planning/requirements_breakdown.md` |
-| `@tc.md plan chg`  | `@tc.md plan change`    | `@planning/requirements_change.md`    |
-| `@tc.md plan st`   | `@tc.md plan status`    | `@planning/project_status.md`         |
-| `@tc.md plan n`    | `@tc.md plan next`      | `@planning/next_step_advisor.md`      |
-| `@tc.md plan e`    | `@tc.md plan epic`      | `@planning/epic_planning.md`          |
-| `@tc.md plan feat` | `@tc.md plan feature`   | `@planning/feature_planning.md`       |
-| `@tc.md plan f`    | `@tc.md plan feature`   | `@planning/feature_planning.md`       |
-| `@tc.md plan s`    | `@tc.md plan story`     | `@planning/story_writing.md`          |
-| `@tc.md plan bug`  | `@tc.md plan bugfix`    | `@planning/bug_fix_story.md`          |
-| `@tc.md plan bf`   | `@tc.md plan bugfix`    | `@planning/bug_fix_story.md`          |
+| @tc.md 缩写             | 原命令                  | Playbook 路径                            |
+| ----------------------- | ----------------------- | ---------------------------------------- |
+| `@tc.md plan rv`        | `@tc.md plan review`    | `@planning/requirements_review.md`       |
+| `@tc.md plan bd`        | `@tc.md plan breakdown` | `@planning/requirements_breakdown.md`    |
+| `@tc.md plan chg`       | `@tc.md plan change`    | `@planning/requirements_change.md`       |
+| `@tc.md plan st`        | `@tc.md plan status`    | `@planning/project_status.md`            |
+| `@tc.md plan n`         | `@tc.md plan next`      | `@planning/next_step_advisor.md`         |
+| `@tc.md plan e`         | `@tc.md plan epic`      | `@planning/epic_planning.md`             |
+| `@tc.md plan feat`      | `@tc.md plan feature`   | `@planning/feature_planning.md`          |
+| `@tc.md plan f`         | `@tc.md plan feature`   | `@planning/feature_planning.md`          |
+| `@tc.md plan s`         | `@tc.md plan story`     | `@planning/story_writing.md`             |
+| `@tc.md plan ee`        | `@tc.md plan e2e`       | `@planning/e2e_story.md`                 |
+| `@tc.md plan performance` | `@tc.md plan perf`    | `@planning/performance_test_story.md`    |
+| `@tc.md plan p`         | `@tc.md plan perf`      | `@planning/performance_test_story.md`    |
+| `@tc.md plan bug`       | `@tc.md plan bugfix`    | `@planning/bug_fix_story.md`             |
+| `@tc.md plan bf`        | `@tc.md plan bugfix`    | `@planning/bug_fix_story.md`             |
 
 #### 一级快捷命令
 
-| @tc.md 快捷命令  | 等同于                | Playbook 路径                    |
-| ---------------- | --------------------- | -------------------------------- |
-| `@tc.md status`  | `@tc.md plan status`  | `@planning/project_status.md`    |
-| `@tc.md next`    | `@tc.md plan next`    | `@planning/next_step_advisor.md` |
-| `@tc.md epic`    | `@tc.md plan epic`    | `@planning/epic_planning.md`     |
-| `@tc.md feature` | `@tc.md plan feature` | `@planning/feature_planning.md`  |
-| `@tc.md story`   | `@tc.md plan story`   | `@planning/story_writing.md`     |
-| `@tc.md bugfix`  | `@tc.md plan bugfix`  | `@planning/bug_fix_story.md`     |
+| @tc.md 快捷命令  | 等同于                | Playbook 路径                         |
+| ---------------- | --------------------- | ------------------------------------- |
+| `@tc.md status`  | `@tc.md plan status`  | `@planning/project_status.md`         |
+| `@tc.md next`    | `@tc.md plan next`    | `@planning/next_step_advisor.md`      |
+| `@tc.md epic`    | `@tc.md plan epic`    | `@planning/epic_planning.md`          |
+| `@tc.md feature` | `@tc.md plan feature` | `@planning/feature_planning.md`       |
+| `@tc.md story`   | `@tc.md plan story`   | `@planning/story_writing.md`          |
+| `@tc.md e2e`     | `@tc.md plan e2e`     | `@planning/e2e_story.md`              |
+| `@tc.md perf`    | `@tc.md plan perf`    | `@planning/performance_test_story.md` |
+| `@tc.md bugfix`  | `@tc.md plan bugfix`  | `@planning/bug_fix_story.md`          |
 
 ---
 

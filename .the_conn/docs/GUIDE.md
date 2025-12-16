@@ -93,7 +93,17 @@
 5. **生成 Story**：
 
    ```
+   # 生成普通 Story（功能开发）
    @{需求文档} @playbooks/planning/story_writing.md 帮我拆解为 Story
+   
+   # 生成 E2E Story（Feature 集成测试）
+   @{Feature信息} @playbooks/planning/e2e_story.md 帮我生成 E2E Story
+   
+   # 生成性能测试 Story（性能验证）
+   @{性能需求} @playbooks/planning/performance_test_story.md 帮我生成性能测试 Story
+   
+   # 生成 Bug Fix Story（问题修复）
+   @{Bug信息} @playbooks/planning/bug_fix_story.md 帮我生成 Bug Fix Story
    ```
 
    → 输出到 `.the_conn/epics/.../stories/STORY-XX_Name.md`
@@ -121,12 +131,21 @@
    ```
 
 2. AI 会在 `.the_conn/ai_workspace/EPIC-XX/TASK-XX_STORY-XX_Name/` 下生成：
-   - `task.md` - 任务简报（强调 BDD/TDD 测试先行）
+   - `task.md` - 任务简报（根据 Story type 决定测试策略）
+     - E2E Story (`type: e2e_test`): BDD 测试先行
+     - 普通 Story (`type: dev`): 单元测试先行（TDD）
    - `context.manifest.json` - 上下文清单
 
 3. 审查生成的文件，补充必要的上下文引用
 
-**注意**: Task ID 在 Epic 内顺序编号，一个 Story 可能对应多个 Task（开发、测试、修复）
+**注意**:
+
+- Task ID 在 Epic 内顺序编号，一个 Story 可能对应多个 Task
+- Task 生成会根据 Story 的 `type` 字段自动选择测试策略：
+  - `type: dev` → 单元测试先行（TDD）
+  - `type: e2e_test` → BDD 测试先行
+  - `type: perf_test` → 性能测试
+  - `type: bug_fix` → 单元测试 + 回归测试
 
 ### 流程三：执行开发任务
 
@@ -140,9 +159,10 @@
    @.the_conn/ai_workspace/EPIC-XX/TASK-XX_STORY-XX_Name/ 开始任务
    ```
 
-2. AI 按 BDD/TDD 流程执行（Step 1-5）：
-   - 先创建/更新 `.feature` 文件和测试代码
-   - 再实现业务逻辑使测试通过
+2. AI 按测试策略执行：
+   - **E2E Story** (`type: e2e_test`): 先创建 `.feature` 文件和 Step Definitions，再实现业务逻辑
+   - **性能测试 Story** (`type: perf_test`): 先准备性能测试环境和脚本，再实现/优化业务代码
+   - **普通/Bug Fix Story** (`type: dev`, `type: bug_fix`): 先创建单元测试，再实现业务逻辑使测试通过
    - 运行测试验证
 
 3. **人工 Review 检查点** ⚠️：
@@ -508,12 +528,12 @@ STORY-TMP-Bob-01 → STORY-04
 
 #### 不应提交到 Git
 
-| 目录/文件                 | 说明                | 原因                             |
-| ------------------------- | ------------------- | -------------------------------- |
-| `.the_conn/ai_workspace/` | 临时工作区          | 每个人的 Task 工作区，不需要共享 |
-| `.the_conn/playbooks/`    | Playbooks 操作剧本  | 独立项目，通过 CLI 工具管理      |
-| `.the_conn/docs/`         | 用户文档            | 独立项目，通过 CLI 工具管理      |
-| `*.log`, `*.tmp`          | 临时/日志文件       | 运行时产生，不需要版本控制       |
+| 目录/文件                 | 说明                 | 原因                             |
+| ------------------------- | -------------------- | -------------------------------- |
+| `.the_conn/ai_workspace/` | 临时工作区           | 每个人的 Task 工作区，不需要共享 |
+| `.the_conn/playbooks/`    | Playbooks 操作剧本   | 独立项目，通过 CLI 工具管理      |
+| `.the_conn/docs/`         | 用户文档             | 独立项目，通过 CLI 工具管理      |
+| `*.log`, `*.tmp`          | 临时/日志文件        | 运行时产生，不需要版本控制       |
 | IDE 配置文件              | `.vscode/`, `.idea/` | 个人 IDE 配置，不强制统一        |
 
 #### .gitignore 推荐配置

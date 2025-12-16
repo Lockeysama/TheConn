@@ -237,12 +237,30 @@ AI-assisted coding with human oversight.
 @.the_conn/ai_workspace/EPIC-XX/TASK-XX_STORY-XX_Name/ Start task
 ```
 
-AI follows BDD/TDD workflow (Steps 1-5):
+AI follows test-first workflow (Steps 1-5):
 
-1. Create/update `.feature` files (BDD scenarios)
-2. Write test code first
-3. Implement business logic to pass tests
+**For E2E Stories** (`type: e2e_test`):
+
+1. Create `.feature` files with BDD scenarios
+2. Implement step definitions
+3. Implement business logic to pass BDD tests
 4. Run tests and verify
+5. Code complete
+
+**For Performance Test Stories** (`type: perf_test`):
+
+1. Prepare performance test environment and tools
+2. Write performance test scripts
+3. Implement/optimize business logic
+4. Run performance tests and verify metrics
+5. Code complete
+
+**For Regular/Bug Fix Stories** (`type: dev`, `type: bug_fix`):
+
+1. Write unit tests first (TDD)
+2. Implement business logic to pass tests
+3. Run tests and verify
+4. Refactor if needed
 5. Code complete
 
 ##### ⚠️ Human Review Checkpoint
@@ -277,7 +295,45 @@ If Steps 6-7 weren't executed in Stage 3, run manually:
 @{original_Story_file} @playbooks/execution/story_sync.md Start sync
 ```
 
-#### Stage 5: Bug Fix Workflow
+#### Stage 5: Specialized Story Workflows
+
+##### E2E Testing Stories
+
+For end-to-end integration testing:
+
+```bash
+# New way (recommended):
+@tc.md e2e
+# Or using shorthand:
+@tc.md plan ee
+
+# Or traditional way:
+@playbooks/planning/e2e_story.md Generate E2E Story
+```
+
+- Uses BDD scenarios as acceptance criteria
+- Tests complete user journeys
+- Creates `STORY-99_E2E_{Feature}_Flow.md`
+
+##### Performance Testing Stories
+
+For performance validation:
+
+```bash
+# New way (recommended):
+@tc.md perf
+# Or using shorthand:
+@tc.md plan p
+
+# Or traditional way:
+@playbooks/planning/performance_test_story.md Generate Performance Test Story
+```
+
+- Uses performance metrics as acceptance criteria
+- Tests under load and stress conditions
+- Creates `STORY-97_Performance_{Feature}.md`
+
+##### Bug Fix Workflow
 
 For bugs discovered in completed Stories:
 
@@ -313,7 +369,9 @@ Epic (Business Goal)
 
 - Epic: `EPIC-01`, `EPIC-02`, ...
 - Feature: `FEAT-01`, `FEAT-02`, ... (per Epic)
-- Story: `STORY-01`, `STORY-02`, ... (per Epic)
+- Story: `STORY-01` ~ `STORY-96`, ... (per Epic, regular stories)
+- E2E Story: `STORY-97` ~ `STORY-99` (Feature-level), `STORY-997` ~ `STORY-999` (Epic-level)
+- Performance Story: `STORY-97` (Feature-level), `STORY-997` (Epic-level)
 - Bug Fix: `STORY-01.1`, `STORY-01.2`, ... (inherits parent Story ID)
 - Task: `TASK-01`, `TASK-02`, ... (sequential per Epic)
 

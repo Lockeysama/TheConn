@@ -69,7 +69,9 @@
 | `@tc.md plan next`      | `@tc.md plan n`                      | 下一步行动建议       | `@planning/next_step_advisor.md`      |
 | `@tc.md plan epic`      | `@tc.md plan e`                      | 生成 Epic            | `@planning/epic_planning.md`          |
 | `@tc.md plan feature`   | `@tc.md plan feat` / `@tc.md plan f` | 生成 Feature         | `@planning/feature_planning.md`       |
-| `@tc.md plan story`     | `@tc.md plan s`                      | 生成 Story           | `@planning/story_writing.md`          |
+| `@tc.md plan story`     | `@tc.md plan s`                      | 生成普通 Story       | `@planning/story_writing.md`          |
+| `@tc.md plan e2e`       | -                                    | 生成 E2E Story       | `@planning/e2e_story.md`              |
+| `@tc.md plan perf`      | `@tc.md plan performance`            | 生成性能测试 Story   | `@planning/performance_test_story.md` |
 | `@tc.md plan bugfix`    | `@tc.md plan bug` / `@tc.md plan bf` | 生成 Bug Fix Story   | `@planning/bug_fix_story.md`          |
 
 **一级命令快捷方式**（常用命令）：
@@ -80,6 +82,8 @@
 @tc.md epic       → @tc.md plan epic
 @tc.md feature    → @tc.md plan feature
 @tc.md story      → @tc.md plan story
+@tc.md e2e        → @tc.md plan e2e
+@tc.md perf       → @tc.md plan perf
 @tc.md bugfix     → @tc.md plan bugfix
 ```
 
@@ -146,6 +150,8 @@
   "epic": "@planning/epic_planning.md",
   "feature": "@planning/feature_planning.md",
   "story": "@planning/story_writing.md",
+  "e2e": "@planning/e2e_story.md",
+  "perf": "@planning/performance_test_story.md",
   "bugfix": "@planning/bug_fix_story.md",
   "task": "@execution/task_generation.md",
   "sync": "@execution/story_sync.md",
@@ -174,6 +180,9 @@
     "f": "@planning/feature_planning.md",
     "story": "@planning/story_writing.md",
     "s": "@planning/story_writing.md",
+    "e2e": "@planning/e2e_story.md",
+    "perf": "@planning/performance_test_story.md",
+    "performance": "@planning/performance_test_story.md",
     "bugfix": "@planning/bug_fix_story.md",
     "bug": "@planning/bug_fix_story.md",
     "bf": "@planning/bug_fix_story.md"

@@ -122,9 +122,23 @@ created: yyyy-mm-dd
 
 **性能测试判断**：
 
+**触发条件**（满足任意一条建议添加）：
+
 - 明确性能指标（响应时间、吞吐量、并发数）
 - 性能敏感场景（大数据、实时处理、复杂计算）
-- 如果检测到 → 建议性能测试 Story
+- 预期高并发访问
+- 涉及大数据量处理
+- 实时性要求严格
+
+**如果检测到 → 建议性能测试 Story**
+
+**性能测试 Story 特点**：
+
+- ID：STORY-97（Feature 级）
+- Type：`perf_test`
+- 验收标准：性能指标（响应时间、吞吐量、并发等）
+- 测试场景：负载测试、压力测试、容量测试、峰值测试、稳定性测试
+- 生成方式：使用 `@playbooks/planning/performance_test_story.md`
 
 ### AI 自动生成输出
 
@@ -155,13 +169,19 @@ created: yyyy-mm-dd
 
 ### 测试 Story 命名规范
 
-| Story 类型 | 命名格式                             | 示例                            |
-| ---------- | ------------------------------------ | ------------------------------- |
-| E2E 测试   | `STORY-99_E2E_{FeatureName}_Flow`    | `STORY-99_E2E_Auth_Flow`        |
-| 集成测试   | `STORY-98_Integration_{FeatureName}` | `STORY-98_Integration_Payment`  |
-| 性能测试   | `STORY-97_Performance_{FeatureName}` | `STORY-97_Performance_DataSync` |
+| Story 类型 | 命名格式                             | Story Type  | 示例                            |
+| ---------- | ------------------------------------ | ----------- | ------------------------------- |
+| E2E 测试   | `STORY-99_E2E_{FeatureName}_Flow`    | `e2e_test`  | `STORY-99_E2E_Auth_Flow`        |
+| 集成测试   | `STORY-98_Integration_{FeatureName}` | `e2e_test`  | `STORY-98_Integration_Payment`  |
+| 性能测试   | `STORY-97_Performance_{FeatureName}` | `perf_test` | `STORY-97_Performance_DataSync` |
 
 **编号约定**: 测试 Story 使用 97-99 编号，与功能 Story 区分
+
+**Story type 字段**：
+
+- E2E 测试 Story: `type: e2e_test`
+- 性能测试 Story: `type: perf_test`
+- 生成方式: 使用 `@playbooks/planning/e2e_story.md` 生成 E2E Story
 
 ### 决策示例
 

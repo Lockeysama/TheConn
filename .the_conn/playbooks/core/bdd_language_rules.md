@@ -2,6 +2,13 @@
 
 本文档定义 BDD Feature 文件的语言使用规则。
 
+## ⚠️ 适用范围
+
+**本规范仅适用于 E2E Story (`type: e2e_test`)**
+
+- ✅ E2E Story: 使用 BDD 场景作为验收标准
+- ❌ 普通 Story (`type: dev`, `type: bug_fix`): 使用功能清单，不需要 BDD
+
 ---
 
 ## 1. 双重语言判断机制

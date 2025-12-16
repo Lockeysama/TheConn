@@ -237,12 +237,30 @@ AI 辅助编码，人工监督。
 @.the_conn/ai_workspace/EPIC-XX/TASK-XX_STORY-XX_Name/ 开始任务
 ```
 
-AI 遵循 BDD/TDD 工作流（步骤 1-5）：
+AI 遵循测试先行工作流（步骤 1-5）：
 
-1. 创建/更新 `.feature` 文件（BDD 场景）
-2. 先编写测试代码
-3. 实现业务逻辑使测试通过
+**对于 E2E Story**（`type: e2e_test`）：
+
+1. 创建包含 BDD 场景的 `.feature` 文件
+2. 实现步骤定义
+3. 实现业务逻辑使 BDD 测试通过
 4. 运行测试并验证
+5. 代码完成
+
+**对于性能测试 Story**（`type: perf_test`）：
+
+1. 准备性能测试环境和工具
+2. 编写性能测试脚本
+3. 实现/优化业务逻辑
+4. 运行性能测试并验证指标
+5. 代码完成
+
+**对于普通/Bug Fix Story**（`type: dev`, `type: bug_fix`）：
+
+1. 先编写单元测试（TDD）
+2. 实现业务逻辑使测试通过
+3. 运行测试并验证
+4. 必要时重构
 5. 代码完成
 
 ##### ⚠️ 人工审查检查点
@@ -277,7 +295,45 @@ AI 自动：
 @{原始Story文件} @playbooks/execution/story_sync.md 开始同步
 ```
 
-#### 阶段 5：Bug 修复工作流
+#### 阶段 5：专项 Story 工作流
+
+##### E2E 测试 Story
+
+用于端到端集成测试：
+
+```bash
+# 新方式（推荐）：
+@tc.md e2e
+# 或使用缩写：
+@tc.md plan ee
+
+# 或传统方式：
+@playbooks/planning/e2e_story.md 生成 E2E Story
+```
+
+- 使用 BDD 场景作为验收标准
+- 测试完整用户旅程
+- 创建 `STORY-99_E2E_{Feature}_Flow.md`
+
+##### 性能测试 Story
+
+用于性能验证：
+
+```bash
+# 新方式（推荐）：
+@tc.md perf
+# 或使用缩写：
+@tc.md plan p
+
+# 或传统方式：
+@playbooks/planning/performance_test_story.md 生成性能测试 Story
+```
+
+- 使用性能指标作为验收标准
+- 在负载和压力条件下测试
+- 创建 `STORY-97_Performance_{Feature}.md`
+
+##### Bug 修复工作流
 
 对于已完成 Story 中发现的 Bug：
 
@@ -313,7 +369,9 @@ Epic（业务目标）
 
 - Epic：`EPIC-01`, `EPIC-02`, ...
 - Feature：`FEAT-01`, `FEAT-02`, ...（每个 Epic 内）
-- Story：`STORY-01`, `STORY-02`, ...（每个 Epic 内）
+- Story：`STORY-01` ~ `STORY-96`, ...（每个 Epic 内，普通 Story）
+- E2E Story：`STORY-97` ~ `STORY-99`（Feature 级）, `STORY-997` ~ `STORY-999`（Epic 级）
+- 性能测试 Story：`STORY-97`（Feature 级）, `STORY-997`（Epic 级）
 - Bug 修复：`STORY-01.1`, `STORY-01.2`, ...（继承父 Story ID）
 - Task：`TASK-01`, `TASK-02`, ...（Epic 内顺序编号）
 
