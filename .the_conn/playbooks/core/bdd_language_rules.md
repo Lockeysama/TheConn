@@ -37,7 +37,7 @@ BDD Feature 需要判断两个维度的语言：
 | 编程语言      | 常用 BDD 框架 | 支持中文 | 支持英文 | 其他语言支持 |
 | ------------- | ------------- | -------- | -------- | ------------ |
 | Go            | godog         | ✅        | ✅        | 多语言支持   |
-| Python        | pytest-bdd    | ❌        | ✅        | 仅英文       |
+| Python        | pytest-bdd    | ✅        | ✅        | 多语言支持   |
 | Python        | behave        | ✅        | ✅        | 多语言支持   |
 | JavaScript/TS | cucumber-js   | ✅        | ✅        | 多语言支持   |
 | Java          | Cucumber JVM  | ✅        | ✅        | 多语言支持   |
