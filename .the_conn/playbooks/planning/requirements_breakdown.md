@@ -9,6 +9,7 @@
 ## 本 Playbook 的工作范围
 
 **专注于**：
+
 - ✅ **生成规划文档**：Epic、Feature、Story 规划文件
 - ✅ **需求拆解**：将需求拆解为可开发的任务
 - ✅ **依赖分析**：分析任务之间的依赖关系
@@ -17,6 +18,7 @@
 **原因**：本阶段是**规划阶段**，重点是"拆解需求"。
 
 **📋 规范引用**：
+
 - **测试策略**：`@playbooks/core/test_strategy_rules.md`
 - **复杂度评估**：`@playbooks/core/complexity_rules.md`
 - **BDD 语言配置**：`@playbooks/core/bdd_language_rules.md`
@@ -28,6 +30,7 @@
 ## 输入
 
 用户会提供：
+
 1. **需求文档**（PRD、用户故事、功能列表等）
 2. **技术方案**（已通过 `requirements_review.md` 讨论确定）
 
@@ -68,8 +71,10 @@
 **Step 4: 应用测试策略（多维度分析）**
 
 **Story 级测试策略**：
-- 用户功能 Story → 规划 BDD + 单元测试
-- 技术实现 Story → 规划单元测试
+
+- 用户功能 Story → 规划单元测试（功能清单验收）
+- 技术实现 Story → 规划单元测试（技术清单验收）
+- E2E Story → 规划 BDD E2E 测试（BDD 场景验收）
 
 **Feature 级 E2E 测试判断**：
 
@@ -110,11 +115,13 @@ FEAT-02: 配置管理
 ```
 
 **Epic 级 E2E 测试判断**：
+
 - 分析 Feature 之间是否有跨功能的用户旅程
 - 是否存在核心业务流程跨越多个 Feature
 - Epic 规模 + 集成依赖程度
 
 **性能测试**（按需建议）：
+
 - 检测性能敏感场景：大数据、高并发、实时性、复杂算法
 - 如果检测到 → 告知用户并询问是否需要
 
@@ -125,10 +132,11 @@ FEAT-02: 配置管理
 **重要**: 先展示大纲，等用户确认后再生成详细文档！
 
 **粒度原则**: 默认使用**较粗的粒度**，按**模块边界和功能边界**拆分，便于 AI 编码：
+
 - **Epic**: 按大的业务领域或子系统划分，一个项目通常 1-3 个 Epic
 - **Feature**: 按完整的功能模块划分，每个 Epic 包含 2-4 个 Feature
 - **Story**: 按独立的功能单元或模块职责划分，每个 Feature 包含 2-5 个 Story
-- **拆分标准**: 
+- **拆分标准**:
   - 边界清晰（输入输出明确）
   - 职责单一（一个 Story 只做一件事）
   - 可独立测试（有明确的验收标准）
@@ -179,9 +187,9 @@ FEAT-02: 配置管理
 
 ### STORY-01: {Story 名称}
 - **Feature**: FEAT-01
-- **类型**: 功能开发
+- **类型**: 功能开发 (type: dev)
 - **目标**: {简要目标}
-- **测试策略**: BDD + 单元测试（用户可见功能）
+- **测试策略**: 单元测试（功能清单验收）
 - **依赖**: 无
 - **复杂度**: {1.0-10.0分,如 3.5}
 
@@ -199,25 +207,38 @@ FEAT-02: 配置管理
 
 ### STORY-99: E2E_{FeatureName}_Flow
 - **Feature**: FEAT-01
-- **类型**: E2E 测试
+- **类型**: E2E 测试 (type: e2e_test)
 - **目标**: 验证 STORY-01 ~ STORY-03 的完整集成流程
+- **测试策略**: BDD E2E 测试（BDD 场景验收）
 - **触发条件**: 所有功能 Story 完成后
 - **依赖**: STORY-01, STORY-02, STORY-03
 - **复杂度**: 4.0
+- **测试路径**: 
+  - Feature 文件: `tests/bdd/features/{module}/{feature_name}_flow.feature`
+  - Step Definitions: `tests/bdd/{language}_test.{ext}`
 - **说明**: 自动建议（Feature 包含 ≥3 个功能 Story）
+- **生成方式**: 使用 `@playbooks/planning/e2e_story.md` 生成
 
-### STORY-97: Performance_{FeatureName}（可选）
+### STORY-97: Performance_{FeatureName}（按需添加）
 - **Feature**: FEAT-03
-- **类型**: 性能测试
+- **类型**: 性能测试 (type: perf_test)
 - **目标**: 验证高并发场景下的性能指标
+- **测试策略**: 性能测试（性能指标验收）
 - **触发条件**: 功能 Story 完成后
 - **依赖**: STORY-06, STORY-07, STORY-08
 - **复杂度**: 5.0
-- **说明**: 检测到性能瓶颈，需用户确认是否添加
+- **性能指标**: 
+  - 响应时间: P95 < {X}ms, P99 < {Y}ms
+  - 吞吐量: TPS ≥ {N}
+  - 并发能力: 支持 {M} 并发用户
+- **测试场景**: 负载测试、压力测试、容量测试
+- **说明**: 检测到性能敏感场景，建议添加性能测试
+- **生成方式**: 使用 `@playbooks/planning/performance_test_story.md` 生成
 
 ## 依赖关系与开发顺序
 
 ```
+
 STORY-01, STORY-04 (无依赖，可并行)
   ↓
 STORY-02, STORY-05
@@ -225,6 +246,7 @@ STORY-02, STORY-05
 STORY-03, STORY-06
   ↓
 STORY-07, STORY-08
+
 ```
 
 ---
@@ -267,6 +289,7 @@ STORY-07, STORY-08
 | "Feature 顺序不对"  | 调整 Feature 编号和顺序               |
 
 **迭代流程**:
+
 ```
 展示大纲 v1
   ↓
@@ -298,22 +321,26 @@ STORY-07, STORY-08
 #### 3.1 生成 Epic 文档
 
 参考 `@prompts/planning/epic_planning.md` 的规则，为每个 Epic 生成：
+
 - 文件路径: `.the_conn/epics/EPIC-{序号}_{Name}/README.md`
 - 内容: Epic 规划（业务价值、范围、指标）
 
 #### 3.2 生成 Feature 文档
 
 参考 `@prompts/planning/feature_planning.md` 的规则，为每个 Feature 生成：
+
 - 文件路径: `.the_conn/epics/EPIC-{序号}_{Name}/features/FEAT-{序号}_{Name}/README.md`
 - 内容: Feature 规划（目标、Story 列表、验收标准）
 
 #### 3.3 生成 Story 文档
 
 参考 `@prompts/planning/story_writing.md` 的规则，为每个 Story 生成：
+
 - 文件路径: `.the_conn/epics/.../stories/STORY-{序号}_{Name}.md`
 - 内容: 完整的 Story（目标、BDD 场景、实现指导）
 
-**重要**: 
+**重要**:
+
 - 在生成 Story 前，确认项目的 BDD 配置（语言、测试库、Feature 文件语言）
 - 如果缺失，先提醒用户提供
 
@@ -330,6 +357,7 @@ STORY-07, STORY-08
 5. **粒度控制**: 优先考虑较粗的粒度，一个中型项目通常 1-3 个 Epic 即可
 
 **示例**:
+
 ```
 ✅ 好的拆分:
 EPIC-01: 基础框架
@@ -350,6 +378,7 @@ EPIC-02: 其他功能（边界不清）
 5. **粒度控制**: 优先合并相关功能，不要为了拆而拆
 
 **示例**:
+
 ```
 ✅ 好的拆分:
 FEAT-01: 项目初始化
@@ -371,6 +400,7 @@ FEAT-02: 数据库设计（不是用户视角）
 6. **粒度控制**: 宁粗勿细，按功能完整性拆分，不要为了拆而拆
 
 **示例**:
+
 ```
 ✅ 好的拆分（按功能模块边界）:
 STORY-01: 实现项目结构初始化模块（包含目录创建、权限检查、幂等性处理）
@@ -389,7 +419,7 @@ STORY-03: 修改 init.py 的第 10-50 行（关注实现细节而非功能边界
 
 ### 自动编号逻辑
 
-1. **Epic 编号**: 
+1. **Epic 编号**:
    - 全局唯一
    - 按生成顺序: EPIC-01, EPIC-02, EPIC-03, ...
    - 两位数字，不足补零
@@ -406,6 +436,7 @@ STORY-03: 修改 init.py 的第 10-50 行（关注实现细节而非功能边界
    - 两位数字，不足补零
 
 **示例**:
+
 ```
 EPIC-01
 ├── FEAT-01
@@ -435,6 +466,7 @@ EPIC-02
 ### 标注依赖
 
 在 Story Frontmatter 中：
+
 ```yaml
 depends_on:
   - STORY-01
@@ -444,6 +476,7 @@ depends_on:
 ### 建议开发顺序
 
 根据依赖关系，生成建议的开发顺序：
+
 - 无依赖的 Story 可以并行开发
 - 有依赖的 Story 必须等依赖完成
 
@@ -468,6 +501,7 @@ depends_on:
 ### 输入
 
 **需求文档**:
+
 ```
 项目: DataStream 可靠传输
 需求: 
@@ -477,6 +511,7 @@ depends_on:
 ```
 
 **技术方案**:
+
 ```
 核心: 3次冗余 + 动态捎带
 协议: JSON 格式
@@ -537,6 +572,7 @@ STORY-07: 端到端集成
 ## 依赖关系图
 
 ```
+
 并行开发:
 ├── STORY-01 (发送缓冲) → STORY-03 (冗余控制)
 ├── STORY-02 (历史窗口) ↗
@@ -544,6 +580,7 @@ STORY-07: 端到端集成
 └── STORY-06 (协议定义)
          ↓
       STORY-07 (端到端集成) ← 等待所有依赖完成
+
 ```
 
 ## 建议开发顺序
@@ -571,6 +608,7 @@ STORY-07: 端到端集成
 使用 `@prompts/planning/epic_planning.md` 规则，生成每个 Epic 的 README.md。
 
 **输出示例**:
+
 ```
 .the_conn/epics/EPIC-01_DataStream_Reliable_Transmission/README.md
 .the_conn/epics/EPIC-02_Monitoring_And_Alerting/README.md
@@ -581,6 +619,7 @@ STORY-07: 端到端集成
 使用 `@prompts/planning/feature_planning.md` 规则，生成每个 Feature 的 README.md。
 
 **输出示例**:
+
 ```
 .the_conn/epics/EPIC-01_DataStream_Reliable_Transmission/features/FEAT-01_Sender_Core/README.md
 .the_conn/epics/EPIC-01_DataStream_Reliable_Transmission/features/FEAT-02_Receiver_Dedup/README.md
@@ -591,12 +630,14 @@ STORY-07: 端到端集成
 使用 `@prompts/planning/story_writing.md` 规则，生成每个 Story 文件。
 
 **注意事项**:
+
 1. **BDD 配置确认**: 在生成 Story 前，确认项目的 BDD 配置（语言、测试库、Feature 文件语言）
 2. **依赖关系**: 正确设置每个 Story 的 `depends_on` 字段
 3. **BDD 场景**: 为每个 Story 编写 2-4 个验收场景
 4. **实现指导**: 明确涉及文件和关键逻辑
 
 **输出示例**:
+
 ```
 .the_conn/epics/EPIC-01_DataStream_Reliable_Transmission/features/FEAT-01_Sender_Core/stories/STORY-01_Send_Buffer_Queue.md
 .the_conn/epics/EPIC-01_DataStream_Reliable_Transmission/features/FEAT-01_Sender_Core/stories/STORY-02_History_Window.md
@@ -636,11 +677,13 @@ STORY-07: 端到端集成
 ### Q1: 一个需求太大，如何拆分？
 
 **策略**:
+
 1. 先按业务领域拆分 Epic
 2. 再按用户流程拆分 Feature
 3. 最后按实现单元拆分 Story
 
 **示例**:
+
 ```
 大需求: 用户管理系统
 
@@ -653,6 +696,7 @@ Epic 拆分:
 ### Q2: 多个 Story 之间有依赖怎么办？
 
 **处理方式**:
+
 1. 在 Story Frontmatter 的 `depends_on` 中明确标注
 2. 生成依赖关系图，帮助规划开发顺序
 3. 建议并行开发无依赖的 Story，缩短总工期
@@ -660,6 +704,7 @@ Epic 拆分:
 ### Q3: 需求变化了怎么办？
 
 **应对方式**:
+
 1. 小变化: 修改对应的 Story
 2. 大变化: 可能需要新增 Feature 或 Epic
 3. 使用 `@prompts/context/update.md` 更新技术方案

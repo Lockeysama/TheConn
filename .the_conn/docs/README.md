@@ -28,6 +28,7 @@ The Conn 提供了统一的命令入口 `@tc`，让你无需记住复杂的 Play
 ```
 
 **详细文档**：
+
 - 📘 [快速开始指南](QUICK_START.md) - 5 分钟上手
 - 📗 [命令参考手册](COMMANDS.md) - 完整命令列表
 - 📙 [命令映射表](COMMAND_MAPPING.md) - 命令与 Playbook 对照
@@ -240,6 +241,7 @@ Story 完成并合并
 **格式**: `{ID}_{PascalCaseName}.md`
 
 **示例**:
+
 - `EPIC-01_Base_Init/`
 - `STORY-01_Create_Structure.md`
 - `TASK-01_STORY-01_Create_Structure/`

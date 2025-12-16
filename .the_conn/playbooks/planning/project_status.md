@@ -9,6 +9,7 @@
 ## 本 Playbook 的工作范围
 
 **专注于**：
+
 - ✅ **生成报告**：创建项目进度报告
 - ✅ **分析数据**：统计任务完成情况
 
@@ -28,6 +29,7 @@
 ## 输入要求
 
 需要访问：
+
 - `.the_conn/epics/` 下的所有 Epic/Feature/Story 文件
 - Story 文件的 Frontmatter（特别是 `status` 和 `depends_on` 字段）
 
@@ -64,7 +66,9 @@
 **进度**: {X}% ({已完成}/{总数} Stories)
 
 ```
+
 [████████░░] 80%
+
 ```
 
 **Features**:
@@ -217,6 +221,7 @@ FEAT-04: ░░░░░░░░░░ 0%
 - "进行中" Story 指当前有 Task 正在执行的 Story
 - 阻塞识别基于 `depends_on` 字段的依赖关系
 - 如需更新 Story 状态，使用 @prompts/execution/story_sync.md
+
 ```
 
 ---
@@ -226,38 +231,47 @@ FEAT-04: ░░░░░░░░░░ 0%
 ### 1. 扫描所有 Story
 
 ```
+
 遍历 .the_conn/epics/**/stories/*.md
 提取每个 Story 的:
+
 - id
 - status (pending/done)
 - epic
 - feature
 - depends_on
+
 ```
 
 ### 2. 计算统计数据
 
 ```
+
 总 Story 数 = 所有 Story 文件数量
 已完成数 = status: done 的数量
 待开始数 = status: pending 且依赖已满足的数量
 进行中数 = status: pending 且当前有 Task 的数量（基于 ai_workspace 目录）
+
 ```
 
 ### 3. 识别阻塞
 
 ```
+
 对每个 pending Story:
   检查 depends_on 列表
   如果有任何依赖 Story 的 status != done
     标记为"被阻塞"
+
 ```
 
 ### 4. 生成进度条
 
 ```
-Epic 进度 = (Epic 下已完成 Story 数) / (Epic 下总 Story 数) * 100%
-Feature 进度 = (Feature 下已完成 Story 数) / (Feature 下总 Story 数) * 100%
+
+Epic 进度 = (Epic 下已完成 Story 数) / (Epic 下总 Story 数) *100%
+Feature 进度 = (Feature 下已完成 Story 数) / (Feature 下总 Story 数)* 100%
+
 ```
 
 ---
@@ -277,13 +291,17 @@ Feature 进度 = (Feature 下已完成 Story 数) / (Feature 下总 Story 数) *
 ## 使用示例
 
 ```
+
 @.the_conn/epics/ @prompts/planning/project_status.md 生成项目状态报告
+
 ```
 
 或指定特定 Epic：
 
 ```
+
 @.the_conn/epics/EPIC-01_Base_Init/ @prompts/planning/project_status.md 生成 EPIC-01 状态报告
+
 ```
 
 ---

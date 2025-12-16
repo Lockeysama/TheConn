@@ -31,6 +31,7 @@ theconn init
 ### Options
 
 All commands support:
+
 - `--branch <branch>` - GitHub branch to use (default: `main`)
 - `--path <path>` - Target directory (default: `.`)
 - `--yes` - Skip confirmation prompts (uninstall only)
@@ -63,7 +64,7 @@ npx @theconn/cli uninstall --yes
 
 ## Documentation
 
-For full documentation, visit: https://github.com/Lockeysama/TheConn
+For full documentation, visit: <https://github.com/Lockeysama/TheConn>
 
 - [CLI Documentation](https://github.com/Lockeysama/TheConn/blob/main/CLI.md)
 - [Development Guide](https://github.com/Lockeysama/TheConn/blob/main/DEVELOPMENT.md)

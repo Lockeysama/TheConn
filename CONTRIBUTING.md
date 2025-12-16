@@ -141,6 +141,7 @@ git push origin feature/your-feature-name
 ```
 
 **类型（type）**：
+
 - `feat`: 新功能
 - `fix`: Bug 修复
 - `docs`: 文档更改
@@ -150,6 +151,7 @@ git push origin feature/your-feature-name
 - `chore`: 构建/工具相关
 
 **示例**：
+
 ```
 feat(cli): add --verbose flag to init command
 
@@ -230,6 +232,7 @@ async function downloadFile(url: string, target: string): Promise<void> {
 ### 用户文档
 
 如果功能影响用户使用，需要更新：
+
 - `README.md` - 项目介绍
 - `CLI.md` - CLI 使用文档
 - `.the_conn/GUIDE.md` - 框架使用指南
@@ -322,8 +325,8 @@ Closes #123
 
 ### 联系方式
 
-- GitHub Issues: https://github.com/Lockeysama/TheConn/issues
-- Email: 196349143@qq.com
+- GitHub Issues: <https://github.com/Lockeysama/TheConn/issues>
+- Email: <196349143@qq.com>
 
 ---
 

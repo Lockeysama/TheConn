@@ -15,6 +15,7 @@
 ## 输入
 
 用户会提供：
+
 - Context 文件路径
 - 变更内容（新增章节、修改内容、删除内容）
 
@@ -55,6 +56,7 @@
 ### 示例 1: 更新模块设计文档
 
 **用户输入**:
+
 ```
 文件: .the_conn/context/epics/EPIC-01/Module_Design_Init.md
 变更: 新增 "CLI 参数说明" 章节
@@ -106,14 +108,17 @@ theconn init [options] [target_path]
 ## 5. 关键约束
 
 ...
+
 ```
 
 ### 示例 2: 更新技术栈文档
 
 **用户输入**:
 ```
+
 文件: .the_conn/context/global/Tech_Stack.md
 变更: 升级 Python 版本从 3.10 到 3.11，添加 ruff 作为 linter
+
 ```
 
 **输出**:

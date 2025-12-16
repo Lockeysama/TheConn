@@ -11,6 +11,7 @@
 **专注于**：生成 Epic 规划文档（创建 Epic README.md 文件）
 
 **📋 规范引用**：
+
 - **测试策略**：`@playbooks/core/test_strategy_rules.md`
 
 ---
@@ -48,6 +49,7 @@ created: yyyy-mm-dd
 ```
 
 **字段说明**：
+
 - `status`: `pending` (未完成) 或 `done` (已完成)
 - `created`: 格式 `yyyy-mm-dd`
 
@@ -108,8 +110,11 @@ created: yyyy-mm-dd
 
 ### Epic 级别测试
 - STORY-999_Epic_E2E_User_Journey
+  - **类型**: `type: e2e_test`
+  - **测试方式**: BDD 场景
   - **描述**: 验证从用户注册到完成核心操作的完整旅程
   - **触发条件**: 所有 Feature 开发完成后
+  - **生成方式**: 使用 `@playbooks/planning/e2e_story.md` 生成
   - **覆盖场景**: 
     - 注册 → 登录 → 核心功能使用 → 数据持久化验证
     - 异常处理和错误恢复流程
@@ -120,10 +125,35 @@ Week 3-4: FEAT-02 开发 + Feature 测试
 Week 5: Epic E2E 测试 + 整体验收
 
 ### 测试覆盖预估
-- 单元测试: 所有 Story 包含
-- Feature E2E: 2 个测试 Story
-- Epic E2E: 1 个测试 Story
+- 单元测试: 所有普通 Story 包含
+- Feature E2E: 2 个测试 Story (type: e2e_test)
+- Epic E2E: 1 个测试 Story (type: e2e_test)
+- 性能测试: 按需添加 (type: perf_test)
 - 预计业务场景覆盖率: 85%
+
+### 性能测试里程碑（按需规划）
+
+**触发条件**：
+- Epic 涉及高并发场景
+- 有明确的系统性能 SLA
+- 存在已知的性能瓶颈风险
+
+**如果需要性能测试**：
+
+- STORY-997_Performance_System
+  - **类型**: `type: perf_test`
+  - **描述**: 验证整体系统在生产压力下的性能表现
+  - **触发条件**: 所有 Feature 开发完成后
+  - **性能指标**:
+    - 端到端响应时间
+    - 系统吞吐量
+    - 并发容量
+    - 系统可用性
+  - **测试场景**:
+    - 典型用户旅程测试
+    - 混合负载测试
+    - 业务高峰模拟
+  - **生成方式**: 使用 `@playbooks/planning/performance_test_story.md` 生成
 ```
 
 ### 测试里程碑决策树

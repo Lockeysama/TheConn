@@ -59,11 +59,27 @@ The Conn 提供了统一的命令入口文件 `tc.md`，让你通过简单的命
 ### 生成 Story
 
 ```bash
+# 生成普通 Story（功能开发）
 @tc.md story 实现用户登录功能
 # 或
 @tc.md plan story 实现用户登录功能
 # 或缩写
 @tc.md plan s 实现用户登录功能
+
+# 生成 E2E Story（集成测试）
+@tc.md e2e
+@tc.md plan e2e
+
+# 生成性能测试 Story
+@tc.md perf
+@tc.md plan perf
+@tc.md plan performance
+
+# 生成 Bug Fix Story
+@tc.md bugfix STORY-01 登录失败
+@tc.md plan bugfix STORY-01 登录失败
+# 或缩写
+@tc.md plan bf STORY-01 登录失败
 ```
 
 ### 生成 Epic
@@ -149,6 +165,8 @@ The Conn 提供了统一的命令入口文件 `tc.md`，让你通过简单的命
 | `@tc.md plan epic` | `e` | 生成 Epic |
 | `@tc.md plan feature` | `feat` / `f` | 生成 Feature |
 | `@tc.md plan story` | `s` | 生成 Story |
+| `@tc.md plan e2e` | `ee` | 生成 E2E Story |
+| `@tc.md plan perf` | `performance` / `p` | 生成性能测试 Story |
 | `@tc.md plan bugfix` | `bug` / `bf` | Bug Fix |
 
 **一级快捷命令**：`status`, `next`, `epic`, `feature`, `story`, `bugfix`
@@ -347,22 +365,26 @@ The Conn 提供了统一的命令入口文件 `tc.md`，让你通过简单的命
 ## 🆘 遇到问题？
 
 1. **不确定用什么命令**：
+
    ```bash
    @tc.md help
    @tc.md list
    ```
 
 2. **不知道下一步**：
+
    ```bash
    @tc.md next
    ```
 
 3. **查看项目状态**：
+
    ```bash
    @tc.md status
    ```
 
 4. **查看模块帮助**：
+
    ```bash
    @tc.md help plan
    @tc.md help ctx
@@ -372,4 +394,3 @@ The Conn 提供了统一的命令入口文件 `tc.md`，让你通过简单的命
 ---
 
 **现在开始使用 `@tc` 命令，开启高效的 AI 协作开发之旅！** 🚀
-

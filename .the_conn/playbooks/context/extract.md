@@ -9,6 +9,7 @@
 ## 本 Playbook 的工作范围
 
 **专注于**：
+
 - ✅ **提取设计**：从材料中提取设计决策和架构信息
 - ✅ **生成 Context 文档**：创建设计文档
 - ✅ **使用代码片段**：通过代码片段说明设计（接口定义、数据结构、API 签名等）
@@ -20,6 +21,7 @@
 ## 输入
 
 用户会提供：
+
 - 技术方案文档
 - 架构设计讨论
 - 需求规范（PRD）
@@ -68,21 +70,25 @@
 ```
 
 **全局 Context**:
+
 ```
 .the_conn/context/global/{Type}_{Descriptor}.md
 ```
 
 **Epic Context**:
+
 ```
 .the_conn/context/epics/EPIC-{序号}/{Type}_{Descriptor}.md
 ```
 
 **命名规则**:
+
 - `{Type}`: 从类型枚举中选择（小写）
 - `{Descriptor}`: 描述性名称，使用 PascalCase
 - 特殊情况：纯类型名不加 Descriptor（如 `Architecture.md`）
 
 **示例**:
+
 - `.the_conn/context/global/Architecture.md`
 - `.the_conn/context/global/Tech_Stack.md`
 - `.the_conn/context/global/Coding_Standard_Go.md`
@@ -120,6 +126,7 @@ tags:
 | `tags`    | array  | 标签（便于搜索） | `[microservices, grpc]`    | 否   |
 
 **字段约束**:
+
 - `type`: 必须从类型枚举中选择
 - `scope`: 格式必须是 `global` 或 `epic:EPIC-{序号}`
 - `created`: 初次提取时的日期
@@ -177,11 +184,13 @@ tags:
 | Epic 专属算法      | **epic**   | 仅该 Epic 使用的特殊算法 |
 
 **判断标准**:
+
 - 如果内容适用于**多个 Epic** 或**整个项目** → global
 - 如果内容仅适用于**单个 Epic** → epic
 - **有疑问时，优先选择 global**（后续可以重构为 epic）
 
 根据分析结果，确定：
+
 - **Type**: 从枚举中选择最匹配的类型
 - **Scope**: global 或 epic:EPIC-XX
 - **Descriptor**: 如何简洁准确地描述这个 Context
@@ -191,6 +200,7 @@ tags:
 **提取原则 - 关注"是什么"和"为什么"，而非"怎么做"**:
 
 **避免重复原则**:
+
 - 如果某些内容已在 global Context 中，Epic Context 应**引用而非复制**
 - 在 Epic Context 中可以写："参考 Architecture.md 的微服务架构设计"
 - 只提取该 Epic **独有的、差异化的**设计内容
@@ -202,6 +212,7 @@ tags:
 5. **保持抽象**: 停留在设计层面，不深入具体实现逻辑
 
 **应该提取的内容**:
+
 - ✅ 模块职责和边界（"用户认证模块负责..."）
 - ✅ 接口定义（"API 接口格式为 JSON，字段包括..."）
 - ✅ 设计约束（"单个文件不超过 1MB"）
@@ -210,6 +221,7 @@ tags:
 - ✅ 协议规范（"消息格式为..."）
 
 **严格避免的内容**:
+
 - ❌ 具体代码逻辑（"在第 10 行调用 xxx 函数"）
 - ❌ 实现算法细节（"使用 for 循环遍历..."）
 - ❌ 函数内部实现（"首先判断 x>0，然后..."）
@@ -373,6 +385,7 @@ tags:
 ```
 
 **不好的做法**:
+
 ```{language}
 {示例代码}
 ```
@@ -381,6 +394,7 @@ tags:
 
 - [ ] {检查项1}
 - [ ] {检查项2}
+
 ```
 
 ---
@@ -401,13 +415,16 @@ tags:
 
 **输入材料**（摘要）:
 ```
+
 系统采用微服务架构：
+
 - 用户服务（Go）
 - 认证服务（Go + JWT）
 - 数据服务（Go + PostgreSQL）
 - 网关（Nginx）
 
 服务间通信使用 gRPC，对外 API 使用 REST。
+
 ```
 
 **提取结果**:
@@ -477,6 +494,7 @@ tags:
 ### 示例 2: 提取模块设计
 
 **输入材料**（摘要）:
+
 ```
 DataStream 可靠传输模块设计：
 
@@ -581,6 +599,7 @@ type Receiver interface {
 - 去重哈希表需要设计过期清理机制
 - timestamp 可能存在时钟偏移问题
 - 避免内存无限增长
+
 ```
 
 ---

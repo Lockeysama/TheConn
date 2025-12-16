@@ -23,11 +23,13 @@
 **功能**：初始化 The Conn 项目结构
 
 **语法**：
+
 ```bash
 @tc.md init
 ```
 
 **示例**：
+
 ```bash
 用户：@tc.md init
 AI：正在初始化项目结构...
@@ -49,12 +51,14 @@ AI：正在初始化项目结构...
 **功能**：需求与方案评审
 
 **语法**：
+
 ```bash
 @tc.md plan review [文档路径]
 @tc.md plan rv [文档路径]
 ```
 
 **示例**：
+
 ```bash
 @tc.md plan review requirements.md
 @tc.md plan rv
@@ -69,12 +73,14 @@ AI：正在初始化项目结构...
 **功能**：需求拆解（批量生成 Epic/Feature/Story）
 
 **语法**：
+
 ```bash
 @tc.md plan breakdown [文档路径]
 @tc.md plan bd [文档路径]
 ```
 
 **示例**：
+
 ```bash
 @tc.md plan breakdown requirements.md
 @tc.md plan bd
@@ -89,12 +95,14 @@ AI：正在初始化项目结构...
 **功能**：需求变更管理
 
 **语法**：
+
 ```bash
 @tc.md plan change [Story ID]
 @tc.md plan chg [Story ID]
 ```
 
 **示例**：
+
 ```bash
 @tc.md plan change STORY-01
 @tc.md plan chg STORY-01
@@ -109,6 +117,7 @@ AI：正在初始化项目结构...
 **功能**：查看项目状态
 
 **语法**：
+
 ```bash
 @tc.md status [--epic=EPIC-ID]
 @tc.md plan status [--epic=EPIC-ID]
@@ -116,6 +125,7 @@ AI：正在初始化项目结构...
 ```
 
 **示例**：
+
 ```bash
 @tc.md status
 @tc.md status --epic=EPIC-01
@@ -131,6 +141,7 @@ AI：正在初始化项目结构...
 **功能**：获取下一步行动建议
 
 **语法**：
+
 ```bash
 @tc.md next [--context=EPIC-ID]
 @tc.md plan next [--context=EPIC-ID]
@@ -138,6 +149,7 @@ AI：正在初始化项目结构...
 ```
 
 **示例**：
+
 ```bash
 @tc.md next
 @tc.md next --context=EPIC-01
@@ -153,6 +165,7 @@ AI：正在初始化项目结构...
 **功能**：生成 Epic
 
 **语法**：
+
 ```bash
 @tc.md epic <Epic名称> [--description="描述"]
 @tc.md plan epic <Epic名称>
@@ -160,6 +173,7 @@ AI：正在初始化项目结构...
 ```
 
 **示例**：
+
 ```bash
 @tc.md epic 用户管理系统
 @tc.md plan epic 用户管理系统 --description="完整的用户管理功能"
@@ -175,6 +189,7 @@ AI：正在初始化项目结构...
 **功能**：生成 Feature
 
 **语法**：
+
 ```bash
 @tc.md feature <Feature名称> [--epic=EPIC-ID]
 @tc.md plan feature <Feature名称>
@@ -183,6 +198,7 @@ AI：正在初始化项目结构...
 ```
 
 **示例**：
+
 ```bash
 @tc.md feature 用户认证
 @tc.md feature 用户认证 --epic=EPIC-01
@@ -199,6 +215,7 @@ AI：正在初始化项目结构...
 **功能**：生成 Story
 
 **语法**：
+
 ```bash
 @tc.md story <Story标题> [--feature=FEAT-ID] [--epic=EPIC-ID]
 @tc.md plan story <Story标题>
@@ -206,6 +223,7 @@ AI：正在初始化项目结构...
 ```
 
 **示例**：
+
 ```bash
 @tc.md story 实现用户登录
 @tc.md story 实现用户登录 --feature=FEAT-01
@@ -221,6 +239,7 @@ AI：正在初始化项目结构...
 **功能**：生成 Bug Fix Story
 
 **语法**：
+
 ```bash
 @tc.md bugfix <父Story ID> <Bug描述>
 @tc.md plan bugfix <父Story ID> <Bug描述>
@@ -229,6 +248,7 @@ AI：正在初始化项目结构...
 ```
 
 **示例**：
+
 ```bash
 @tc.md bugfix STORY-01 登录失败处理不当
 @tc.md plan bug STORY-01 密码验证错误
@@ -246,6 +266,7 @@ AI：正在初始化项目结构...
 **功能**：提取 Context 文档
 
 **语法**：
+
 ```bash
 @tc.md ctx extract [文件路径]
 @tc.md ctx ext [文件路径]
@@ -253,6 +274,7 @@ AI：正在初始化项目结构...
 ```
 
 **示例**：
+
 ```bash
 @tc.md ctx extract src/architecture.md
 @tc.md ctx ext
@@ -268,16 +290,19 @@ AI：正在初始化项目结构...
 **功能**：添加 Context 文档
 
 **语法**：
+
 ```bash
 @tc.md ctx add --type=<类型> [--scope=global|epic] [--epic=EPIC-ID]
 @tc.md ctx a --type=<类型>
 ```
 
 **Context 类型**：
+
 - Global: `architecture`, `tech_stack`, `coding_standard`, `testing_strategy`, `deployment`, `api_convention`, `domain_model`
 - Epic: `module_design`, `data_model`, `api_spec`, `integration`, `algorithm`, `protocol`, `migration`
 
 **示例**：
+
 ```bash
 @tc.md ctx add --type=architecture --scope=global
 @tc.md ctx add --type=module_design --scope=epic --epic=EPIC-01
@@ -293,6 +318,7 @@ AI：正在初始化项目结构...
 **功能**：更新 Context 文档
 
 **语法**：
+
 ```bash
 @tc.md ctx update <文件名>
 @tc.md ctx upd <文件名>
@@ -300,6 +326,7 @@ AI：正在初始化项目结构...
 ```
 
 **示例**：
+
 ```bash
 @tc.md ctx update Architecture.md
 @tc.md ctx upd Tech_Stack.md
@@ -315,12 +342,14 @@ AI：正在初始化项目结构...
 **功能**：搜索 Context 文档
 
 **语法**：
+
 ```bash
 @tc.md ctx search <关键词>
 @tc.md ctx s <关键词>
 ```
 
 **示例**：
+
 ```bash
 @tc.md ctx search 架构设计
 @tc.md ctx search authentication
@@ -338,6 +367,7 @@ AI：正在初始化项目结构...
 **功能**：生成 Task 简报
 
 **语法**：
+
 ```bash
 @tc.md task <Story ID>
 @tc.md exec task <Story ID>
@@ -345,6 +375,7 @@ AI：正在初始化项目结构...
 ```
 
 **示例**：
+
 ```bash
 @tc.md task STORY-01
 @tc.md exec task STORY-01
@@ -360,6 +391,7 @@ AI：正在初始化项目结构...
 **功能**：同步 Story 状态
 
 **语法**：
+
 ```bash
 @tc.md sync <Story ID>
 @tc.md exec sync <Story ID>
@@ -367,6 +399,7 @@ AI：正在初始化项目结构...
 ```
 
 **示例**：
+
 ```bash
 @tc.md sync STORY-01
 @tc.md exec sync STORY-01
@@ -382,6 +415,7 @@ AI：正在初始化项目结构...
 **功能**：生成变更摘要
 
 **语法**：
+
 ```bash
 @tc.md summary [Task ID]
 @tc.md exec summary [Task ID]
@@ -389,6 +423,7 @@ AI：正在初始化项目结构...
 ```
 
 **示例**：
+
 ```bash
 @tc.md summary
 @tc.md exec summary TASK-01
@@ -406,12 +441,14 @@ AI：正在初始化项目结构...
 **功能**：显示帮助信息
 
 **语法**：
+
 ```bash
 @tc.md help
 @tc.md help <模块>
 ```
 
 **示例**：
+
 ```bash
 @tc.md help
 @tc.md help plan
@@ -426,6 +463,7 @@ AI：正在初始化项目结构...
 **功能**：列出所有可用命令
 
 **语法**：
+
 ```bash
 @tc.md list
 ```
@@ -589,4 +627,3 @@ AI：正在初始化项目结构...
 ---
 
 **💡 提示**：所有命令不区分大小写，`@TC`, `@Tc`, `@tc` 效果相同！
-

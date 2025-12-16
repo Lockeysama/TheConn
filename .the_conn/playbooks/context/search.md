@@ -9,6 +9,7 @@
 ## 本 Playbook 的工作范围
 
 **专注于**：
+
 - ✅ **搜索文档**：查找相关的 Context 文档
 - ✅ **生成报告**：输出搜索结果
 
@@ -32,11 +33,13 @@
 **输入**: 关键词列表
 
 **逻辑**:
+
 1. 在 Context 文件名中搜索
 2. 在 Context Frontmatter 的 `title` 和 `tags` 中搜索
 3. 在 Context 正文的标题和关键段落中搜索
 
 **示例**:
+
 ```
 关键词: "authentication", "用户认证"
 结果:
@@ -54,6 +57,7 @@
 **逻辑**: 读取所有 Context 的 Frontmatter，筛选匹配 `type` 的文档
 
 **示例**:
+
 ```
 类型: architecture
 结果:
@@ -68,11 +72,13 @@
 
 **输入**: Epic ID
 
-**逻辑**: 
+**逻辑**:
+
 1. 搜索 `context/epics/EPIC-XX/` 下的所有 Context
 2. 搜索 `context/global/` 下 `scope: global` 的 Context
 
 **示例**:
+
 ```
 Epic: EPIC-01
 结果:
@@ -87,12 +93,14 @@ Epic: EPIC-01
 
 **输入**: Story 内容或 Task 描述
 
-**逻辑**: 
+**逻辑**:
+
 1. 提取 Story 的关键信息（目标、涉及文件、技术点）
 2. 为每个 Context 计算相关性评分
 3. 返回评分最高的 Top N 个 Context
 
 **评分规则**:
+
 ```
 基础分 = 0
 
@@ -117,6 +125,7 @@ if Context.expires < today: -5 分
 ```
 
 **示例**:
+
 ```
 Story: STORY-03 实现用户登录缓存
 涉及文件: src/auth/cache.go
@@ -344,6 +353,7 @@ Epic: EPIC-02
 ### 当搜索结果为空
 
 如果没找到相关 Context：
+
 1. 检查关键词是否过于具体
 2. 尝试更通用的类型（如 architecture）
 3. 搜索 global 范围的 Context

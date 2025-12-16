@@ -37,20 +37,24 @@ npx theconn-cli init --path=./my-project
 将 The Conn 框架集成到你的项目中。
 
 **Python:**
+
 ```bash
 uvx theconn init [--branch=BRANCH] [--path=PATH]
 ```
 
 **Node.js:**
+
 ```bash
 npx theconn-cli init [--branch=BRANCH] [--path=PATH]
 ```
 
 **选项:**
+
 - `--branch` - 指定 GitHub 分支（默认: `stable`）
 - `--path` - 目标目录（默认: 当前目录）
 
 **创建的目录结构:**
+
 ```
 .the_conn/
 ├── playbooks/          # AI 操作剧本系统（从 GitHub 下载）
@@ -78,24 +82,29 @@ npx theconn-cli init [--branch=BRANCH] [--path=PATH]
 更新框架文件到最新版本（保留你的数据）。
 
 **Python:**
+
 ```bash
 uvx theconn update [--branch=BRANCH] [--path=PATH]
 ```
 
 **Node.js:**
+
 ```bash
 npx theconn-cli update [--branch=BRANCH] [--path=PATH]
 ```
 
 **选项:**
+
 - `--branch` - 指定 GitHub 分支（默认: 使用当前已安装的分支）
 - `--path` - 目标目录（默认: 当前目录）
 
 **更新内容:**
+
 - ✅ 更新 `playbooks/`
 - ✅ 更新 `docs/`
 
 **保留内容:**
+
 - 📁 `epics/` - 你的项目规划
 - 📁 `context/` - 你的上下文文档
 - 📁 `ai_workspace/` - 你的工作区
@@ -107,24 +116,29 @@ npx theconn-cli update [--branch=BRANCH] [--path=PATH]
 卸载 The Conn 框架（保留用户数据）。
 
 **Python:**
+
 ```bash
 uvx theconn uninstall [--path=PATH]
 ```
 
 **Node.js:**
+
 ```bash
 npx theconn-cli uninstall [--path=PATH] [--yes]
 ```
 
 **选项:**
+
 - `--path` - 目标目录（默认: 当前目录）
 - `--yes` - 跳过确认提示（仅 Node.js）
 
 **删除内容:**
+
 - 🗑️ `playbooks/`
 - 🗑️ `docs/`
 
 **保留内容:**
+
 - 📁 `epics/`
 - 📁 `context/`
 - 📁 `ai_workspace/`
@@ -138,19 +152,23 @@ npx theconn-cli uninstall [--path=PATH] [--yes]
 检查是否有新版本可用。
 
 **Python:**
+
 ```bash
 uvx theconn check [--path=PATH]
 ```
 
 **Node.js:**
+
 ```bash
 npx theconn-cli check [--path=PATH]
 ```
 
 **选项:**
+
 - `--path` - 目标目录（默认: 当前目录）
 
 **输出示例:**
+
 ```
 🔍 Checking for updates on branch 'main'...
 
@@ -238,6 +256,7 @@ uvx theconn update --branch=v2.0.0
 ```
 
 **分支说明:**
+
 - `stable` - 稳定版本（默认，推荐用于生产）
 - `main` - 最新开发版本（可能包含未稳定的功能）
 - `v*.*.*` - 特定版本标签（用于锁定版本）
@@ -247,6 +266,7 @@ uvx theconn update --branch=v2.0.0
 The Conn CLI 工具本身也会定期更新。查看和更新 CLI 工具：
 
 **Python (uvx):**
+
 ```bash
 # 查看当前版本
 uvx theconn --version
@@ -264,6 +284,7 @@ uvx theconn init
 ```
 
 **Node.js (npx):**
+
 ```bash
 # 查看当前版本
 npx theconn-cli --version
@@ -284,7 +305,8 @@ npx theconn-cli@0.1.6 init
 
 **当前版本: 0.1.6**
 
-**💡 提示：** 
+**💡 提示：**
+
 - `uvx` 和 `npx` 在首次使用后会缓存下载的包
 - 如果发现使用的不是最新版本，使用上述命令强制更新
 - 推荐定期运行 `uvx --force-reinstall theconn --version` 或 `npx theconn-cli@latest --version` 检查并更新
@@ -318,10 +340,12 @@ done
 ## ⚙️ 系统要求
 
 ### Python CLI (`theconn`)
+
 - Python >= 3.12
 - 自动安装依赖: `click`, `requests`, `rich`
 
 ### Node.js CLI (`theconn-cli`)
+
 - Node.js >= 18.0.0
 - 自动安装依赖: `chalk`, `commander`, `ora`
 
@@ -336,6 +360,7 @@ done
 **解决方案:**
 
 **Python (uvx):**
+
 ```bash
 # 方法 1: 使用 --force-reinstall 参数强制重新安装（推荐）
 uvx --force-reinstall theconn --version
@@ -347,6 +372,7 @@ uvx theconn --version
 ```
 
 **Node.js (npx):**
+
 ```bash
 # 方法 1: 指定使用 latest 版本（推荐）
 npx theconn-cli@latest --version
@@ -367,6 +393,7 @@ npx theconn-cli --version
 **原因:** 指定的分支不存在。
 
 **解决方案:**
+
 ```bash
 # 使用默认 stable 分支
 uvx theconn init
@@ -383,6 +410,7 @@ uvx theconn init --branch=main
 **原因:** `.the_conn` 目录已存在。
 
 **解决方案:**
+
 ```bash
 # 如果要更新，使用 update 命令
 uvx theconn update
@@ -397,6 +425,7 @@ uvx theconn init
 **原因:** 无法连接到 GitHub。
 
 **解决方案:**
+
 - 检查网络连接
 - 检查防火墙设置
 - 尝试使用代理

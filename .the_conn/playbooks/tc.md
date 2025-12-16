@@ -11,12 +11,14 @@
 ```
 
 **重要性说明**：
+
 - ✅ `base_rules.md` 定义了所有 Playbook 必须遵守的基础规则和约束
 - ✅ 包含了**文件加载强制要求**，确保所有被 `@` 引用的文件都被正确加载
 - ✅ 定义了禁止事项、允许事项、文件路径约定、质量标准等核心规则
 - ✅ 违反基础公约可能导致生成不符合规范的输出或破坏项目结构
 
 **执行流程**：
+
 1. 加载 `base_rules.md`
 2. 检查并加载用户 Prompt 中所有被 `@` 引用的文件
 3. 根据用户命令加载对应的 playbook
@@ -67,7 +69,9 @@
 | `@tc.md plan next`      | `@tc.md plan n`                      | 下一步行动建议       | `@planning/next_step_advisor.md`      |
 | `@tc.md plan epic`      | `@tc.md plan e`                      | 生成 Epic            | `@planning/epic_planning.md`          |
 | `@tc.md plan feature`   | `@tc.md plan feat` / `@tc.md plan f` | 生成 Feature         | `@planning/feature_planning.md`       |
-| `@tc.md plan story`     | `@tc.md plan s`                      | 生成 Story           | `@planning/story_writing.md`          |
+| `@tc.md plan story`     | `@tc.md plan s`                      | 生成普通 Story       | `@planning/story_writing.md`          |
+| `@tc.md plan e2e`       | -                                    | 生成 E2E Story       | `@planning/e2e_story.md`              |
+| `@tc.md plan perf`      | `@tc.md plan performance`            | 生成性能测试 Story   | `@planning/performance_test_story.md` |
 | `@tc.md plan bugfix`    | `@tc.md plan bug` / `@tc.md plan bf` | 生成 Bug Fix Story   | `@planning/bug_fix_story.md`          |
 
 **一级命令快捷方式**（常用命令）：
@@ -78,6 +82,8 @@
 @tc.md epic       → @tc.md plan epic
 @tc.md feature    → @tc.md plan feature
 @tc.md story      → @tc.md plan story
+@tc.md e2e        → @tc.md plan e2e
+@tc.md perf       → @tc.md plan perf
 @tc.md bugfix     → @tc.md plan bugfix
 ```
 
@@ -127,6 +133,7 @@
 ### 1. 识别命令结构
 
 解析用户输入，识别：
+
 - **一级命令**：如 `@tc init`, `@tc help`
 - **二级命令**：如 `@tc plan story`, `@tc ctx add`
 - **缩写命令**：如 `@tc plan bd`, `@tc ctx e`
@@ -143,6 +150,8 @@
   "epic": "@planning/epic_planning.md",
   "feature": "@planning/feature_planning.md",
   "story": "@planning/story_writing.md",
+  "e2e": "@planning/e2e_story.md",
+  "perf": "@planning/performance_test_story.md",
   "bugfix": "@planning/bug_fix_story.md",
   "task": "@execution/task_generation.md",
   "sync": "@execution/story_sync.md",
@@ -171,6 +180,9 @@
     "f": "@planning/feature_planning.md",
     "story": "@planning/story_writing.md",
     "s": "@planning/story_writing.md",
+    "e2e": "@planning/e2e_story.md",
+    "perf": "@planning/performance_test_story.md",
+    "performance": "@planning/performance_test_story.md",
     "bugfix": "@planning/bug_fix_story.md",
     "bug": "@planning/bug_fix_story.md",
     "bf": "@planning/bug_fix_story.md"
@@ -413,6 +425,7 @@ AI：识别缩写 'bd' → breakdown
 现在你已准备好处理用户通过 `@tc.md` 或 `@playbooks/tc.md` 发起的命令。
 
 **记住**：
+
 - 用户在 AI IDE 中使用 @ 符号引用此文件：`@tc.md` 或 `@playbooks/tc.md`
 - 优先匹配一级命令
 - 然后匹配二级命令
@@ -421,4 +434,3 @@ AI：识别缩写 'bd' → breakdown
 - 将所有额外参数传递给目标 Playbook
 
 让我们开始吧！🚀
-

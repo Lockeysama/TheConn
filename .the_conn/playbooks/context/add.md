@@ -58,6 +58,7 @@
 ## 输入要求
 
 用户需要提供：
+
 1. **Context 类型**: 从上述枚举中选择
 2. **Context 作用域**: global 或 EPIC-XX
 3. **Context 内容**: 技术方案、设计文档、讨论结果等
@@ -73,21 +74,25 @@
 ```
 
 **全局 Context**:
+
 ```
 .the_conn/context/global/{Type}_{Descriptor}.md
 ```
 
 **Epic Context**:
+
 ```
 .the_conn/context/epics/EPIC-{序号}/{Type}_{Descriptor}.md
 ```
 
 **命名规则**:
+
 - `{Type}`: 从类型枚举中选择（小写）
 - `{Descriptor}`: 描述性名称，使用 PascalCase
 - 特殊情况：纯类型名不加 Descriptor（如 `Architecture.md`）
 
 **示例**:
+
 - `.the_conn/context/global/Architecture.md`
 - `.the_conn/context/global/Tech_Stack.md`
 - `.the_conn/context/global/Coding_Standard_Go.md`
@@ -125,6 +130,7 @@ tags:
 | `tags`    | array  | 标签（便于搜索） | `[microservices, grpc]`    | 否   |
 
 **字段约束**:
+
 - `type`: 必须从类型枚举中选择
 - `scope`: 格式必须是 `global` 或 `epic:EPIC-{序号}`
 - `created`: 创建时的日期
@@ -140,7 +146,7 @@ tags:
 
 **⚠️ 添加前必须先检查已有 Context！**
 
-0. **避免重复**: 
+0. **避免重复**:
    - 使用 `@prompts/context/search.md` 搜索是否已有相关 Context
    - 如果内容已存在，考虑更新而非创建新的
    - 如果与 global Context 重叠，Epic Context 应引用而非复制
@@ -155,6 +161,7 @@ tags:
 7. **保持精简**: 只包含 AI 理解设计所必需的信息
 
 **应该记录的内容**:
+
 - ✅ 设计决策和理由（"选择异步架构是因为..."）
 - ✅ 模块职责和边界（"认证模块负责..."）
 - ✅ 接口定义和约定（"API 返回格式为..."）
@@ -162,6 +169,7 @@ tags:
 - ✅ 约束和要求（"响应时间不超过 100ms"）
 
 **严格禁止的内容**:
+
 - ❌ 代码实现逻辑（"在函数内部先判断..."）
 - ❌ 算法步骤细节（"使用循环遍历数组..."）
 - ❌ 变量和函数命名（"定义变量 x = ..."）
@@ -306,6 +314,7 @@ tags:
 ```
 
 **不好的做法**:
+
 ```{language}
 {示例代码}
 ```
@@ -314,6 +323,7 @@ tags:
 
 - [ ] {检查项1}
 - [ ] {检查项2}
+
 ```
 
 ---
@@ -324,10 +334,12 @@ tags:
 
 **用户输入**:
 ```
+
 类型: coding_standard
 作用域: global
 语言: Go
 内容: Go 编码规范 - 错误处理、命名约定、注释规范
+
 ```
 
 **输出**:
@@ -391,6 +403,7 @@ func GetUser(id int) (*User, error) {
 ```
 
 **不好的做法**:
+
 ```go
 // get user
 func getUser(id int) *User {
@@ -405,6 +418,7 @@ func getUser(id int) *User {
 - [ ] 所有错误都被处理
 - [ ] 命名符合 Go 惯例
 - [ ] 使用 `gofmt` 格式化代码
+
 ```
 
 ---
@@ -413,9 +427,11 @@ func getUser(id int) *User {
 
 **用户输入**:
 ```
+
 类型: module_design
 作用域: EPIC-01
 内容: 初始化模块设计 - 负责创建项目目录结构
+
 ```
 
 **输出**:
@@ -471,6 +487,7 @@ PROJECT_STRUCTURE = {
 ### 2.2 幂等性设计
 
 重复执行不覆盖已有文件：
+
 - 检查目标文件是否存在
 - 存在则跳过，输出提示
 - 不存在则创建
@@ -507,6 +524,7 @@ def init_project(
 
 - 大量文件创建时建议提供进度反馈
 - 考虑失败时的回滚策略
+
 ```
 
 ---
@@ -515,9 +533,11 @@ def init_project(
 
 **用户输入**:
 ```
+
 类型: protocol
 作用域: EPIC-02
 内容: UDP 可靠传输协议（3次冗余 + 动态捎带）
+
 ```
 
 **输出**:
@@ -567,6 +587,7 @@ tags:
 ### 2.2 冗余策略
 
 每个 Event 发送 3 次：
+
 - **T+0ms**: 首次发送
 - **T+20ms**: 第 1 次冗余
 - **T+40ms**: 第 2 次冗余
@@ -576,10 +597,12 @@ tags:
 ### 2.3 去重机制
 
 **发送端**:
+
 - 维护历史窗口（最近 5 个 Event）
 - seq 单调递增，溢出后从 0 重新开始
 
 **接收端**:
+
 - Packet 去重：基于 `seq`，HashSet 存储已处理的 seq
 - Event 去重：基于 `id`，HashSet 存储已处理的 id
 
@@ -608,6 +631,7 @@ tags:
 - 时钟偏移可能影响排序，考虑逻辑时钟方案
 - 网络抖动可能导致包乱序
 - 高频发送需控制 Packet 大小，避免超过 MTU
+
 ```
 
 ---

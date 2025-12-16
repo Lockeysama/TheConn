@@ -56,6 +56,7 @@ The Conn 提供两个独立但功能一致的 CLI 实现：
 2. **TypeScript CLI** (`theconn-cli`) - 使用 `npx` 运行，面向 Node.js 生态系统
 
 两个实现的功能完全相同：
+
 - ✅ `init` - 从 GitHub 下载框架文件并初始化项目
 - ✅ `update` - 更新框架文件（保留用户数据）
 - ✅ `uninstall` - 卸载框架（保留用户数据）
@@ -331,32 +332,38 @@ mise tasks
 ### 任务分类
 
 #### 依赖管理
+
 - `mise run install` - 安装 Python 依赖
 - `mise run npm-install` - 安装 Node.js 依赖
 - `mise run add <package>` - 添加 Python 依赖
 - `mise run remove <package>` - 移除 Python 依赖
 
 #### 开发运行
+
 - `mise run py-cli [args]` - 运行 Python CLI
 - `mise run ts-cli [args]` - 运行 TypeScript CLI
 - `mise run npm-link` - 本地链接 TypeScript CLI
 - `mise run npm-unlink` - 取消本地链接
 
 #### 测试
+
 - `mise run test-py-init` - 测试 Python CLI init
 - `mise run test-ts-init` - 测试 TypeScript CLI init
 
 #### 代码质量
+
 - `mise run fmt-py` - 格式化 Python 代码
 - `mise run lint-py` - 检查 Python 代码
 - `mise run fmt-ts` - 格式化 TypeScript 代码
 - `mise run lint-ts` - 检查 TypeScript 代码
 
 #### 构建
+
 - `mise run build-py` - 构建 Python 包
 - `mise run build-ts` - 构建 TypeScript 包
 
 #### 清理
+
 - `mise run clean` - 清理所有构建产物
 
 ---
@@ -366,6 +373,7 @@ mise tasks
 ### pyproject.toml
 
 Python 项目配置文件：
+
 - 定义包名、版本、依赖
 - CLI 入口点：`theconn = "theconn.cli:main"`
 - 构建系统：hatchling
@@ -374,6 +382,7 @@ Python 项目配置文件：
 ### src/typescript/package.json
 
 Node.js 包配置文件：
+
 - 包名：`theconn-cli`
 - 可执行文件：`bin/theconn.js`
 - 依赖：`chalk`, `commander`, `ora`
@@ -382,6 +391,7 @@ Node.js 包配置文件：
 ### .mise.toml
 
 mise 环境管理配置：
+
 - 工具版本：
   - `node = "20"` (Node.js 20 LTS)
   - `uv = "latest"` (最新版 uv)
@@ -409,6 +419,7 @@ Python 版本锁定：`3.12`
 ### 保持功能一致
 
 两个实现应该：
+
 - ✅ 支持相同的命令和选项
 - ✅ 产生相同的输出格式
 - ✅ 使用相同的错误处理
@@ -417,6 +428,7 @@ Python 版本锁定：`3.12`
 ### 版本同步
 
 发布前确保版本号一致：
+
 - `pyproject.toml`: `version = "0.1.0"`
 - `src/typescript/package.json`: `"version": "0.1.0"`
 - `src/theconn/cli.py`: `@click.version_option(version="0.1.0")`
@@ -427,12 +439,14 @@ Python 版本锁定：`3.12`
 完全可以！
 
 **Python 开发：**
+
 ```bash
 uv sync
 uv run theconn --help
 ```
 
 **Node.js 开发：**
+
 ```bash
 cd src/typescript
 npm install
@@ -488,6 +502,7 @@ theconn init 2>&1 | tee debug.log
 ### 测试隔离
 
 测试时使用临时目录：
+
 ```bash
 # ✅ 好
 mkdir -p /tmp/test-theconn
@@ -500,6 +515,7 @@ cd ~/projects/my-project  # 可能污染真实项目
 ### Git 提交
 
 提交前检查：
+
 - [ ] Python 和 TypeScript 都测试通过
 - [ ] 代码已格式化
 - [ ] 版本号已同步（如果修改了）
