@@ -27,17 +27,27 @@
 
 ### 全局 Context (scope: global)
 
+**⚠️ 重要：Global Context 固定为以下 4 个文件，不随意新增**
+
 适用于整个项目的通用知识，所有 Epic 都可引用。
 
-| Type               | 说明         | 典型文件名              |
-| ------------------ | ------------ | ----------------------- |
-| `architecture`     | 系统架构     | `Architecture.md`       |
-| `tech_stack`       | 技术栈       | `Tech_Stack.md`         |
-| `coding_standard`  | 编码规范     | `Coding_Standard_Go.md` |
-| `testing_strategy` | 测试策略     | `Testing_Strategy.md`   |
-| `deployment`       | 部署方案     | `Deployment.md`         |
-| `api_convention`   | API 约定     | `API_Convention.md`     |
-| `domain_model`     | 核心领域模型 | `Domain_Model.md`       |
+| Type               | 说明     | 固定文件名                      | 内容归类规则                                                 |
+| ------------------ | -------- | ------------------------------- | ------------------------------------------------------------ |
+| `architecture`     | 系统架构 | `Architecture.md`               | 系统设计、模块关系、通信方式、架构原则、部署方案、API 约定等 |
+| `tech_stack`       | 技术栈   | `Tech_Stack.md`                 | 语言、框架、工具、数据库、中间件等技术选型                   |
+| `coding_standard`  | 编码规范 | `Coding_Standard_{Language}.md` | 命名约定、错误处理、注释规范、最佳实践等                     |
+| `testing_strategy` | 测试策略 | `Testing_Strategy.md`           | 测试方法、覆盖率要求、BDD/TDD 策略、测试组织规范等           |
+
+**⚠️ Global Context 添加规则**：
+- ❌ **不创建新的 Global Context 文件**
+- ✅ **公约类型的内容必须归入已有的 4 个文件**
+- 🔄 **使用 `@prompts/context/update.md` 更新已有文件，而不是创建新文件**
+
+**示例**：
+- 需要添加部署方案 → 更新 `Architecture.md` 添加新章节
+- 需要添加 API 约定 → 更新 `Architecture.md` 添加新章节
+- 需要添加安全规范 → 更新 `Architecture.md` 添加新章节
+- 需要添加性能优化实践 → 更新 `Coding_Standard_{Language}.md` 添加新章节
 
 ### Epic Context (scope: epic:EPIC-XX)
 
@@ -146,15 +156,19 @@ tags:
 
 **⚠️ 添加前必须先检查已有 Context！**
 
-0. **避免重复**:
+0. **避免重复 + Global Context 更新优先**:
    - 使用 `@prompts/context/search.md` 搜索是否已有相关 Context
-   - 如果内容已存在，考虑更新而非创建新的
+   - **如果是公约类型内容（架构、技术栈、编码规范、测试策略）**：
+     - ❌ **不创建新的 Global Context 文件**
+     - ✅ **必须使用 `@prompts/context/update.md` 更新已有的 4 个 Global Context 文件**
    - 如果与 global Context 重叠，Epic Context 应引用而非复制
-   - 原则：**优先复用，避免重复**
+   - 原则：**Global Context 固定 4 个文件，Epic Context 自由创建**
 
 1. **类型准确**: 根据内容选择最合适的 type
-2. **范围合理**: 判断是全局通用还是 Epic 专属（**有疑问时优先选择 global**）
-3. **命名清晰**: Descriptor 应简洁明确，使用 PascalCase
+2. **范围判断**: 
+   - **公约类型** → 必须归入 global 的 4 个固定文件
+   - **Epic 专属** → 可以创建新的 Epic Context 文件
+3. **命名清晰**: Descriptor 应简洁明确，使用 PascalCase（仅 Epic Context）
 4. **结构清晰**: 使用标题层级组织内容
 5. **抽象层次**: 聚焦设计决策、接口约定、架构原则，**严格避免实现细节**
 6. **聚焦"是什么"和"为什么"**: 记录设计意图和架构决策，而非"怎么做"
@@ -648,16 +662,37 @@ A:
 
 A: **添加前必须先检查**！
 1. 使用 `@prompts/context/search.md` 搜索相关主题
-2. 如果已存在相关 Context，考虑更新而非新建
+2. **如果是公约类型内容**：
+   - ❌ 不创建新的 Global Context 文件
+   - ✅ 使用 `@prompts/context/update.md` 更新已有的 4 个 Global Context 文件
 3. Epic Context 应引用 global Context，而非复制内容
-4. 原则：**优先复用，避免重复**
+4. 原则：**Global Context 固定 4 个，Epic Context 可自由创建**
+
+**Q: Global Context 为什么固定为 4 个文件？**
+
+A: 
+- **避免文件碎片化**：所有公约类型内容集中管理
+- **便于查找和维护**：4 个文件覆盖所有全局规范
+- **减少上下文冗余**：Task 加载时只需这 4 个核心文件
+- **归类原则**：
+  - 架构/设计/部署/API 约定 → `Architecture.md`
+  - 技术选型/工具/框架 → `Tech_Stack.md`
+  - 编码规范/最佳实践 → `Coding_Standard_{Language}.md`
+  - 测试方法/策略 → `Testing_Strategy.md`
+
+**Q: 如果需要添加安全规范、性能优化等内容怎么办？**
+
+A: 归入已有的 4 个文件：
+- 安全规范 → 更新 `Architecture.md` 添加"安全设计"章节
+- 性能优化 → 更新 `Coding_Standard_{Language}.md` 添加"性能优化"章节
+- 部署方案 → 更新 `Architecture.md` 添加"部署架构"章节
+- API 约定 → 更新 `Architecture.md` 添加"API 设计约定"章节
 
 **Q: 如何判断 Context 是 global 还是 epic？**
 
 A:
-- **Global**: 多个 Epic 都会用到（如架构、编码规范、技术栈）
-- **Epic**: 仅特定 Epic 使用（如特定模块的设计、特定协议）
-- **有疑问时，优先选择 global**（便于复用）
+- **Global**: 多个 Epic 都会用到 → **必须归入 4 个固定文件**
+- **Epic**: 仅特定 Epic 使用 → **可以自由创建新文件**
 
 **Q: 一个主题应该创建一个 Context 还是多个？**
 

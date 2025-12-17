@@ -355,14 +355,31 @@ Epic: {Story 所属 Epic ID}
 1. `.the_conn/context/global/` - 公共 Context
 2. `.the_conn/context/epics/EPIC-{序号}/` - Epic 专属 Context
 
-**匹配规则**:
+**匹配规则（分级加载）**:
+
+**级别 1：核心 Global Context（几乎总是包含）**
+
+| Context 文件                    | 包含条件  | 理由             |
+| ------------------------------- | --------- | ---------------- |
+| `Architecture.md`               | 所有 Task | 理解系统整体设计 |
+| `Coding_Standard_{Language}.md` | 所有 Task | 确保代码风格一致 |
+
+**级别 2：按 Story 类型包含**
+
+| Context 文件          | 包含条件                                | 理由                        |
+| --------------------- | --------------------------------------- | --------------------------- |
+| `Testing_Strategy.md` | Story type 为 `e2e_test` 或 `perf_test` | 测试相关 Story 需要测试策略 |
+| `Tech_Stack.md`       | Story type 为 `dev` 且涉及技术选型      | 了解可用的技术栈            |
+
+**级别 3：按功能领域包含**
 
 | 匹配规则                 | 示例                                                         |
 | ------------------------ | ------------------------------------------------------------ |
 | 文件名包含功能领域关键词 | Story 涉及 "DataStream" → 包含 `Module_Design_DataStream.md` |
 | Frontmatter type 匹配    | Story 涉及模块设计 → 包含 `type: module_design` 的文档       |
-| 通用依赖（始终包含）     | `Architecture.md`, `Coding_Standard_{Language}.md`           |
-| 不引用测试文件           | 排除 `*_test.*`, `tests/*`                                   |
+
+**排除规则**：
+- ❌ 不引用测试文件：排除 `*_test.*`, `tests/*`
 
 ### Phase 3: 相关代码文件识别
 
@@ -377,17 +394,29 @@ Epic: {Story 所属 Epic ID}
 
 将以上分析结果整合到 `contexts` 数组中，按以下优先级排序：
 
-1. **公共 Context** (`.the_conn/context/global/*.md`) - 通用设计文档
-2. **Epic Context** (`.the_conn/context/epics/EPIC-{序号}/*.md`) - Epic 专属设计
-3. **接口定义** (`src/**/interfaces.*`, `src/**/types.*` 等)
-4. **相关实现代码** (直接相关的源码文件)
-5. **测试参考** (类似功能的测试文件，可选)
+1. **核心 Global Context** - 几乎总是需要
+   - `Architecture.md`
+   - `Coding_Standard_{Language}.md`
+
+2. **按需 Global Context** - 根据 Story 类型和领域
+   - `Testing_Strategy.md` (E2E/性能测试 Story)
+   - `Tech_Stack.md` (涉及技术选型)
+   - 其他领域特定的 Global Context
+
+3. **Epic Context** (`.the_conn/context/epics/EPIC-{序号}/*.md`) - Epic 专属设计
+
+4. **接口定义** (`src/**/interfaces.*`, `src/**/types.*` 等)
+
+5. **相关实现代码** (直接相关的源码文件)
+
+6. **依赖 Story** (如果 Story 依赖其他 Story，包含前置 Story 文件)
 
 **注意**:
 
-- 只包含真正需要的文件，避免信息过载（通常 3-8 个文件）
-- 每个文件的包含都应有明确理由
-- 如果 Story 依赖其他 Story，需包含前置 Story 文件
+- ✅ 只包含真正需要的文件，避免信息过载（通常 4-8 个文件）
+- ✅ 每个文件的包含都应有明确理由
+- ✅ 不要盲目包含所有 Global Context，按需选择
+- ✅ 估算上下文大小：Global (2-3 个) + Epic (1-2 个) + 代码 (2-3 个) = 5-8 个文件
 
 ---
 
