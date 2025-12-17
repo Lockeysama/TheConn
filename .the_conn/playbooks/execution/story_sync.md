@@ -185,13 +185,13 @@ depends_on: []
 
 ## 2. 验收标准
 
-Feature: 项目结构初始化
+功能: 项目结构初始化
 
-  Scenario: 执行初始化命令
-    Given 目标目录为空
-    When 用户执行 `theconn init` 命令
-    Then 应该创建 `.the_conn/` 目录
-    And 应该返回成功消息
+  场景: 执行初始化命令
+    假如 目标目录为空
+    当 用户执行 `theconn init` 命令
+    那么 应该创建 `.the_conn/` 目录
+    并且 应该返回成功消息
 ```
 
 #### 代码实现发现
@@ -215,14 +215,14 @@ depends_on: []
 
 ## 2. 验收标准
 
-Feature: 项目结构初始化
+功能: 项目结构初始化
 
-  Scenario: 执行初始化命令
-    Given 目标目录为空
-    When 用户执行 `theconn init` 命令
-    Then 应该创建 `.the_conn/` 目录
-    And 应该创建 `pyproject.toml` 文件
-    And 应该返回消息 "Initialization completed successfully"
+  场景: 执行初始化命令
+    假如 目标目录为空
+    当 用户执行 `theconn init` 命令
+    那么 应该创建 `.the_conn/` 目录
+    并且 应该创建 `pyproject.toml` 文件
+    并且 应该返回消息 "Initialization completed successfully"
 ```
 
 ---

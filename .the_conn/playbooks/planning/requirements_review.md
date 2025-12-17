@@ -233,7 +233,7 @@ Step 4: 应用默认测试策略
 ✅ 从 .the_conn/context/global/Tech_Stack.md 读取：
 - 编程语言: Go
 - BDD 框架: godog
-- BDD 关键词: 功能/场景/假如/当/那么/而且
+- BDD 关键词: 功能/场景/假如/当/那么/并且
 
 ✅ 测试策略: 混合策略（自动应用）
 
