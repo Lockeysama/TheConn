@@ -33,17 +33,22 @@
 
 ### 全局 Context (scope: global)
 
+**⚠️ 重要：Global Context 固定为以下 4 个文件，不随意新增**
+
 适用于整个项目的通用知识，所有 Epic 都可引用。
 
-| Type               | 说明         | 典型文件名              |
-| ------------------ | ------------ | ----------------------- |
-| `architecture`     | 系统架构     | `Architecture.md`       |
-| `tech_stack`       | 技术栈       | `Tech_Stack.md`         |
-| `coding_standard`  | 编码规范     | `Coding_Standard_Go.md` |
-| `testing_strategy` | 测试策略     | `Testing_Strategy.md`   |
-| `deployment`       | 部署方案     | `Deployment.md`         |
-| `api_convention`   | API 约定     | `API_Convention.md`     |
-| `domain_model`     | 核心领域模型 | `Domain_Model.md`       |
+| Type               | 说明     | 固定文件名                      | 内容归类规则                                       |
+| ------------------ | -------- | ------------------------------- | -------------------------------------------------- |
+| `architecture`     | 系统架构 | `Architecture.md`               | 系统设计、模块关系、通信方式、架构原则等           |
+| `tech_stack`       | 技术栈   | `Tech_Stack.md`                 | 语言、框架、工具、数据库、中间件等技术选型         |
+| `coding_standard`  | 编码规范 | `Coding_Standard_{Language}.md` | 命名约定、错误处理、注释规范、最佳实践等           |
+| `testing_strategy` | 测试策略 | `Testing_Strategy.md`           | 测试方法、覆盖率要求、BDD/TDD 策略、测试组织规范等 |
+
+**公约归类原则**：
+- ✅ 部署方案、API 约定、安全规范等 → 归入 `Architecture.md`
+- ✅ 领域模型、数据模型通用规范 → 归入 `Architecture.md` 或 `Tech_Stack.md`
+- ❌ 不创建新的 Global Context 文件（如 Deployment.md, API_Convention.md 等）
+- 🔄 如需补充内容，使用 `@prompts/context/update.md` 更新已有文件
 
 ### Epic Context (scope: epic:EPIC-XX)
 
@@ -167,33 +172,50 @@ tags:
 
 ### Step 3: 确定 Context 类型和作用域
 
-**作用域判断原则**（优先使用 global）：
+**作用域判断原则**：
 
-| 内容类型           | 作用域     | 理由                     |
-| ------------------ | ---------- | ------------------------ |
-| 系统架构           | **global** | 全项目通用               |
-| 技术栈             | **global** | 全项目通用               |
-| 编码规范           | **global** | 全项目通用               |
-| 测试策略           | **global** | 全项目通用               |
-| API 通用约定       | **global** | 全项目 API 都应遵循      |
-| 核心领域模型       | **global** | 跨 Epic 共享             |
-| 特定模块设计       | **epic**   | 仅该 Epic 使用           |
-| Epic 专属数据模型  | **epic**   | 仅该 Epic 使用           |
-| Epic 专属 API 规范 | **epic**   | 仅该 Epic 的 API         |
-| Epic 专属协议      | **epic**   | 仅该 Epic 使用的通信协议 |
-| Epic 专属算法      | **epic**   | 仅该 Epic 使用的特殊算法 |
+| 内容类型            | 作用域     | 归入文件                        | 说明                           |
+| ------------------- | ---------- | ------------------------------- | ------------------------------ |
+| 系统架构、设计原则  | **global** | `Architecture.md`               | 全项目通用的架构设计           |
+| 部署方案、API 约定  | **global** | `Architecture.md`               | 作为架构的一部分归入           |
+| 技术栈、工具选型    | **global** | `Tech_Stack.md`                 | 全项目通用的技术选择           |
+| 编码规范、最佳实践  | **global** | `Coding_Standard_{Language}.md` | 全项目代码风格规范             |
+| 测试策略、测试规范  | **global** | `Testing_Strategy.md`           | 全项目测试方法和组织           |
+| 领域模型（跨 Epic） | **global** | `Architecture.md`               | 核心业务概念，作为架构的一部分 |
+| 特定模块设计        | **epic**   | `Module_Design_XXX.md`          | 仅该 Epic 使用的模块           |
+| Epic 专属数据模型   | **epic**   | `Data_Model_XXX.md`             | 仅该 Epic 使用的数据结构       |
+| Epic 专属 API 规范  | **epic**   | `API_Spec_XXX.md`               | 仅该 Epic 的 API               |
+| Epic 专属协议       | **epic**   | `Protocol_Design_XXX.md`        | 仅该 Epic 使用的通信协议       |
+| Epic 专属算法       | **epic**   | `Algorithm_XXX.md`              | 仅该 Epic 使用的特殊算法       |
+
+**⚠️ Global Context 更新优先规则**：
+
+1. **判断是否属于 4 大公约类型**：
+   - 架构/设计相关 → 更新 `Architecture.md`
+   - 技术选型相关 → 更新 `Tech_Stack.md`
+   - 编码规范相关 → 更新 `Coding_Standard_{Language}.md`
+   - 测试策略相关 → 更新 `Testing_Strategy.md`
+
+2. **不创建新的 Global Context 文件**：
+   - ❌ 不创建 `Deployment.md`, `API_Convention.md`, `Security.md` 等
+   - ✅ 这些内容应该归入已有的 4 个文件中
+   - 🔄 使用 `@prompts/context/update.md` 更新已有文件
+
+3. **Epic Context 自由创建**：
+   - 特定 Epic 的专属设计可以自由创建新文件
+   - 但要避免与 Global Context 重复
 
 **判断标准**:
 
-- 如果内容适用于**多个 Epic** 或**整个项目** → global
-- 如果内容仅适用于**单个 Epic** → epic
-- **有疑问时，优先选择 global**（后续可以重构为 epic）
+- 如果内容适用于**多个 Epic** 或**整个项目** → 归入 global 的 4 个文件之一
+- 如果内容仅适用于**单个 Epic** → 创建 epic Context
+- **公约类型的内容必须归入 global 的 4 个文件，不创建新文件**
 
 根据分析结果，确定：
 
 - **Type**: 从枚举中选择最匹配的类型
-- **Scope**: global 或 epic:EPIC-XX
-- **Descriptor**: 如何简洁准确地描述这个 Context
+- **Scope**: global（更新已有 4 个文件）或 epic:EPIC-XX（创建新文件）
+- **Descriptor**: 如何简洁准确地描述这个 Context（仅 Epic Context 需要）
 
 ### Step 4: 提取核心内容
 
