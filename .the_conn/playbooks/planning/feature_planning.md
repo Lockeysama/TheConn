@@ -140,9 +140,15 @@ created: yyyy-mm-dd
 - 测试场景：负载测试、压力测试、容量测试、峰值测试、稳定性测试
 - 生成方式：使用 `@playbooks/planning/performance_test_story.md`
 
-### AI 自动生成输出
+### 生成的 Feature 文档中的测试输出格式
 
-**如果需要测试 Story，AI 自动添加：**
+**规则**：
+1. ✅ 只列出需要的测试 Story 及简要理由（1-2 句话）
+2. ✅ 按功能开发顺序排列
+3. ❌ 不包含详细的多维度评估过程
+4. ❌ 不包含决策框架说明
+
+**输出格式**：
 
 ```markdown
 ## 包含的 Story
@@ -152,19 +158,20 @@ created: yyyy-mm-dd
 - STORY-02: {功能2描述}
 - STORY-03: {功能3描述}
 
-### 测试 Story（自动建议）
-- STORY-99: E2E_{FeatureName}_Flow
-  - **类型**: E2E BDD 测试
-  - **目的**: 验证 STORY-01 → STORY-02 → STORY-03 的完整集成流程
-  - **触发条件**: 所有功能 Story 完成后
-  - **预计场景**: 
-    - Happy Path: 完整功能流程验证
-    - 异常处理: 错误边界和恢复机制
-    - 数据一致性: 跨模块数据验证
+### 测试 Story（按开发顺序）
 
-💡 **AI 建议理由**: 
-检测到 Feature 包含 3 个功能 Story，且涉及数据库和 API 集成，
-建议添加 E2E 测试 Story 确保各模块协同工作正常。
+**STORY-99: E2E_{FeatureName}_Flow**
+- **类型**: E2E 测试 (type: e2e_test)
+- **目的**: 验证 STORY-01 → STORY-02 → STORY-03 的完整集成
+- **理由**: Feature 包含 3 个功能 Story 且涉及数据库和 API 集成
+- **测试路径**: `tests/bdd/features/{module}/{feature}_flow.feature`
+- **执行顺序**: STORY-01, STORY-02, STORY-03 完成后
+
+**STORY-97: Performance_{FeatureName}**（如果需要）
+- **类型**: 性能测试 (type: perf_test)
+- **目的**: 验证高并发场景下的性能表现
+- **理由**: 涉及实时数据处理，需要验证性能指标
+- **执行顺序**: STORY-99 完成后
 ```
 
 ### 测试 Story 命名规范
@@ -207,6 +214,8 @@ FEAT-02: 配置管理（2 个 Story，平均复杂度 2.3）
 
 ## 示例
 
+### 示例 1: 不需要测试 Story 的 Feature
+
 ```markdown
 # Feature: FEAT-01 初始化项目结构
 
@@ -218,6 +227,52 @@ FEAT-02: 配置管理（2 个 Story，平均复杂度 2.3）
   - 生成的模板文件内容完整且格式正确
   - 重复执行不会覆盖已有文件
 - **创建日期**: 2025-12-11
+
+## 包含的 Story
+
+### 功能开发 Story
+- STORY-01: 创建目录结构
+- STORY-02: 生成模板文件
+
+### 测试 Story
+无需 Feature 级 E2E 测试（仅 2 个独立 Story，单元测试足够）
+```
+
+### 示例 2: 需要测试 Story 的 Feature
+
+```markdown
+# Feature: FEAT-02 用户认证
+
+- **所属 Epic**: EPIC-02
+- **目标**: 提供完整的用户认证流程
+- **包含的故事**: STORY-03, STORY-04, STORY-05, STORY-99
+- **验收标准**:
+  - 用户可以通过邮箱/密码注册和登录
+  - 认证令牌自动刷新
+  - 支持记住登录状态
+- **创建日期**: 2025-12-17
+
+## 包含的 Story
+
+### 功能开发 Story
+- STORY-03: 用户注册接口
+- STORY-04: 用户登录接口
+- STORY-05: Token 刷新机制
+
+### 测试 Story（按开发顺序）
+
+**STORY-99: E2E_Auth_Flow**
+- **类型**: E2E 测试 (type: e2e_test)
+- **目的**: 验证注册 → 登录 → Token 刷新的完整认证流程
+- **理由**: Feature 构成完整用户旅程且涉及多系统集成（数据库、缓存、API）
+- **测试路径**: `tests/bdd/features/auth/auth_flow.feature`
+- **执行顺序**: STORY-03, STORY-04, STORY-05 完成后
+
+**STORY-97: Performance_Auth**
+- **类型**: 性能测试 (type: perf_test)
+- **目的**: 验证认证接口的高并发性能
+- **理由**: 认证是高频访问场景，需要确保 P95 响应时间 < 200ms
+- **执行顺序**: STORY-99 完成后
 ```
 
 ---

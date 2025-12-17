@@ -107,6 +107,11 @@
 - 如果 `type: dev` → 使用"格式 B: 普通 Story (单元测试)"
 - 如果 `type: bug_fix` → 使用"格式 B: 普通 Story (单元测试)"
 
+**重要**：
+- ✅ task.md 只包含任务目标、验收标准、开发流程、技术要点、工作范围
+- ❌ 不要包含"参考资料"、"上下文文件列表"等已在 context.manifest.json 中定义的信息
+- ❌ 不要复制 base_rules.md 或其他公约文件的内容（执行时会自动加载）
+
 #### 格式 A：E2E Story（使用 BDD 测试）
 
 ```markdown
@@ -207,12 +212,11 @@
 
 更新文件: `.the_conn/epics/EPIC-{序号}_{Name}/features/FEAT-{序号}_{Name}/stories/STORY-{序号}_{Name}.md`
 
-## 7. 参考资料
-
-- 设计文档: {相关 context 文件}
-- 原始 Story: {Story 文件路径}
-
 ```
+
+**注意**：不要在 task.md 中包含"参考资料"或"上下文文件"列表，这些信息已经在 `context.manifest.json` 中定义，执行时会自动加载。
+
+---
 
 #### 格式 B：普通 Story（使用单元测试）
 
@@ -304,11 +308,9 @@
 
 更新文件: `.the_conn/epics/EPIC-{序号}_{Name}/features/FEAT-{序号}_{Name}/stories/STORY-{序号}_{Name}.md`
 
-## 7. 参考资料
-
-- 设计文档: {相关 context 文件}
-- 原始 Story: {Story 文件路径}
 ```
+
+**注意**：不要在 task.md 中包含"参考资料"或"上下文文件"列表，这些信息已经在 `context.manifest.json` 中定义，执行时会自动加载。
 
 ---
 
@@ -319,6 +321,7 @@
 3. **验收驱动**：Story 的验收标准是任务完成的唯一标准
 4. **上下文精准**：manifest 只包含真正需要的文件
 5. **边界明确**：清晰列出"禁止"范围，避免 AI 越界
+6. **避免重复**：不要在 task.md 中重复 context.manifest.json 中的信息（如上下文文件列表、原始 Story 路径等）
 
 ---
 

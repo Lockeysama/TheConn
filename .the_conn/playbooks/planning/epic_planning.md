@@ -79,105 +79,76 @@ created: yyyy-mm-dd
 
 ---
 
-## 测试里程碑规划 (智能引导)
+## 测试里程碑规划规则
 
-### 自动分析与建议
+**📋 详细的测试决策规则参考**: `@playbooks/planning/feature_planning.md` 的"自动生成测试 Story"部分
 
-生成 Epic 时，AI 需要分析并建议测试里程碑：
+### Epic 级 E2E 测试决策规则
 
-**分析维度：**
+**触发条件**（满足任意一条需要 Epic E2E）：
 
-1. **Epic 规模**: 预计包含多少个 Feature？
-   - 1-2 个 Feature → 无需 Epic 级别 E2E 测试
-   - 3+ 个 Feature → 建议 1 个 Epic E2E Story
+1. **Epic 规模**: 包含 ≥3 个 Feature
+2. **跨 Feature 集成**: Feature 之间有数据流或业务流依赖
+3. **完整用户旅程**: 存在跨多个 Feature 的端到端用户流程
 
-2. **功能复杂度**: Feature 之间是否有集成依赖？
-   - 无依赖 → Feature 级别测试即可
-   - 有依赖 → 需要跨 Feature 的集成测试
+**决策逻辑**：
 
-3. **用户旅程**: 是否存在跨 Feature 的完整用户流程？
-   - 是 → 必须规划端到端用户旅程测试
-   - 否 → Feature 独立测试即可
+```
+≥ 3 Features? → 是 → 建议 Epic E2E
+    ↓ 否
+有跨 Feature 依赖? → 是 → 建议 Epic E2E
+    ↓ 否
+有完整用户旅程? → 是 → 必须 Epic E2E
+    ↓ 否
+仅需 Feature 级测试
+```
 
-**AI 输出格式：**
+### Epic 级性能测试决策规则
+
+**触发条件**（满足任意一条建议性能测试）：
+
+- Epic 涉及高并发场景
+- 有明确的系统性能 SLA 要求
+- 存在已知的性能瓶颈风险
+- 需要验证系统整体容量
+
+### 生成的 Epic 文档中的测试输出格式
+
+**规则**：
+1. ✅ 只列出需要的测试 Story 及简要理由
+2. ✅ 按功能开发顺序排列
+3. ❌ 不包含详细的决策原理说明
+4. ❌ 不包含时间规划（Week 1-2 等）
+
+**输出格式**：
 
 ```markdown
-## 测试里程碑规划
+## 测试里程碑
 
 ### Feature 级别测试
-- FEAT-01: 预计 1 个 E2E Story（验证用户认证完整流程）
-- FEAT-02: 预计 1 个集成测试 Story（验证数据同步）
+各 Feature 根据其特征规划测试 Story（详见各 Feature 规划）
 
-### Epic 级别测试
-- STORY-999_Epic_E2E_User_Journey
-  - **类型**: `type: e2e_test`
-  - **测试方式**: BDD 场景
-  - **描述**: 验证从用户注册到完成核心操作的完整旅程
-  - **触发条件**: 所有 Feature 开发完成后
-  - **生成方式**: 使用 `@playbooks/planning/e2e_story.md` 生成
-  - **覆盖场景**: 
-    - 注册 → 登录 → 核心功能使用 → 数据持久化验证
-    - 异常处理和错误恢复流程
+### Epic 级别测试（如果需要）
 
-### 测试执行时序
-Week 1-2: FEAT-01 开发 + Feature 测试
-Week 3-4: FEAT-02 开发 + Feature 测试
-Week 5: Epic E2E 测试 + 整体验收
+**STORY-999: Epic_E2E_{EpicName}**
+- **类型**: E2E 测试 (type: e2e_test)
+- **目的**: 验证跨 Feature 的完整用户旅程
+- **理由**: Epic 包含 3 个以上 Feature，需要验证端到端集成
+- **测试路径**: `tests/bdd/features/{module}/epic_{name}_flow.feature`
+- **执行顺序**: 所有 Feature 完成后
 
-### 测试覆盖预估
-- 单元测试: 所有普通 Story 包含
-- Feature E2E: 2 个测试 Story (type: e2e_test)
-- Epic E2E: 1 个测试 Story (type: e2e_test)
-- 性能测试: 按需添加 (type: perf_test)
-- 预计业务场景覆盖率: 85%
-
-### 性能测试里程碑（按需规划）
-
-**触发条件**：
-- Epic 涉及高并发场景
-- 有明确的系统性能 SLA
-- 存在已知的性能瓶颈风险
-
-**如果需要性能测试**：
-
-- STORY-997_Performance_System
-  - **类型**: `type: perf_test`
-  - **描述**: 验证整体系统在生产压力下的性能表现
-  - **触发条件**: 所有 Feature 开发完成后
-  - **性能指标**:
-    - 端到端响应时间
-    - 系统吞吐量
-    - 并发容量
-    - 系统可用性
-  - **测试场景**:
-    - 典型用户旅程测试
-    - 混合负载测试
-    - 业务高峰模拟
-  - **生成方式**: 使用 `@playbooks/planning/performance_test_story.md` 生成
-```
-
-### 测试里程碑决策树
-
-```
-Epic 规模判断
-    ↓
-≤ 2 Features → 仅 Feature 级测试
-≥ 3 Features → 继续判断
-    ↓
-Features 有集成依赖？
-    ↓
-是 → 必须规划 Epic E2E Story
-否 → 继续判断
-    ↓
-存在完整用户旅程？
-    ↓
-是 → 必须规划 Epic E2E Story
-否 → Feature 级测试即可
+**STORY-997: Performance_{EpicName}**（如果需要）
+- **类型**: 性能测试 (type: perf_test)
+- **目的**: 验证系统整体性能表现
+- **理由**: 存在高并发场景，需要验证系统容量
+- **执行顺序**: 所有 Feature 完成后
 ```
 
 ---
 
 ## 示例
+
+### 示例 1: 不需要 Epic 级测试的 Epic
 
 ```markdown
 # EPIC-01: 基础初始化
@@ -186,6 +157,57 @@ Features 有集成依赖？
 - **范围**: 目录结构初始化、模板文件生成、CLI 工具
 - **关键指标**: 目录结构创建成功率 100%，模板文件完整性 100%
 - **创建日期**: 2025-12-11
+
+## Features 概览
+
+- FEAT-01: 初始化项目结构
+- FEAT-02: 生成模板文件
+
+## 测试里程碑
+
+### Feature 级别测试
+各 Feature 根据其特征规划测试 Story（详见各 Feature 规划）
+
+### Epic 级别测试
+无需 Epic 级别测试（仅 2 个独立 Feature，无跨 Feature 依赖）
+```
+
+### 示例 2: 需要 Epic 级测试的 Epic
+
+```markdown
+# EPIC-02: 用户管理系统
+
+- **业务价值**: 提供完整的用户生命周期管理能力
+- **范围**: 用户注册、认证、权限、个人资料管理
+- **关键指标**: 用户注册成功率 99.9%，认证响应时间 < 200ms
+- **创建日期**: 2025-12-17
+
+## Features 概览
+
+- FEAT-01: 用户注册
+- FEAT-02: 用户认证
+- FEAT-03: 权限管理
+- FEAT-04: 个人资料
+
+## 测试里程碑
+
+### Feature 级别测试
+各 Feature 根据其特征规划测试 Story（详见各 Feature 规划）
+
+### Epic 级别测试
+
+**STORY-999: Epic_E2E_UserManagement**
+- **类型**: E2E 测试 (type: e2e_test)
+- **目的**: 验证从注册到使用完整用户旅程
+- **理由**: Epic 包含 4 个强依赖的 Feature，需要验证端到端集成
+- **测试路径**: `tests/bdd/features/user/epic_user_flow.feature`
+- **执行顺序**: 所有 Feature 完成后
+
+**STORY-997: Performance_UserAuth**
+- **类型**: 性能测试 (type: perf_test)
+- **目的**: 验证用户认证系统的性能表现
+- **理由**: 认证是高频访问场景，需要验证并发容量
+- **执行顺序**: FEAT-02 完成后
 ```
 
 ---
