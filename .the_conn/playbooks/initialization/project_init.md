@@ -209,7 +209,7 @@ tags:
 ## 3. BDD 规范
 
 - **语言**: {中文/英文}
-- **关键词**: {Given/When/Then 或 假如/当/那么}
+- **关键词**: {Given/When/Then/And 或 假如/当/那么/并且}
 - **Feature 文件位置**: `tests/bdd/features/`
 - **Step Definitions 位置**: `tests/bdd/`
 
