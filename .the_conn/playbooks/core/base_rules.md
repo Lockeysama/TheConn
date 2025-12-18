@@ -217,6 +217,24 @@ def jisuanZongjia(items):
 
 ---
 
+### 5.4 BDD 语言规范 ✨
+
+**核心原则**：BDD Feature 文件必须保持技术关键字的标准化和业务描述的本地化。
+
+**强制要求**：
+
+- ✅ **关键字 (Keywords)**: 统一使用英文 (`Feature`, `Scenario`, `Given`, `When`, `Then`, `And`, `But`, `Background`, `Examples`, `Scenario Outline` 等)。
+- ✅ **描述 (Descriptions)**: 使用项目交互的自然语言（AI 应优先遵循项目 Context 指定，或根据用户对话语言自动适配，参考 `@playbooks/core/bdd_language_rules.md`）。
+- ✅ **禁止翻译**: 严禁将 Gherkin 关键字翻译为其他语言。
+
+**原因**：
+
+- 保证跨 BDD 测试框架的兼容性（所有框架原生支持英文关键字）。
+- 降低环境配置和插件支持的复杂度。
+- 确保业务逻辑能被团队成员清晰理解。
+
+---
+
 ## 6. 专项规范引用
 
 **详细规范文档**：
