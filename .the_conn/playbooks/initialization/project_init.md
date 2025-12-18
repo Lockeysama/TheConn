@@ -208,8 +208,8 @@ tags:
 
 ## 3. BDD 规范
 
-- **语言**: {中文/英文}
-- **关键词**: {Given/When/Then/And 或 假如/当/那么/并且}
+- **关键字 (Keywords)**: 统一使用英文 (Given/When/Then...)
+- **描述 (Descriptions)**: 使用项目交互的自然语言（由 AI 根据 Context 或用户对话自动适配，参考 `@playbooks/core/bdd_language_rules.md`）
 - **Feature 文件位置**: `tests/bdd/features/`
 - **Step Definitions 位置**: `tests/bdd/`
 

@@ -187,9 +187,9 @@ Step 4: 应用默认测试策略
    - 用户可以随时指定其他框架
 
 3. **BDD Feature 文件语言**
-   - 跟随用户对话语言
-   - AI 自行分析框架的语法支持
-   - 确定正确的关键词
+   - 关键字 (Keywords): 统一使用英文 (Feature/Scenario/Given/When/Then...)
+   - 描述 (Descriptions): 跟随项目交互的自然语言（AI 根据 Context 指定或用户对话语言自动判断，参考 `@playbooks/core/bdd_language_rules.md`）
+   - AI 自行分析并确保关键字未被翻译
 
 4. **测试策略**（自动应用，不需要用户决策）
 
@@ -233,7 +233,7 @@ Step 4: 应用默认测试策略
 ✅ 从 .the_conn/context/global/Tech_Stack.md 读取：
 - 编程语言: Go
 - BDD 框架: godog
-- BDD 关键词: 功能/场景/假如/当/那么/并且
+- BDD 格式: 英文关键字 + 中文描述 (Given/When/Then...)
 
 ✅ 测试策略: 混合策略（自动应用）
 
