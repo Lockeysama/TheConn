@@ -6,6 +6,12 @@
 
 **本 Playbook 严格遵守 `@playbooks/core/base_rules.md` 中定义的所有基础公约。**
 
+**📋 规范引用**：
+
+- **测试策略**：`@playbooks/core/test_strategy_rules.md`
+- **复杂度评估**：`@playbooks/core/complexity_rules.md`
+- **BDD 语言配置**：`@playbooks/core/bdd_language_rules.md`
+
 ## 本 Playbook 的工作范围
 
 **专注于**：

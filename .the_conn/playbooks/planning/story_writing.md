@@ -14,15 +14,15 @@
 - ✅ **编写功能清单**：使用功能清单作为验收标准
 - ✅ **设计指导**：在"实现指导"中使用代码片段说明设计
 
-**不包括**：
-
-- ❌ E2E Story：请使用 `@playbooks/planning/e2e_story.md`
-- ❌ Bug Fix Story：请使用 `@playbooks/planning/bug_fix_story.md`
-
 **📋 规范引用**：
 
 - **测试策略**：`@playbooks/core/test_strategy_rules.md`
 - **复杂度评估**：`@playbooks/core/complexity_rules.md`
+
+**不包括**：
+
+- ❌ E2E Story：请使用 `@playbooks/planning/e2e_story.md`
+- ❌ Bug Fix Story：请使用 `@playbooks/planning/bug_fix_story.md`
 
 ---
 

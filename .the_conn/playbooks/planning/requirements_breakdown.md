@@ -17,13 +17,13 @@
 
 **原因**：本阶段是**规划阶段**，重点是"拆解需求"。
 
+**命名规范说明**：详见各规划 Playbook（`epic_planning.md`、`feature_planning.md`、`story_writing.md`）
+
 **📋 规范引用**：
 
 - **测试策略**：`@playbooks/core/test_strategy_rules.md`
 - **复杂度评估**：`@playbooks/core/complexity_rules.md`
 - **BDD 语言配置**：`@playbooks/core/bdd_language_rules.md`
-
-**命名规范说明**：详见各规划 Playbook（`epic_planning.md`、`feature_planning.md`、`story_writing.md`）
 
 ---
 
