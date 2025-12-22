@@ -87,18 +87,63 @@
 
 ## 评审流程
 
-### Phase 1: 需求澄清（10-15 分钟）
+### Phase 1: 需求分析与 Context 加载 🆕
 
-**目标**: 确保理解用户的真实需求
+**目标**: 理解用户需求，并加载相关的项目 Context
 
-**关键问题**:
+#### Step 1.1: 初步需求分析
+
+**快速分析用户需求**，提取关键信息：
+
+1. **功能领域识别**: 涉及哪些功能模块？
+   - 示例：用户认证、支付处理、数据分析、消息推送等
+
+2. **技术关键词提取**: 从需求中识别技术术语
+   - 示例：API、数据库、缓存、队列、微服务等
+
+3. **业务场景理解**: 核心业务场景是什么？
+   - 示例：用户注册流程、订单处理、实时通知等
+
+**输出**: 关键词列表（3-6 个），如：`["authentication", "API", "database", "user management"]`
+
+#### Step 1.2: Context 搜索与加载
+
+**使用提取的关键词搜索相关 Context**:
+
+```
+调用: @playbooks/context/search.md
+
+输入参数:
+- 关键词: {Step 1.1 提取的关键词数组}
+- 任务类型: requirements_review
+- Epic: (不指定，搜索全局)
+```
+
+**快速浏览返回的 Context**:
+- 重点关注：Architecture.md、Tech_Stack.md
+- 了解：现有技术栈、架构设计、类似模块的实现
+- 目的：后续技术决策与项目现状保持一致
+
+**如果未找到精确匹配的 Context**:
+- 使用保底返回的 Global Context（Architecture.md、Tech_Stack.md）
+- 如果连 Global Context 也没有，说明是新项目，继续正常流程
+
+#### Step 1.3: 需求澄清（基于 Context）
+
+**目标**: 确保理解用户的真实需求，并与现有设计对齐
+
+**关键问题**（结合已加载的 Context）:
 
 1. **业务目标**: 为什么需要这个功能？解决什么问题？
 2. **用户场景**: 谁会使用？如何使用？
 3. **成功标准**: 如何判断功能是否成功？
 4. **约束条件**: 有哪些限制（时间、资源、技术栈）？
+5. **与现有设计的关系** 🆕: 
+   - 是否有类似功能？如何复用？
+   - 是否与现有架构/技术栈一致？
+   - 是否需要修改现有模块？
 
-**输出**: 清晰的需求描述
+**输出**: 清晰的需求描述 + 与现有设计的对齐分析
 
 ---
 
@@ -288,9 +333,9 @@ Step 4: 应用默认测试策略
 
 ---
 
-### Phase 5: 方案确认和输出（5 分钟）
+### Phase 5: 方案确认和后续流程（5 分钟）
 
-**目标**: 确认最终方案并输出文档
+**目标**: 确认最终方案并决定是否立即进入拆解流程
 
 **确认要点**:
 
@@ -299,6 +344,52 @@ Step 4: 应用默认测试策略
 3. 关键技术点实现方案
 4. 风险和应对措施
 5. 后续行动计划
+
+**流程决策**:
+
+用户确认技术方案后，AI 询问：
+
+```
+✅ 技术方案已确认
+
+📋 下一步选项：
+1. 立即进入完整拆解流程（推荐）→ 提取 Context → 初始化 Epic → 批量生成规划
+2. 仅保存方案 → 输出技术方案文档，稍后手动拆解
+
+请选择 [1]:
+```
+
+**选项 1 - 立即进入完整拆解流程**（推荐）:
+
+```
+Step 1: 初始化 Epic 基础设施
+    ↓
+调用 @playbooks/planning/epic_init.md
+自动识别下一个 Epic 编号
+创建 Epic 目录结构和上下文目录
+    ↓
+Step 2: 提取/更新全局 Context
+    ↓
+调用 @playbooks/context/add.md
+从技术方案中提取全局 Context（Architecture、Tech_Stack 等）
+如果已存在则使用 @playbooks/context/update.md 更新
+输出到 .the_conn/context/global/
+    ↓
+Step 3: 添加 Epic 专属 Context
+    ↓
+调用 @playbooks/context/add.md
+从技术方案中提取 Epic 专属 Context（Module Design、Data Model 等）
+输出到 .the_conn/context/epics/EPIC-XX/
+    ↓
+Step 4: 批量生成规划
+    ↓
+调用 @playbooks/planning/requirements_breakdown.md
+AI 展示大纲 → 用户确认 → 批量生成所有 Epic/Feature/Story
+```
+
+**选项 2 - 仅保存方案**:
+- 输出技术方案文档
+- 用户稍后可手动执行完整流程
 
 **输出格式**:
 
@@ -354,10 +445,82 @@ Step 4: 应用默认测试策略
 
 ## 6. 后续行动
 
-- [ ] 创建 Context 文档
-- [ ] 拆解 Epic/Feature/Story
+**如果选择立即拆解**：
+- ✅ 自动触发 requirements_breakdown.md
+- ✅ 批量生成 Epic/Feature/Story
+- [ ] 创建 Context 文档（规划生成后）
 - [ ] 技术预研（如需要）
 - [ ] 团队技术分享（如需要）
+
+**如果选择仅保存方案**：
+- [ ] 创建 Context 文档
+- [ ] 手动拆解 Epic/Feature/Story（使用 requirements_breakdown.md）
+- [ ] 技术预研（如需要）
+- [ ] 团队技术分享（如需要）
+```
+
+---
+
+## 触发完整拆解流程
+
+当用户选择"立即进入完整拆解流程"时，AI 按顺序执行：
+
+**AI 执行流程**：
+
+```markdown
+✅ 技术方案已确认并保存
+
+🚀 开始完整拆解流程...
+
+---
+
+🏗️ Step 1: 初始化 Epic 基础设施...
+
+加载: @playbooks/planning/epic_init.md
+参数: Epic 名称
+输出: .the_conn/epics/EPIC-XX_{Name}/ 目录结构
+
+✅ Epic 初始化完成
+
+---
+
+📝 Step 2: 提取/更新全局 Context...
+
+加载: @playbooks/context/add.md
+参数: 技术方案文档
+目标: 提取 Architecture、Tech_Stack、Coding_Standard、Testing_Strategy
+处理: 检查已存在的文件，如存在则使用 @playbooks/context/update.md 更新
+输出: .the_conn/context/global/
+
+✅ 全局 Context 处理完成
+
+---
+
+📝 Step 3: 添加 Epic 专属 Context...
+
+加载: @playbooks/context/add.md
+参数: 技术方案文档 + Epic 信息
+目标: 提取 Module Design、Data Model、API Spec、Protocol 等
+输出: .the_conn/context/epics/EPIC-XX/
+
+✅ Epic Context 添加完成
+
+---
+
+📋 Step 4: 批量生成规划...
+
+加载: @playbooks/planning/requirements_breakdown.md
+参数: 需求文档 + 技术方案
+
+（AI 展示大纲，等待用户确认后生成所有 Epic/Feature/Story）
+
+✅ 规划生成完成
+
+---
+
+🎉 完整拆解流程已完成！
+
+请审查生成的文档，确认无误后提交。
 ```
 
 ---

@@ -19,9 +19,10 @@ npx theconn-cli init
 ```bash
 # 在 AI IDE（如 Cursor）中，使用 @ 符号引用 tc.md：
 @tc.md init                    # 初始化项目
-@tc.md story 用户登录          # 创建 Story
-@tc.md status                  # 查看项目状态
-@tc.md next                    # 获取下一步建议
+@tc.md review                  # 需求评审（最常用）
+@tc.md quick "修复登录bug"     # 快速变更（最常用）
+@tc.md gtask STORY-01          # 生成任务（最常用）
+@tc.md etask                   # 执行任务（最常用）
 ```
 
 **文档：**
@@ -59,12 +60,18 @@ The Conn 遵循简单的 5 阶段流程：
 **示例工作流：**
 
 ```bash
-@tc.md init                          # 初始化
-@tc.md plan breakdown requirements.md # 生成规划
-@tc.md task STORY-01                 # 创建任务
-@.the_conn/ai_workspace/.../         # AI 执行
-@tc.md sync STORY-01                 # 同步状态
-@tc.md next                          # 获取下一步
+@tc.md init                    # 初始化
+@tc.md review                  # 需求评审与拆解
+@tc.md gtask STORY-01          # 生成任务
+@tc.md etask                   # AI 以 TDD/BDD 执行
+@tc.md plan next               # 获取下一步
+```
+
+**快速变更（Bug 修复和改进）：**
+
+```bash
+@tc.md quick "STORY-03 在高并发时崩溃"
+@tc.md q "增加登录详细日志"  # 'q' 是 'quick' 的快捷方式
 ```
 
 **核心原则：**
@@ -73,6 +80,7 @@ The Conn 遵循简单的 5 阶段流程：
 - **上下文为王** - 在 `context/` 中维护架构文档以确保一致的 AI 输出
 - **测试先行** - 总是在实现前编写测试（BDD/TDD）
 - **人工审查** - 总是在合并前审查 AI 的工作
+- **快速迭代** - 使用 `@tc.md quick` 处理小变更，同时保持文档完整性
 
 详细工作流程和所有命令，请参阅 [完整使用指南](.the_conn/docs/GUIDE.md)
 

@@ -1,6 +1,6 @@
 # The Conn CLI 工具
 
-The Conn 提供两个 CLI 工具，让你快速将框架集成到任何项目中。
+The Conn 提供 CLI 工具，让你快速将框架集成到任何项目中。
 
 ## 🚀 快速开始
 
