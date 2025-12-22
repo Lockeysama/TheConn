@@ -4,14 +4,14 @@
 
 ## ⚠️ 重要：遵守基础公约
 
-**本 Playbook 严格遵守 `@playbooks/core/base_rules.md` 中定义的所有基础公约。**
+**本 Playbook 严格遵守 `@rules/base_rules.md` 中定义的所有基础公约。**
 
 **📋 规范引用**：
 
 本 Playbook 依赖以下规范文件（AI 必须先加载）：
-- **基础公约**: `@playbooks/core/base_rules.md` - 禁止事项、文件路径约定、质量标准
-- **测试策略**: `@playbooks/core/test_strategy_rules.md` - Story 类型判断、测试策略
-- **复杂度评估**: `@playbooks/core/complexity_rules.md` - 复杂度评分标准
+- **基础公约**: `@rules/base_rules.md` - 禁止事项、文件路径约定、质量标准
+- **测试策略**: `@rules/test_strategy_rules.md` - Story 类型判断、测试策略
+- **复杂度评估**: `@rules/complexity_rules.md` - 复杂度评分标准
 
 ## 本 Playbook 的工作范围
 
@@ -128,7 +128,7 @@ depends_on: []
 
 **复杂度评估**: {1.0-10.0 分}
 
-**评分参考**（详见 `@playbooks/core/complexity_rules.md`）：
+**评分参考**（详见 `@rules/complexity_rules.md`）：
 - 1-2 分：简单配置、常量定义
 - 3-4 分：标准 CRUD、简单函数
 - 5-6 分：复杂业务逻辑、多模块集成

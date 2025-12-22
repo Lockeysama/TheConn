@@ -187,21 +187,21 @@
 
 ---
 
-## 🎯 核心 Playbook（不直接调用）
+## 🎯 核心规则文件（不直接调用）
 
-以下是核心规范 Playbook，不通过 @tc.md 命令直接调用，而是被其他 Playbook 引用：
+以下是核心规则文件，不通过 @tc.md 命令直接调用，而是被 Playbook 引用：
 
-| Playbook 文件                 | 用途           |
+| 规则文件                      | 用途           |
 | ----------------------------- | -------------- |
-| `core/base_rules.md`          | 基础公约       |
-| `core/test_strategy_rules.md` | 测试策略规范   |
-| `core/complexity_rules.md`    | 复杂度评估规范 |
-| `core/bdd_language_rules.md`  | BDD 语言配置   |
+| `rules/base_rules.md`         | 基础公约       |
+| `rules/test_strategy_rules.md`| 测试策略规范   |
+| `rules/complexity_rules.md`   | 复杂度评估规范 |
+| `rules/bdd_language_rules.md` | BDD 语言配置   |
 
-这些文件通过 `@` 符号在其他 Playbook 中引用，例如：
+这些文件通过 `@` 符号在 Playbook 中引用，例如：
 
-- `@playbooks/core/base_rules.md`
-- `@playbooks/core/test_strategy_rules.md`
+- `@rules/base_rules.md`
+- `@rules/test_strategy_rules.md`
 
 ---
 

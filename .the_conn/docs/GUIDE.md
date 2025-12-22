@@ -375,12 +375,13 @@ PR 合并后，确保"意图"与"实现"的一致性。
 │       └── EPIC-01/
 │           └── Module_Design_Core.md
 │
+├── rules/                              # 规则层（核心规则和约束）
+│   ├── base_rules.md
+│   ├── test_strategy_rules.md
+│   ├── complexity_rules.md
+│   └── bdd_language_rules.md
+│
 ├── playbooks/                          # 工具层（AI 操作剧本）
-│   ├── core/
-│   │   ├── base_rules.md
-│   │   ├── test_strategy_rules.md
-│   │   ├── complexity_rules.md
-│   │   └── bdd_language_rules.md
 │   ├── initialization/
 │   ├── planning/
 │   ├── context/
@@ -435,10 +436,10 @@ story/STORY-01 (可选)
 ```markdown
 ## ID 分配记录
 
-| 类型    | 下一个可用 ID | 最后分配者 | 更新时间   |
-| ------- | ------------- | ---------- | ---------- |
-| Story   | STORY-06      | @user1     | 2025-12-22 |
-| Task    | TASK-08       | @user2     | 2025-12-22 |
+| 类型  | 下一个可用 ID | 最后分配者 | 更新时间   |
+| ----- | ------------- | ---------- | ---------- |
+| Story | STORY-06      | @user1     | 2025-12-22 |
+| Task  | TASK-08       | @user2     | 2025-12-22 |
 ```
 
 ### 协作检查清单

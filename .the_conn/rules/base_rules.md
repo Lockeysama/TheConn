@@ -15,7 +15,7 @@
 #### 第一层：核心公约（所有命令必须加载）
 
 ```
-playbooks/core/base_rules.md
+rules/base_rules.md
 ```
 
 **说明**：定义了所有 Playbook 必须遵守的基础规则和约束
@@ -262,7 +262,7 @@ def jisuanZongjia(items):
 **强制要求**：
 
 - ✅ **关键字 (Keywords)**: 统一使用英文 (`Feature`, `Scenario`, `Given`, `When`, `Then`, `And`, `But`, `Background`, `Examples`, `Scenario Outline` 等)。
-- ✅ **描述 (Descriptions)**: 使用项目交互的自然语言（AI 应优先遵循项目 Context 指定，或根据用户对话语言自动适配，参考 `@playbooks/core/bdd_language_rules.md`）。
+- ✅ **描述 (Descriptions)**: 使用项目交互的自然语言（AI 应优先遵循项目 Context 指定，或根据用户对话语言自动适配，参考 `@rules/bdd_language_rules.md`）。
 - ✅ **禁止翻译**: 严禁将 Gherkin 关键字翻译为其他语言。
 
 **原因**：
@@ -347,7 +347,7 @@ def jisuanZongjia(items):
 ```markdown
 ## ⚠️ 重要：遵守基础公约
 
-本 Playbook 严格遵守 `@playbooks/core/base_rules.md` 中定义的所有基础公约。
+本 Playbook 严格遵守 `@rules/base_rules.md` 中定义的所有基础公约。
 ```
 
 ---

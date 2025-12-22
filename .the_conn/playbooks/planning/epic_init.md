@@ -4,12 +4,12 @@
 
 ## ⚠️ 重要：遵守基础公约
 
-**本 Playbook 严格遵守 `@playbooks/core/base_rules.md` 中定义的所有基础公约。**
+**本 Playbook 严格遵守 `@rules/base_rules.md` 中定义的所有基础公约。**
 
 **📋 规范引用**：
 
 本 Playbook 依赖以下规范文件（AI 必须先加载）：
-- **基础公约**: `@playbooks/core/base_rules.md` - 禁止事项、文件路径约定、质量标准
+- **基础公约**: `@rules/base_rules.md` - 禁止事项、文件路径约定、质量标准
 
 本 Playbook **不依赖**以下规范：
 - ❌ `test_strategy_rules.md` - Epic 初始化不涉及测试策略
