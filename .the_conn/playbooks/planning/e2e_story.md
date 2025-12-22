@@ -6,6 +6,13 @@
 
 **本 Playbook 严格遵守 `@playbooks/core/base_rules.md` 中定义的所有基础公约。**
 
+**📋 规范引用**：
+
+本 Playbook 依赖以下规范文件（AI 必须先加载）：
+- **基础公约**: `@playbooks/core/base_rules.md` - 禁止事项、文件路径约定、质量标准
+- **测试策略**: `@playbooks/core/test_strategy_rules.md` - Story 类型判断、测试策略
+- **BDD 语言配置**: `@playbooks/core/bdd_language_rules.md` - BDD 关键字和描述语言规范
+
 ## 本 Playbook 的工作范围
 
 **专注于**：
@@ -13,11 +20,6 @@
 - ✅ **生成 E2E Story 文档**：创建端到端测试 Story 文件
 - ✅ **编写 BDD 场景**：使用 Gherkin 格式描述完整业务流程
 - ✅ **设计测试策略**：规划集成测试的范围和重点
-
-**📋 规范引用**：
-
-- **测试策略**：`@playbooks/core/test_strategy_rules.md`
-- **BDD 语言配置**：`@playbooks/core/bdd_language_rules.md`
 
 ---
 
@@ -39,23 +41,25 @@
 
 ---
 
-## ⚠️ 前置检查：BDD 配置
+## 📋 BDD 配置自动读取
 
-**生成 E2E Story 前，需要确认以下信息：**
+**AI 应自动从以下位置读取 BDD 配置**：
 
-1. **项目编程语言**（如 Go, Python, JavaScript）→ 决定默认 BDD 框架
-2. **测试框架/库**（用户可指定任意框架）
-3. **项目交互语言** → 决定描述文本的语言（AI 根据 Context 指定或用户对话语言自动判断）
+1. **优先读取**：`.the_conn/context/global/Testing_Strategy.md`
+   - 编程语言
+   - BDD 框架
+   - 描述语言
+   - Feature 文件位置
 
-**BDD 语言配置规则（强制执行）**：
+2. **如果配置不完整**：
+   - 仅询问缺失的配置项
+   - 不要重复询问已有的配置
 
-1. **关键字 (Keywords)**: **统一使用英文** (`Feature`, `Scenario`, `Given`, `When`, `Then`, `And` 等)。
-2. **描述 (Descriptions)**: **使用项目交互的自然语言**（AI 自动适配，参考 `@playbooks/core/bdd_language_rules.md`）。
+3. **BDD 语言配置规则（强制执行）**：
+   - **关键字 (Keywords)**: **统一使用英文** (`Feature`, `Scenario`, `Given`, `When`, `Then`, `And` 等)
+   - **描述 (Descriptions)**: **使用项目交互的自然语言**（从 Context 读取或根据用户对话语言自动判断）
 
-**⚠️ 重要提醒**：
-
-- 如果用户未提供编程语言或测试框架信息，**必须先提醒用户提供，不要自行假设**。
-- 生成 BDD 场景时，严禁翻译 Gherkin 关键字。
+**⚠️ 重要**：生成 BDD 场景时，严禁翻译 Gherkin 关键字。
 
 ---
 
@@ -179,10 +183,63 @@ Feature: {Feature 名称完整流程}
 - 验证关键业务指标
 - 测试主要的异常路径
 
-**测试数据**:
-- 使用 fixtures 准备测试数据
-- 测试前清理环境
-- 测试后恢复状态
+**测试数据管理**:
+
+*数据准备（推荐使用 Factory Pattern）*：
+
+**Factory Pattern 说明**：
+- 使用工厂模式创建测试数据，提高可维护性和可复用性
+- 每个实体对应一个 Factory 类，负责创建该实体的测试数据
+- 支持默认值和自定义值，灵活组合
+
+**Factory 示例**（以用户数据为例）：
+
+```python
+# 工厂类定义
+class UserFactory:
+    @staticmethod
+    def create_user(email=None, password=None, **kwargs):
+        return User(
+            email=email or f"test_user_{random_id()}@example.com",
+            password=password or "Test@1234",
+            created_at=kwargs.get('created_at', datetime.now()),
+            status=kwargs.get('status', 'active')
+        )
+    
+    @staticmethod
+    def create_admin_user(**kwargs):
+        return UserFactory.create_user(
+            role='admin',
+            **kwargs
+        )
+
+# 使用示例
+user1 = UserFactory.create_user()
+user2 = UserFactory.create_user(email="specific@example.com")
+admin = UserFactory.create_admin_user()
+```
+
+**Factory Pattern 优势**：
+- ✅ 测试数据集中管理，易于维护
+- ✅ 支持默认值，减少重复代码
+- ✅ 灵活自定义，适应不同测试场景
+- ✅ 提高测试可读性
+
+*环境清理*：
+- **测试前（Setup）**：
+  - 清理旧的测试数据
+  - 初始化必要的测试环境
+  - 使用 Factory 创建测试所需的基础数据
+  
+- **测试后（Teardown）**：
+  - 清理测试产生的数据
+  - 恢复数据库/缓存状态
+  - 关闭测试连接
+
+*数据隔离*：
+- 使用独立的测试数据库
+- Factory 创建的数据自动添加特殊标识（如前缀 `test_`）
+- 避免测试数据污染生产环境
 ```
 
 ### Epic E2E Story 模板
@@ -374,7 +431,53 @@ Feature: 用户认证完整流程
 **测试策略**:
 - 使用真实数据库（测试环境）
 - 使用真实 Session 存储
-- 测试前清理测试用户数据
+- 使用 Factory Pattern 管理测试数据
+
+**测试数据 Factory 示例**:
+
+```go
+// Go 版本的 Factory Pattern
+package testutil
+
+type UserFactory struct{}
+
+func (f *UserFactory) CreateUser(opts ...UserOption) *User {
+    // 默认值
+    user := &User{
+        Email:     fmt.Sprintf("test_user_%s@example.com", randomID()),
+        Password:  "Test@1234",
+        Status:    "active",
+        CreatedAt: time.Now(),
+    }
+    
+    // 应用自定义选项
+    for _, opt := range opts {
+        opt(user)
+    }
+    
+    return user
+}
+
+// 选项模式
+type UserOption func(*User)
+
+func WithEmail(email string) UserOption {
+    return func(u *User) {
+        u.Email = email
+    }
+}
+
+func WithRole(role string) UserOption {
+    return func(u *User) {
+        u.Role = role
+    }
+}
+
+// 使用示例
+user1 := UserFactory{}.CreateUser()
+user2 := UserFactory{}.CreateUser(WithEmail("specific@example.com"))
+admin := UserFactory{}.CreateUser(WithRole("admin"))
+```
 ```
 
 ---

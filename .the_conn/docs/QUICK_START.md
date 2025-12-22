@@ -82,9 +82,21 @@ The Conn 提供了统一的命令入口文件 `tc.md`，让你通过简单的命
 @tc.md plan bf STORY-01 登录失败
 ```
 
-### 生成 Epic
+### 初始化 Epic
 
 ```bash
+# 初始化 Epic 基础设施（自动编号、创建目录）
+@tc.md epic-init 用户管理系统
+# 或
+@tc.md plan epic-init 用户管理系统
+# 或缩写
+@tc.md plan ei 用户管理系统
+```
+
+### 生成 Epic 规划
+
+```bash
+# 生成详细的 Epic 规划内容
 @tc.md epic 用户管理系统
 # 或
 @tc.md plan epic 用户管理系统
