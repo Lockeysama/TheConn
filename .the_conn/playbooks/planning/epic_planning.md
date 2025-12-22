@@ -47,6 +47,7 @@
 id: EPIC-01
 status: pending
 created: yyyy-mm-dd
+depends_on: []
 ---
 ```
 
@@ -54,6 +55,7 @@ created: yyyy-mm-dd
 
 - `status`: `pending` (未完成) 或 `done` (已完成)
 - `created`: 格式 `yyyy-mm-dd`
+- `depends_on`: 依赖的其他 Epic ID 列表，无依赖写 `[]`
 
 ---
 
@@ -85,34 +87,46 @@ created: yyyy-mm-dd
 
 **📋 详细的测试决策规则参考**: `@playbooks/planning/feature_planning.md` 的"自动生成测试 Story"部分
 
-### Epic 级 E2E 测试决策规则
-
-**触发条件**（满足任意一条需要 Epic E2E）：
-
-1. **Epic 规模**: 包含 ≥3 个 Feature
-2. **跨 Feature 集成**: Feature 之间有数据流或业务流依赖
-3. **完整用户旅程**: 存在跨多个 Feature 的端到端用户流程
-
-**决策逻辑**：
+### Epic 级 E2E 测试决策规则（判断树）
 
 ```
-≥ 3 Features? → 是 → 建议 Epic E2E
-    ↓ 否
-有跨 Feature 依赖? → 是 → 建议 Epic E2E
-    ↓ 否
-有完整用户旅程? → 是 → 必须 Epic E2E
-    ↓ 否
-仅需 Feature 级测试
+开始判断
+    ↓
+是否有跨 Feature 的完整用户旅程？
+    ├─ 是 → ✅ 必须 Epic E2E
+    └─ 否 ↓
+    
+Feature 之间是否有强依赖（数据流/业务流）？
+    ├─ 是 → ✅ 必须 Epic E2E
+    └─ 否 ↓
+    
+Epic 包含 ≥3 个 Feature？
+    ├─ 是 → 💡 建议 Epic E2E
+    └─ 否 → ❌ 无需 Epic E2E（Feature 级测试足够）
 ```
 
-### Epic 级性能测试决策规则
+**判断标准**：
+- **完整用户旅程**：用户操作跨越多个 Feature（如注册→登录→使用功能）
+- **强依赖**：一个 Feature 的输出是另一个 Feature 的输入
+- **Feature 数量**：≥3 个时建议增加 Epic 级验证
 
-**触发条件**（满足任意一条建议性能测试）：
+### Epic 级性能测试决策规则（判断树）
 
-- Epic 涉及高并发场景
-- 有明确的系统性能 SLA 要求
-- 存在已知的性能瓶颈风险
-- 需要验证系统整体容量
+```
+开始判断
+    ↓
+是否有明确的性能 SLA 要求？
+    ├─ 是 → ✅ 必须性能测试
+    └─ 否 ↓
+    
+是否涉及高并发场景？
+    ├─ 是 → 💡 建议性能测试
+    └─ 否 ↓
+    
+是否有已知的性能瓶颈风险？
+    ├─ 是 → 💡 建议性能测试
+    └─ 否 → ❌ 无需性能测试（按需添加）
+```
 
 ### 生成的 Epic 文档中的测试输出格式
 

@@ -20,15 +20,20 @@ playbooks/core/base_rules.md
 
 **说明**：定义了所有 Playbook 必须遵守的基础规则和约束
 
-#### 第二层：领域规范（按 Playbook 声明加载）
+#### 第二层：具体 Playbook
+
+加载命令对应的 playbook 文件（通过 tc.md 的命令路由表映射）
+
+#### 第三层：领域规范（按 Playbook 声明加载）
 
 每个 Playbook 在开头的 **"📋 规范引用"** 部分声明了自己依赖的规范文件。
 
 AI 必须按照 Playbook 的声明加载对应的规范文件。
 
-#### 第三层：具体 Playbook
-
-加载命令对应的 playbook 文件（通过 tc.md 的命令路由表映射）
+**⚠️ 重要：去重加载**
+- 同一个规范文件只加载一次，避免重复
+- 如果多个 playbook 引用同一规范，AI 应自动去重
+- 已加载的文件不需要重新加载
 
 #### 第四层：项目上下文（按需加载）
 
@@ -53,9 +58,9 @@ AI 必须按照 Playbook 的声明加载对应的规范文件。
     ↓
 第一层：加载 base_rules.md
     ↓
-第三层：加载目标 playbook
+第二层：加载目标 playbook
     ↓
-第二层：按 playbook 声明加载规范文件
+第三层：按 playbook 声明加载规范文件（去重）
     ↓
 第四层：加载 playbook 要求的项目上下文
     ↓
