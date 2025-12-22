@@ -67,12 +67,21 @@ The Conn follows a simple 5-stage process:
 @tc.md next                          # Get next step
 ```
 
+**Quick changes (bug fixes & improvements):**
+
+```bash
+@tc.md quick "STORY-03 crashes under high concurrency"  # AI analyzes & routes
+@tc.md quick "Add detailed login logs"                  # Fast improvement
+@tc.md hotfix "Update Redis timeout config"             # Skip analysis
+```
+
 **Key principles:**
 
 - **You Plan, AI Executes** - You define WHAT and WHY; AI handles HOW
 - **Context is King** - Maintain architecture docs in `context/` for consistent AI output
 - **Test-First** - Always write tests before implementation (BDD/TDD)
 - **Human Review** - Always review AI's work before merging
+- **Fast Iterations** - Use `tc quick` for small changes while maintaining documentation
 
 For detailed workflows and all commands, see [Complete Usage Guide](.the_conn/docs/GUIDE.md)
 

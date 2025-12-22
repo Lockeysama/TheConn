@@ -74,13 +74,29 @@ The Conn 提供了统一的命令入口文件 `tc.md`，让你通过简单的命
 @tc.md perf
 @tc.md plan perf
 @tc.md plan performance
-
-# 生成 Bug Fix Story
-@tc.md bugfix STORY-01 登录失败
-@tc.md plan bugfix STORY-01 登录失败
-# 或缩写
-@tc.md plan bf STORY-01 登录失败
 ```
+
+### 快速变更
+
+```bash
+# 智能判断类型并路由（推荐）
+@tc.md quick "STORY-03 在并发时崩溃"
+@tc.md q "增加登录详细日志"                    # 缩写
+
+# 明确指定为 Bug 修复
+@tc.md bugfix "STORY-03 的并发问题"
+@tc.md plan bugfix "STORY-03 的并发问题"
+
+# 明确指定为快速改进
+@tc.md hotfix "更新 Redis 超时配置"
+@tc.md plan hotfix "更新 Redis 超时配置"
+```
+
+**Quick Change 特点**：
+- ⚡ **快速**：文档精简但保留关键要素
+- 🤖 **智能**：AI 自动判断是 bug 还是改进
+- 📊 **完整**：保持 Epic 体系和文档可追溯性
+- 🎯 **适用**：复杂度 ≤ 2 分的小变更
 
 ### 初始化 Epic
 
@@ -167,38 +183,38 @@ The Conn 提供了统一的命令入口文件 `tc.md`，让你通过简单的命
 
 ### 规划模块（plan）
 
-| 命令 | 缩写 | 功能 |
-|------|------|------|
-| `@tc.md plan review` | `rv` | 需求评审 |
-| `@tc.md plan breakdown` | `bd` | 需求拆解 |
-| `@tc.md plan change` | `chg` | 需求变更 |
-| `@tc.md plan status` | `st` | 项目状态 |
-| `@tc.md plan next` | `n` | 下一步建议 |
-| `@tc.md plan epic` | `e` | 生成 Epic |
-| `@tc.md plan feature` | `feat` / `f` | 生成 Feature |
-| `@tc.md plan story` | `s` | 生成 Story |
-| `@tc.md plan e2e` | `ee` | 生成 E2E Story |
-| `@tc.md plan perf` | `performance` / `p` | 生成性能测试 Story |
-| `@tc.md plan bugfix` | `bug` / `bf` | Bug Fix |
+| 命令                    | 缩写                | 功能               |
+| ----------------------- | ------------------- | ------------------ |
+| `@tc.md plan review`    | `rv`                | 需求评审           |
+| `@tc.md plan breakdown` | `bd`                | 需求拆解           |
+| `@tc.md plan change`    | `chg`               | 需求变更           |
+| `@tc.md plan status`    | `st`                | 项目状态           |
+| `@tc.md plan next`      | `n`                 | 下一步建议         |
+| `@tc.md plan epic`      | `e`                 | 生成 Epic          |
+| `@tc.md plan feature`   | `feat` / `f`        | 生成 Feature       |
+| `@tc.md plan story`     | `s`                 | 生成 Story         |
+| `@tc.md plan e2e`       | `ee`                | 生成 E2E Story     |
+| `@tc.md plan perf`      | `performance` / `p` | 生成性能测试 Story |
+| `@tc.md plan bugfix`    | `bug` / `bf`        | Bug Fix            |
 
 **一级快捷命令**：`status`, `next`, `epic`, `feature`, `story`, `bugfix`
 
 ### 上下文模块（ctx）
 
-| 命令 | 缩写 | 功能 |
-|------|------|------|
+| 命令                 | 缩写        | 功能         |
+| -------------------- | ----------- | ------------ |
 | `@tc.md ctx extract` | `ext` / `e` | 提取 Context |
-| `@tc.md ctx add` | `a` | 添加 Context |
-| `@tc.md ctx update` | `upd` / `u` | 更新 Context |
-| `@tc.md ctx search` | `s` | 搜索 Context |
+| `@tc.md ctx add`     | `a`         | 添加 Context |
+| `@tc.md ctx update`  | `upd` / `u` | 更新 Context |
+| `@tc.md ctx search`  | `s`         | 搜索 Context |
 
 ### 执行模块（exec）
 
-| 命令 | 缩写 | 功能 |
-|------|------|------|
-| `@tc.md exec task` | `t` | 生成 Task |
-| `@tc.md exec sync` | `sy` | 同步 Story |
-| `@tc.md exec summary` | `sum` | 变更摘要 |
+| 命令                  | 缩写  | 功能       |
+| --------------------- | ----- | ---------- |
+| `@tc.md exec task`    | `t`   | 生成 Task  |
+| `@tc.md exec sync`    | `sy`  | 同步 Story |
+| `@tc.md exec summary` | `sum` | 变更摘要   |
 
 **一级快捷命令**：`task`, `sync`, `summary`
 
@@ -292,18 +308,28 @@ The Conn 提供了统一的命令入口文件 `tc.md`，让你通过简单的命
 @tc.md next
 ```
 
-### 场景 2：修复 Bug
+### 场景 2：快速变更（⭐ 推荐）
 
 ```bash
-# 1. 创建 Bug Fix Story
-@tc.md bugfix STORY-05 商品价格显示错误
+# 使用 quick 命令，AI 自动判断类型
+@tc.md quick "STORY-05 商品价格显示错误"
+# AI 分析: "错误" → bug_fix
+# 生成: STORY-05.1 (Bug Fix Story，包含根因分析)
 
-# 2. 生成 Task
+@tc.md quick "给商品列表增加筛选功能"
+# AI 分析: "增加" → hotfix  
+# 生成: STORY-06 (Hotfix Story，简化流程)
+
+# 或明确指定类型
+@tc.md bugfix "STORY-05 的价格计算问题"
+@tc.md hotfix "优化商品图片加载速度"
+
+# 后续流程相同
 @tc.md task STORY-05.1
-
-# 3. 修复后同步
 @tc.md sync STORY-05.1
 ```
+
+### 场景 3：需求拆解
 
 ### 场景 3：需求拆解
 
@@ -318,7 +344,28 @@ The Conn 提供了统一的命令入口文件 `tc.md`，让你通过简单的命
 @tc.md next
 ```
 
-### 场景 4：管理 Context
+### 场景 4：追溯补录（代码已完成）
+
+```bash
+# 情况：你已经手动修改了代码，现在需要补录文档
+
+# 1. 使用 quick 创建 Story
+@tc.md quick "修复登录时的空指针检查"
+# AI 检测到 git diff 有变更
+# 询问: "检测到未提交的变更，是否为追溯模式？"
+# 选择: y
+
+# 2. AI 从 git diff 自动填充"涉及文件"
+# 3. 你补充验收标准
+
+# 4. 直接生成变更摘要（跳过 Task）
+@tc.md summary
+
+# 5. 同步 Story 状态
+@tc.md sync
+```
+
+### 场景 5：管理 Context
 
 ```bash
 # 1. 添加架构文档
@@ -340,29 +387,156 @@ The Conn 提供了统一的命令入口文件 `tc.md`，让你通过简单的命
 
 ### 完整命令 vs 缩写
 
-| 功能 | 完整命令 | 缩写命令 |
-|------|---------|---------|
-| 项目状态 | `@tc.md plan status` | `@tc.md plan st` |
-| 下一步 | `@tc.md plan next` | `@tc.md plan n` |
-| 生成 Story | `@tc.md plan story` | `@tc.md plan s` |
-| 生成 Feature | `@tc.md plan feature` | `@tc.md plan f` |
-| 需求拆解 | `@tc.md plan breakdown` | `@tc.md plan bd` |
-| 添加 Context | `@tc.md ctx add` | `@tc.md ctx a` |
-| 提取 Context | `@tc.md ctx extract` | `@tc.md ctx e` |
-| 生成 Task | `@tc.md exec task` | `@tc.md exec t` |
+| 功能         | 完整命令                | 缩写命令         |
+| ------------ | ----------------------- | ---------------- |
+| 项目状态     | `@tc.md plan status`    | `@tc.md plan st` |
+| 下一步       | `@tc.md plan next`      | `@tc.md plan n`  |
+| 生成 Story   | `@tc.md plan story`     | `@tc.md plan s`  |
+| 生成 Feature | `@tc.md plan feature`   | `@tc.md plan f`  |
+| 需求拆解     | `@tc.md plan breakdown` | `@tc.md plan bd` |
+| 添加 Context | `@tc.md ctx add`        | `@tc.md ctx a`   |
+| 提取 Context | `@tc.md ctx extract`    | `@tc.md ctx e`   |
+| 生成 Task    | `@tc.md exec task`      | `@tc.md exec t`  |
 
 ### 二级命令 vs 一级快捷命令
 
-| 功能 | 二级命令 | 一级快捷 |
-|------|---------|---------|
-| 项目状态 | `@tc.md plan status` | `@tc.md status` |
-| 下一步 | `@tc.md plan next` | `@tc.md next` |
-| 生成 Story | `@tc.md plan story` | `@tc.md story` |
-| 生成 Epic | `@tc.md plan epic` | `@tc.md epic` |
+| 功能         | 二级命令              | 一级快捷         |
+| ------------ | --------------------- | ---------------- |
+| 项目状态     | `@tc.md plan status`  | `@tc.md status`  |
+| 下一步       | `@tc.md plan next`    | `@tc.md next`    |
+| 生成 Story   | `@tc.md plan story`   | `@tc.md story`   |
+| 生成 Epic    | `@tc.md plan epic`    | `@tc.md epic`    |
 | 生成 Feature | `@tc.md plan feature` | `@tc.md feature` |
-| Bug Fix | `@tc.md plan bugfix` | `@tc.md bugfix` |
-| 生成 Task | `@tc.md exec task` | `@tc.md task` |
-| 同步 Story | `@tc.md exec sync` | `@tc.md sync` |
+| Bug Fix      | `@tc.md plan bugfix`  | `@tc.md bugfix`  |
+| 生成 Task    | `@tc.md exec task`    | `@tc.md task`    |
+| 同步 Story   | `@tc.md exec sync`    | `@tc.md sync`    |
+
+---
+
+## ⚡ Quick Change 深入指南
+
+### 什么是 Quick Change？
+
+Quick Change 是一套轻量级的变更管理系统，用于快速处理小的 bug 修复和功能改进，同时保持文档完整性和可追溯性。
+
+### 核心特点
+
+1. **智能判断**：AI 自动分析描述，判断是 bug_fix 还是 hotfix
+2. **自动推断**：AI 推断变更属于哪个 Epic/Feature
+3. **精简文档**：文档长度减少 50-70%，但保留关键要素
+4. **保持标准**：所有变更仍在 Epic 体系内，完全可追溯
+
+### 类型对比
+
+| 类型       | 判断标准         | 文档长度 | 根因分析 | 适用场景         |
+| ---------- | ---------------- | -------- | -------- | ---------------- |
+| bug_fix    | 功能不正常       | ~200 行  | ✅ 必须   | 崩溃、异常、错误 |
+| hotfix     | 功能正常但需改进 | ~100 行  | ❌ 不需要 | 优化、小功能     |
+| 标准 Story | 复杂功能开发     | ~300 行  | 可选     | 新功能开发       |
+
+### 判断规则
+
+**bug_fix 关键词**：
+- 崩溃、异常、错误、失败、bug
+- 不工作、数据错误、空指针
+- 不符合原 Story 验收标准
+
+**hotfix 关键词**：
+- 增加、添加、优化、改进、调整
+- 日志、监控、配置、重构
+- 功能正常但想改进
+
+**模糊情况**（慢、卡、延迟）：
+- AI 会读取原 Story 验收标准
+- 如果不符合性能要求 → bug_fix
+- 如果符合但想更快 → hotfix
+
+### 归属推断策略
+
+AI 按以下优先级推断：
+
+```
+1. 描述中提到 STORY-XX → 直接关联
+2. git diff 分析 → 查看修改的文件
+3. 关键词搜索 → 搜索相关 Story
+4. 最近活动 → git log 查看
+5. 交互选择 → 列表供选择
+```
+
+### Story ID 格式
+
+- **子 Story**（属于某个已完成 Story）：`STORY-03.1`, `STORY-03.2`
+- **独立 Story**（不属于任何 Story）：`STORY-04`, `STORY-05`
+
+### 使用建议
+
+**✅ 适合使用 Quick Change**：
+- 复杂度 ≤ 2 分
+- 改动文件 ≤ 3 个
+- 预计 < 1 小时完成
+- 不涉及架构变更
+
+**❌ 应该使用标准 Story**：
+- 复杂功能开发
+- 需要详细设计
+- 涉及多个模块
+- 需要架构讨论
+
+### 完整示例
+
+**示例 1: 明确的 bug**
+
+```bash
+@tc.md quick "STORY-03 在并发时崩溃"
+
+# AI 输出:
+# 🔍 分析 Quick Change...
+# ✅ 类型: Bug Fix (关键词"崩溃")
+# ✅ 父 Story: STORY-03 (用户登录)
+# ✅ 新 ID: STORY-03.1
+# 📋 路由到: bug_fix_story.md
+# 
+# 继续创建？[y/n]: y
+# 
+# ✅ 已生成: STORY-03.1_Fix_Concurrency.md
+```
+
+**示例 2: 明确的改进**
+
+```bash
+@tc.md quick "给登录增加详细日志"
+
+# AI 输出:
+# 🔍 分析 Quick Change...
+# ✅ 类型: Hotfix (关键词"增加")
+# 🔎 搜索"登录"相关 Story...
+# ✅ 找到: STORY-03 (用户登录)
+# 
+# 🤔 是否关联到 STORY-03？[y/n]: y
+# 
+# ✅ 新 ID: STORY-03.1
+# 📋 路由到: hotfix_story.md
+```
+
+**示例 3: 模糊情况**
+
+```bash
+@tc.md quick "STORY-03 登录很慢"
+
+# AI 输出:
+# 🔍 分析 Quick Change...
+# ⚠️  关键词"慢"模糊
+# 📋 读取 STORY-03 验收标准...
+#    发现: "响应时间 < 200ms"
+# 
+# 🤔 请选择问题类型:
+# [1] Bug: 当前响应时间 > 200ms (不符合验收标准)
+# [2] 优化: 当前响应时间符合标准，但希望更快
+# 
+# 请选择 [1]: 1
+# 
+# ✅ 确认: Bug Fix
+```
 
 ---
 
