@@ -408,4 +408,82 @@ AI 会与你讨论需求和技术方案，确认后自动：
 
 ---
 
+## 🔗 Playbook 引用关系
+
+### 主要工作流的 Playbook 调用链
+
+**工作流 1：需求评审与完整拆解**
+```
+requirements_review.md
+  ↓ 调用
+epic_init.md → context/add.md → requirements_breakdown.md
+```
+
+**工作流 2：快速变更（Bug/Hotfix）**
+```
+quick_router.md
+  ↓ 路由
+bug_fix_story.md 或 hotfix_story.md
+```
+
+**工作流 3：Task 执行闭环**
+```
+task_generation.md (引用 context/search.md)
+  ↓
+task_execution.md
+  ↓
+change_summary.md → story_sync.md
+```
+
+### Context 引用层级
+
+```
+Global Context (4个固定文件)
+  ├─ Architecture.md
+  ├─ Tech_Stack.md
+  ├─ Testing_Strategy.md
+  └─ Coding_Standard_*.md
+       ↓
+Epic Context (按需创建)
+  ├─ Module_Design_*.md
+  ├─ Data_Model_*.md
+  └─ ...
+       ↓
+Task 加载时按需引用 (通过 context/search.md)
+```
+
+---
+
+## 🔄 隐含工作流说明
+
+### tc review（完整拆解）
+
+执行 `@tc.md review` 后，AI 会依次调用：
+1. **epic_init.md** - 初始化 Epic 目录结构和 README
+2. **context/add.md** - 提取/更新全局 Context（如架构、技术栈）
+3. **context/add.md** - 添加 Epic 专属 Context（如模块设计）
+4. **requirements_breakdown.md** - 批量生成完整规划
+   - 生成所有 Epic、Feature、Story 规划文档
+   - 自动应用测试策略（E2E、性能测试）
+   - 分析依赖关系和开发顺序
+   - 使用粒度控制标准（避免过度拆分）
+
+### tc quick（快速变更）
+
+执行 `@tc.md quick "描述"` 后，AI 会：
+1. **quick_router.md** - 分析并判断类型
+2. 路由到 **bug_fix_story.md** 或 **hotfix_story.md**
+
+### Task 执行闭环
+
+```
+tc gtask STORY-XX → task_generation.md
+tc etask → task_execution.md
+（开发完成后）
+tc exec summary → change_summary.md
+tc exec sync → story_sync.md
+```
+
+---
+
 **现在开始使用 `@tc` 命令，开启高效的 AI 协作开发之旅！** 🚀

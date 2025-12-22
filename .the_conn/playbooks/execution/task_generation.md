@@ -421,14 +421,31 @@
 
 **优先使用 Context 搜索工具**:
 
-```
-@prompts/context/search.md 搜索相关 Context
+调用 `@playbooks/context/search.md` 搜索相关 Context
 
-关键词: {从 Story 中提取的关键词}
-Epic: {Story 所属 Epic ID}
+**输入参数**:
+- **关键词**: {从 Phase 1 提取的技术关键词数组}
+- **任务类型**: task_generation
+- **Epic**: {Story 所属 Epic ID}
+- **类型过滤**（可选）: 根据 Story 类型指定（如 `module_design`, `architecture` 等）
+
+**返回结果示例**:
+```json
+{
+  "contexts": [
+    ".the_conn/context/global/Architecture.md",
+    ".the_conn/context/global/Tech_Stack.md",
+    ".the_conn/context/epics/EPIC-01/Module_Design_Auth.md"
+  ],
+  "total": 3
+}
 ```
 
-如果未使用搜索工具，手动扫描 `.the_conn/context/` 目录，根据 Phase 1 的分析结果匹配相关文件：
+将返回的 Context 文件路径直接用于 `context.manifest.json` 的 `contexts` 数组。
+
+---
+
+**备选方案**：如果未使用搜索工具，手动扫描 `.the_conn/context/` 目录，根据 Phase 1 的分析结果匹配相关文件：
 
 **扫描路径**:
 
