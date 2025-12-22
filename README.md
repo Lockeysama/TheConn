@@ -19,9 +19,10 @@ npx theconn-cli init
 ```bash
 # In your AI IDE (e.g., Cursor), use @ symbol with tc.md:
 @tc.md init                    # Initialize project
-@tc.md story User Login        # Create a story
-@tc.md status                  # View project status
-@tc.md next                    # Get next step suggestions
+@tc.md review                  # Requirements review (most used)
+@tc.md quick "fix login bug"   # Quick change (most used)
+@tc.md gtask STORY-01          # Generate task (most used)
+@tc.md etask                   # Execute task (most used)
 ```
 
 **Documentation:**
@@ -59,20 +60,18 @@ The Conn follows a simple 5-stage process:
 **Example workflow:**
 
 ```bash
-@tc.md init                          # Initialize
-@tc.md plan breakdown requirements.md # Generate plan
-@tc.md task STORY-01                 # Create task
-@.the_conn/ai_workspace/.../         # AI executes
-@tc.md sync STORY-01                 # Sync status
-@tc.md next                          # Get next step
+@tc.md init                    # Initialize
+@tc.md review                  # Requirements review & breakdown
+@tc.md gtask STORY-01          # Generate task
+@tc.md etask                   # AI executes with TDD/BDD
+@tc.md plan next               # Get next step
 ```
 
 **Quick changes (bug fixes & improvements):**
 
 ```bash
-@tc.md quick "STORY-03 crashes under high concurrency"  # AI analyzes & routes
-@tc.md quick "Add detailed login logs"                  # Fast improvement
-@tc.md hotfix "Update Redis timeout config"             # Skip analysis
+@tc.md quick "STORY-03 crashes under high concurrency"
+@tc.md q "Add detailed login logs"  # 'q' is shortcut for 'quick'
 ```
 
 **Key principles:**
@@ -81,7 +80,7 @@ The Conn follows a simple 5-stage process:
 - **Context is King** - Maintain architecture docs in `context/` for consistent AI output
 - **Test-First** - Always write tests before implementation (BDD/TDD)
 - **Human Review** - Always review AI's work before merging
-- **Fast Iterations** - Use `tc quick` for small changes while maintaining documentation
+- **Fast Iterations** - Use `@tc.md quick` for small changes while maintaining documentation
 
 For detailed workflows and all commands, see [Complete Usage Guide](.the_conn/docs/GUIDE.md)
 

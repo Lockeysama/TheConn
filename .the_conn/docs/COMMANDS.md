@@ -8,7 +8,7 @@
 @tc.md <模块> <命令> [参数]
 ```
 
-或使用一级快捷命令：
+或使用一级快捷命令（仅 4 个最常用命令）：
 
 ```
 @tc.md <命令> [参数]
@@ -28,302 +28,266 @@
 @tc.md init
 ```
 
+**调用的 Playbook**：`initialization/project_init.md`
+
+---
+
+## ⭐ 最常用命令（有一级快捷）
+
+### `@tc.md review` / `@tc.md plan review`
+
+**功能**：需求评审与拆解（最常用）
+
+**语法**：
+
+```bash
+@tc.md review [文档路径]
+@tc.md plan review [文档路径]
+```
+
 **示例**：
 
 ```bash
-用户：@tc.md init
-AI：正在初始化项目结构...
-    ✅ 创建 .the_conn/ 目录
-    ✅ 创建 epics/ 目录
-    ✅ 创建 context/ 目录
-    ✅ 创建 ai_workspace/ 目录
-    初始化完成！
+@tc.md review requirements.md
+@tc.md review
 ```
 
-**调用的 Playbook**：`@initialization/project_init.md`
+**说明**：AI 会与你讨论需求和技术方案，确认后自动批量生成 Epic/Feature/Story
+
+**调用的 Playbook**：`planning/requirements_review.md`
+
+---
+
+### `@tc.md quick` / `@tc.md q` / `@tc.md plan quick`
+
+**功能**：快速变更（智能路由，最常用）
+
+**语法**：
+
+```bash
+@tc.md quick "<变更描述>"
+@tc.md q "<变更描述>"
+@tc.md plan quick "<变更描述>"
+```
+
+**示例**：
+
+```bash
+@tc.md quick "修复登录按钮点击无响应"
+@tc.md q "优化首页加载速度"
+```
+
+**说明**：AI 会自动判断变更类型并创建相应的 Story
+
+**调用的 Playbook**：`planning/quick_router.md`
+
+---
+
+### `@tc.md gtask` / `@tc.md exec task-generate`
+
+**功能**：生成 Task 简报（最常用）
+
+**语法**：
+
+```bash
+@tc.md gtask <Story ID>
+@tc.md exec task-generate <Story ID>
+```
+
+**示例**：
+
+```bash
+@tc.md gtask STORY-01
+@tc.md exec task-generate STORY-01
+```
+
+**调用的 Playbook**：`execution/task_generation.md`
+
+---
+
+### `@tc.md etask` / `@tc.md exec task-execute`
+
+**功能**：执行 Task（最常用）
+
+**语法**：
+
+```bash
+@tc.md etask
+@tc.md exec task-execute
+```
+
+**示例**：
+
+```bash
+@tc.md etask
+@tc.md exec task-execute
+```
+
+**说明**：AI 会按照 TDD/BDD 流程执行开发，完成后等待人工 Review
+
+**调用的 Playbook**：`execution/task_execution.md`
 
 ---
 
 ## 📋 规划模块（plan）
 
-### `@tc.md plan review` / `@tc.md plan rv`
-
-**功能**：需求与方案评审
-
-**语法**：
-
-```bash
-@tc.md plan review [文档路径]
-@tc.md plan rv [文档路径]
-```
-
-**示例**：
-
-```bash
-@tc.md plan review requirements.md
-@tc.md plan rv
-```
-
-**调用的 Playbook**：`@planning/requirements_review.md`
-
----
-
-### `@tc.md plan breakdown` / `@tc.md plan bd`
-
-**功能**：需求拆解（批量生成 Epic/Feature/Story）
-
-**语法**：
-
-```bash
-@tc.md plan breakdown [文档路径]
-@tc.md plan bd [文档路径]
-```
-
-**示例**：
-
-```bash
-@tc.md plan breakdown requirements.md
-@tc.md plan bd
-```
-
-**调用的 Playbook**：`@planning/requirements_breakdown.md`
-
----
-
-### `@tc.md plan change` / `@tc.md plan chg`
-
-**功能**：需求变更管理
-
-**语法**：
-
-```bash
-@tc.md plan change [Story ID]
-@tc.md plan chg [Story ID]
-```
-
-**示例**：
-
-```bash
-@tc.md plan change STORY-01
-@tc.md plan chg STORY-01
-```
-
-**调用的 Playbook**：`@planning/requirements_change.md`
-
----
-
-### `@tc.md status` / `@tc.md plan status` / `@tc.md plan st`
+### `@tc.md plan status`
 
 **功能**：查看项目状态
 
 **语法**：
 
 ```bash
-@tc.md status [--epic=EPIC-ID]
 @tc.md plan status [--epic=EPIC-ID]
-@tc.md plan st [--epic=EPIC-ID]
 ```
 
 **示例**：
 
 ```bash
-@tc.md status
-@tc.md status --epic=EPIC-01
-@tc.md plan st
+@tc.md plan status
+@tc.md plan status --epic=EPIC-01
 ```
 
-**调用的 Playbook**：`@planning/project_status.md`
+**调用的 Playbook**：`planning/project_status.md`
 
 ---
 
-### `@tc.md next` / `@tc.md plan next` / `@tc.md plan n`
+### `@tc.md plan next`
 
 **功能**：获取下一步行动建议
 
 **语法**：
 
 ```bash
-@tc.md next [--context=EPIC-ID]
 @tc.md plan next [--context=EPIC-ID]
-@tc.md plan n
 ```
 
 **示例**：
 
 ```bash
-@tc.md next
-@tc.md next --context=EPIC-01
-@tc.md plan n
+@tc.md plan next
+@tc.md plan next --context=EPIC-01
 ```
 
-**调用的 Playbook**：`@planning/next_step_advisor.md`
+**调用的 Playbook**：`planning/next_step_advisor.md`
 
 ---
 
-### `@tc.md epic-init` / `@tc.md plan epic-init` / `@tc.md plan ei`
+### `@tc.md plan epic`
 
-**功能**：初始化 Epic 基础设施（自动编号、创建目录结构）
+**功能**：生成 Epic 规划
 
 **语法**：
 
 ```bash
-@tc.md epic-init <Epic名称>
-@tc.md plan epic-init <Epic名称>
-@tc.md plan ei <Epic名称>
+@tc.md plan epic <Epic名称> [--description="描述"]
 ```
 
 **示例**：
 
 ```bash
-@tc.md epic-init 用户管理系统
-@tc.md plan epic-init 数据分析模块
-@tc.md plan ei 电商平台
-```
-
-**功能说明**：
-- 自动识别下一个可用的 Epic 编号（如 EPIC-01, EPIC-02）
-- 创建 Epic 目录：`.the_conn/epics/EPIC-XX_{PascalCaseName}/`
-- 创建上下文目录：`.the_conn/context/epics/EPIC-XX/`
-- 生成初始 Epic README.md 文件
-
-**调用的 Playbook**：`@planning/epic_init.md`
-
----
-
-### `@tc.md epic` / `@tc.md plan epic` / `@tc.md plan e`
-
-**功能**：生成 Epic 规划内容
-
-**语法**：
-
-```bash
-@tc.md epic <Epic名称> [--description="描述"]
-@tc.md plan epic <Epic名称>
-@tc.md plan e <Epic名称>
-```
-
-**示例**：
-
-```bash
-@tc.md epic 用户管理系统
+@tc.md plan epic 用户管理系统
 @tc.md plan epic 用户管理系统 --description="完整的用户管理功能"
-@tc.md plan e 电商平台
 ```
 
-**调用的 Playbook**：`@planning/epic_planning.md`
+**说明**：会自动检测并初始化 Epic 目录结构
+
+**调用的 Playbook**：`planning/epic_planning.md`
 
 ---
 
-### `@tc.md feature` / `@tc.md plan feature` / `@tc.md plan feat` / `@tc.md plan f`
+### `@tc.md plan feature`
 
 **功能**：生成 Feature
 
 **语法**：
 
 ```bash
-@tc.md feature <Feature名称> [--epic=EPIC-ID]
-@tc.md plan feature <Feature名称>
-@tc.md plan feat <Feature名称>
-@tc.md plan f <Feature名称>
+@tc.md plan feature <Feature名称> [--epic=EPIC-ID]
 ```
 
 **示例**：
 
 ```bash
-@tc.md feature 用户认证
-@tc.md feature 用户认证 --epic=EPIC-01
-@tc.md plan feat 商品管理
-@tc.md plan f 订单处理
+@tc.md plan feature 用户认证
+@tc.md plan feature 用户认证 --epic=EPIC-01
 ```
 
-**调用的 Playbook**：`@planning/feature_planning.md`
+**调用的 Playbook**：`planning/feature_planning.md`
 
 ---
 
-### `@tc.md story` / `@tc.md plan story` / `@tc.md plan s`
+### `@tc.md plan story`
 
 **功能**：生成 Story
 
 **语法**：
 
 ```bash
-@tc.md story <Story标题> [--feature=FEAT-ID] [--epic=EPIC-ID]
-@tc.md plan story <Story标题>
-@tc.md plan s <Story标题>
+@tc.md plan story <Story标题> [--feature=FEAT-ID] [--epic=EPIC-ID]
 ```
 
 **示例**：
 
 ```bash
-@tc.md story 实现用户登录
-@tc.md story 实现用户登录 --feature=FEAT-01
-@tc.md plan s 用户注册功能
+@tc.md plan story 实现用户登录
+@tc.md plan story 实现用户登录 --feature=FEAT-01
 ```
 
-**调用的 Playbook**：`@planning/story_writing.md`
+**调用的 Playbook**：`planning/story_writing.md`
 
 ---
 
-### `@tc.md bugfix` / `@tc.md plan bugfix` / `@tc.md plan bug` / `@tc.md plan bf`
+### `@tc.md plan e2e`
 
-**功能**：生成 Bug Fix Story
+**功能**：生成 E2E Story
 
 **语法**：
 
 ```bash
-@tc.md bugfix <父Story ID> <Bug描述>
-@tc.md plan bugfix <父Story ID> <Bug描述>
-@tc.md plan bug <父Story ID> <Bug描述>
-@tc.md plan bf <父Story ID> <Bug描述>
+@tc.md plan e2e <Story标题> [--feature=FEAT-ID]
 ```
 
 **示例**：
 
 ```bash
-@tc.md bugfix STORY-01 登录失败处理不当
-@tc.md plan bug STORY-01 密码验证错误
-@tc.md plan bf STORY-05 商品价格显示错误
+@tc.md plan e2e 用户注册流程测试
 ```
 
-**调用的 Playbook**：`@planning/bug_fix_story.md`
+**调用的 Playbook**：`planning/e2e_story.md`
+
+---
+
+### `@tc.md plan perf`
+
+**功能**：生成性能测试 Story
+
+**语法**：
+
+```bash
+@tc.md plan perf <Story标题> [--feature=FEAT-ID]
+```
+
+**示例**：
+
+```bash
+@tc.md plan perf API 响应时间优化
+```
+
+**调用的 Playbook**：`planning/performance_test_story.md`
 
 ---
 
 ## 📝 上下文模块（ctx）
 
-### `@tc.md ctx extract` / `@tc.md ctx ext` / `@tc.md ctx e`
+### `@tc.md ctx add`
 
-**功能**：提取 Context 文档
-
-**语法**：
-
-```bash
-@tc.md ctx extract [文件路径]
-@tc.md ctx ext [文件路径]
-@tc.md ctx e [文件路径]
-```
-
-**示例**：
-
-```bash
-@tc.md ctx extract src/architecture.md
-@tc.md ctx ext
-@tc.md ctx e docs/design.md
-```
-
-**调用的 Playbook**：`@context/extract.md`
-
----
-
-### `@tc.md ctx add` / `@tc.md ctx a`
-
-**功能**：添加 Context 文档
+**功能**：添加/提取 Context 文档
 
 **语法**：
 
 ```bash
 @tc.md ctx add --type=<类型> [--scope=global|epic] [--epic=EPIC-ID]
-@tc.md ctx a --type=<类型>
 ```
 
 **Context 类型**：
@@ -336,14 +300,15 @@ AI：正在初始化项目结构...
 ```bash
 @tc.md ctx add --type=architecture --scope=global
 @tc.md ctx add --type=module_design --scope=epic --epic=EPIC-01
-@tc.md ctx a --type=tech_stack
 ```
 
-**调用的 Playbook**：`@context/add.md`
+**说明**：AI 会根据你的输入判断是直接添加还是从材料中提取
+
+**调用的 Playbook**：`context/add.md`
 
 ---
 
-### `@tc.md ctx update` / `@tc.md ctx upd` / `@tc.md ctx u`
+### `@tc.md ctx update`
 
 **功能**：更新 Context 文档
 
@@ -351,116 +316,59 @@ AI：正在初始化项目结构...
 
 ```bash
 @tc.md ctx update <文件名>
-@tc.md ctx upd <文件名>
-@tc.md ctx u <文件名>
 ```
 
 **示例**：
 
 ```bash
 @tc.md ctx update Architecture.md
-@tc.md ctx upd Tech_Stack.md
-@tc.md ctx u Module_Design_Core.md
+@tc.md ctx update Tech_Stack.md
 ```
 
-**调用的 Playbook**：`@context/update.md`
-
----
-
-### `@tc.md ctx search` / `@tc.md ctx s`
-
-**功能**：搜索 Context 文档
-
-**语法**：
-
-```bash
-@tc.md ctx search <关键词>
-@tc.md ctx s <关键词>
-```
-
-**示例**：
-
-```bash
-@tc.md ctx search 架构设计
-@tc.md ctx search authentication
-@tc.md ctx s 数据库
-```
-
-**调用的 Playbook**：`@context/search.md`
+**调用的 Playbook**：`context/update.md`
 
 ---
 
 ## ⚙️ 执行模块（exec）
 
-### `@tc.md task` / `@tc.md exec task` / `@tc.md exec t`
-
-**功能**：生成 Task 简报
-
-**语法**：
-
-```bash
-@tc.md task <Story ID>
-@tc.md exec task <Story ID>
-@tc.md exec t <Story ID>
-```
-
-**示例**：
-
-```bash
-@tc.md task STORY-01
-@tc.md exec task STORY-01
-@tc.md exec t STORY-05
-```
-
-**调用的 Playbook**：`@execution/task_generation.md`
-
----
-
-### `@tc.md sync` / `@tc.md exec sync` / `@tc.md exec sy`
+### `@tc.md exec sync`
 
 **功能**：同步 Story 状态
 
 **语法**：
 
 ```bash
-@tc.md sync <Story ID>
 @tc.md exec sync <Story ID>
-@tc.md exec sy <Story ID>
 ```
 
 **示例**：
 
 ```bash
-@tc.md sync STORY-01
 @tc.md exec sync STORY-01
-@tc.md exec sy STORY-01
 ```
 
-**调用的 Playbook**：`@execution/story_sync.md`
+**调用的 Playbook**：`execution/story_sync.md`
 
 ---
 
-### `@tc.md summary` / `@tc.md exec summary` / `@tc.md exec sum`
+### `@tc.md exec summary`
 
 **功能**：生成变更摘要
 
 **语法**：
 
 ```bash
-@tc.md summary [Task ID]
 @tc.md exec summary [Task ID]
-@tc.md exec sum [Task ID]
 ```
 
 **示例**：
 
 ```bash
-@tc.md summary
+@tc.md exec summary
 @tc.md exec summary TASK-01
-@tc.md exec sum TASK-01
 ```
 
-**调用的 Playbook**：`@execution/change_summary.md`
+**调用的 Playbook**：`execution/change_summary.md`
 
 ---
 
@@ -473,8 +381,7 @@ AI：正在初始化项目结构...
 **语法**：
 
 ```bash
-@tc.md help
-@tc.md help <模块>
+@tc.md help [模块]
 ```
 
 **示例**：
@@ -500,149 +407,82 @@ AI：正在初始化项目结构...
 
 ---
 
-## 🔤 命令缩写对照表
-
-### 规划模块（plan）
-
-| 命令 | 缩写 1 | 缩写 2 | 一级快捷 |
-|------|--------|--------|---------|
-| `plan review` | `rv` | - | ❌ |
-| `plan breakdown` | `bd` | - | ❌ |
-| `plan change` | `chg` | - | ❌ |
-| `plan status` | `st` | - | ✅ `status` |
-| `plan next` | `n` | - | ✅ `next` |
-| `plan epic` | `e` | - | ✅ `epic` |
-| `plan feature` | `feat` | `f` | ✅ `feature` |
-| `plan story` | `s` | - | ✅ `story` |
-| `plan bugfix` | `bug` | `bf` | ✅ `bugfix` |
-
-### 上下文模块（ctx）
-
-| 命令 | 缩写 1 | 缩写 2 |
-|------|--------|--------|
-| `ctx extract` | `ext` | `e` |
-| `ctx add` | `a` | - |
-| `ctx update` | `upd` | `u` |
-| `ctx search` | `s` | - |
-
-### 执行模块（exec）
-
-| 命令 | 缩写 1 | 缩写 2 | 一级快捷 |
-|------|--------|--------|---------|
-| `exec task` | `t` | - | ✅ `task` |
-| `exec sync` | `sy` | - | ✅ `sync` |
-| `exec summary` | `sum` | - | ✅ `summary` |
-
----
-
-## 🌐 中文命令对照表
-
-| 英文命令 | 中文命令 |
-|---------|---------|
-| `@tc.md init` | `@tc.md 初始化` |
-| `@tc.md status` | `@tc.md 状态` |
-| `@tc.md next` | `@tc.md 下一步` |
-| `@tc.md epic` | `@tc.md 史诗` |
-| `@tc.md feature` | `@tc.md 特性` |
-| `@tc.md story` | `@tc.md 故事` |
-| `@tc.md bugfix` | `@tc.md 缺陷` |
-| `@tc.md task` | `@tc.md 任务` |
-| `@tc.md sync` | `@tc.md 同步` |
-| `@tc.md summary` | `@tc.md 摘要` |
-| `@tc.md help` | `@tc.md 帮助` |
-
----
-
 ## 🎯 使用场景
 
-### 场景 1：初始化到开发
+### 场景 1：从零开始
 
 ```bash
-@tc.md init                              # 初始化项目
-@tc.md epic 用户系统                      # 创建 Epic
-@tc.md feature 用户认证 --epic=EPIC-01   # 创建 Feature
-@tc.md story 登录功能 --feature=FEAT-01  # 创建 Story
-@tc.md task STORY-01                     # 生成 Task
-# 开发完成后
-@tc.md sync STORY-01                     # 同步状态
-@tc.md next                              # 查看下一步
+@tc.md init                    # 初始化项目
+@tc.md review requirements.md  # 需求评审与拆解
+# AI 自动批量生成 Epic/Feature/Story
 ```
 
-### 场景 2：批量规划
+### 场景 2：执行开发
 
 ```bash
-@tc.md plan bd requirements.md   # 拆解需求
-@tc.md status                    # 查看生成的规划
-@tc.md next                      # 获取建议
+@tc.md gtask STORY-01          # 生成 Task
+@tc.md etask                   # 执行 Task
+# AI 完成后等待人工 Review，确认后自动闭环
 ```
 
-### 场景 3：Bug 修复
+### 场景 3：快速变更
 
 ```bash
-@tc.md bugfix STORY-05 价格计算错误   # 创建 Bug Fix
-@tc.md task STORY-05.1                # 生成 Task
-# 修复完成后
-@tc.md sync STORY-05.1                # 同步状态
+@tc.md quick "修复登录按钮样式"
+@tc.md q "优化查询性能"
 ```
 
-### 场景 4：Context 管理
+### 场景 4：创建规划
 
 ```bash
-@tc.md ctx a --type=architecture      # 添加架构文档
-@tc.md ctx a --type=tech_stack        # 添加技术栈
-@tc.md ctx s 架构                     # 搜索
-@tc.md ctx u Architecture.md          # 更新
+@tc.md plan epic 支付系统
+@tc.md plan feature 支付宝集成
+@tc.md plan story 支付接口对接
+```
+
+### 场景 5：管理 Context
+
+```bash
+@tc.md ctx add --type=architecture
+@tc.md ctx update Architecture.md
 ```
 
 ---
 
 ## 💡 最佳实践
 
-### 1. 优先使用一级快捷命令
+### 1. 优先使用最常用命令的一级快捷方式
 
 ```bash
-# 推荐 ✅
-@tc.md story 用户登录
-@tc.md status
-@tc.md next
+# 推荐 ✅（最常用命令）
+@tc.md review
+@tc.md quick "描述"
+@tc.md gtask STORY-01
+@tc.md etask
 
-# 可以，但更长 ⚠️
-@tc.md plan story 用户登录
+# 其他命令使用二级形式 ✅
 @tc.md plan status
-@tc.md plan next
+@tc.md plan epic
+@tc.md ctx add
+@tc.md exec sync
 ```
 
-### 2. 使用缩写提高效率
-
-```bash
-# 完整命令
-@tc.md plan breakdown requirements.md
-@tc.md ctx extract design.md
-
-# 缩写（更快）✅
-@tc.md plan bd requirements.md
-@tc.md ctx e design.md
-```
-
-### 3. 合理使用参数
+### 2. 合理使用参数
 
 ```bash
 # 带参数一次完成
-@tc.md story 用户登录 --feature=FEAT-01 --epic=EPIC-01
+@tc.md plan story 用户登录 --feature=FEAT-01
 
-# 分步确认（更安全）
-@tc.md story 用户登录
-# AI 会询问选择 Feature 和 Epic
+# 分步确认（AI 会询问）
+@tc.md plan story 用户登录
 ```
 
-### 4. 查看帮助
+### 3. 查看帮助
 
 ```bash
 # 不确定命令时
 @tc.md help
 @tc.md help plan
-
-# 查看所有命令
 @tc.md list
 ```
 
@@ -656,4 +496,7 @@ AI：正在初始化项目结构...
 
 ---
 
-**💡 提示**：所有命令不区分大小写，`@TC`, `@Tc`, `@tc` 效果相同！
+**💡 提示**：
+- 只有 4 个最常用命令有一级快捷方式：`review`, `quick/q`, `gtask`, `etask`
+- 其他命令必须使用二级形式：`@tc.md <module> <command>`
+- 所有命令不区分大小写

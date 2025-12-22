@@ -44,37 +44,37 @@ tc init [参数]
 
 ### 📋 规划模块（plan）
 
-| 命令              | 缩写         | 一级快捷       | Playbook                             |
-| ----------------- | ------------ | -------------- | ------------------------------------ |
-| `tc plan review`  | -            | `tc review`    | `planning/requirements_review.md`    |
-| `tc plan quick`   | `tc plan q`  | `tc quick / q` | `planning/quick_router.md`           |
-| `tc plan status`  | `tc plan st` | -              | `planning/project_status.md`         |
-| `tc plan next`    | -            | -              | `planning/next_step_advisor.md`      |
-| `tc plan epic`    | -            | -              | `planning/epic_planning.md`          |
-| `tc plan feature` | `tc plan f`  | -              | `planning/feature_planning.md`       |
-| `tc plan story`   | `tc plan s`  | -              | `planning/story_writing.md`          |
-| `tc plan e2e`     | -            | -              | `planning/e2e_story.md`              |
-| `tc plan perf`    | -            | -              | `planning/performance_test_story.md` |
+| 命令              | 一级快捷       | Playbook                             |
+| ----------------- | -------------- | ------------------------------------ |
+| `tc plan review`  | `tc review`    | `planning/requirements_review.md`    |
+| `tc plan quick`   | `tc quick / q` | `planning/quick_router.md`           |
+| `tc plan status`  | -              | `planning/project_status.md`         |
+| `tc plan next`    | -              | `planning/next_step_advisor.md`      |
+| `tc plan epic`    | -              | `planning/epic_planning.md`          |
+| `tc plan feature` | -              | `planning/feature_planning.md`       |
+| `tc plan story`   | -              | `planning/story_writing.md`          |
+| `tc plan e2e`     | -              | `planning/e2e_story.md`              |
+| `tc plan perf`    | -              | `planning/performance_test_story.md` |
 
 ---
 
 ### 📝 上下文模块（ctx）
 
-| 命令            | 缩写       | Playbook            |
-| --------------- | ---------- | ------------------- |
-| `tc ctx add`    | -          | `context/add.md`    |
-| `tc ctx update` | `tc ctx u` | `context/update.md` |
+| 命令            | Playbook            |
+| --------------- | ------------------- |
+| `tc ctx add`    | `context/add.md`    |
+| `tc ctx update` | `context/update.md` |
 
 ---
 
 ### ⚙️ 执行模块（exec）
 
-| 命令                    | 缩写          | 一级快捷   | Playbook                       |
-| ----------------------- | ------------- | ---------- | ------------------------------ |
-| `tc exec task-generate` | `tc exec tg`  | `tc gtask` | `execution/task_generation.md` |
-| `tc exec task-execute`  | `tc exec te`  | `tc etask` | `execution/task_execution.md`  |
-| `tc exec sync`          | `tc exec sy`  | -          | `execution/story_sync.md`      |
-| `tc exec summary`       | `tc exec sum` | -          | `execution/change_summary.md`  |
+| 命令                    | 一级快捷   | Playbook                       |
+| ----------------------- | ---------- | ------------------------------ |
+| `tc exec task-generate` | `tc gtask` | `execution/task_generation.md` |
+| `tc exec task-execute`  | `tc etask` | `execution/task_execution.md`  |
+| `tc exec sync`          | -          | `execution/story_sync.md`      |
+| `tc exec summary`       | -          | `execution/change_summary.md`  |
 
 ---
 
