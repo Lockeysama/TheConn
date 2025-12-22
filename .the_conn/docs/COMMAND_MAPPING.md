@@ -193,7 +193,6 @@
 
 | Playbook 文件                 | 用途           |
 | ----------------------------- | -------------- |
-| `core/core.md`                | 框架核心文档   |
 | `core/base_rules.md`          | 基础公约       |
 | `core/test_strategy_rules.md` | 测试策略规范   |
 | `core/complexity_rules.md`    | 复杂度评估规范 |
