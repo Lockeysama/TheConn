@@ -651,8 +651,8 @@ AI：正在初始化项目结构...
 ## 🔗 相关文档
 
 - 📘 [快速开始指南](QUICK_START.md)
-- 📗 [统一入口 Playbook](../playbooks/tc.md)
-- 📕 [核心规则](../playbooks/core/core.md)
+- 📗 [完整使用指南](GUIDE.md)
+- 📕 [命令映射表](COMMAND_MAPPING.md)
 
 ---
 

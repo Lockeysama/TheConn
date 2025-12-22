@@ -368,9 +368,9 @@ The Conn 提供了统一的命令入口文件 `tc.md`，让你通过简单的命
 
 ## 🔗 相关文档
 
-- 📘 [命令参考手册](COMMANDS.md) - 完整的命令列表和详细说明
-- 📗 [统一入口 Playbook](../playbooks/tc.md) - tc.md 的完整文档
-- 📕 [核心规则](../playbooks/core/core.md) - 框架核心规则
+- 📘 [命令参考手册](COMMANDS.md) - 完整的命令列表
+- 📗 [完整使用指南](GUIDE.md) - 详细工作流程
+- 📕 [命令映射表](COMMAND_MAPPING.md) - 命令与 Playbook 对照
 
 ---
 
