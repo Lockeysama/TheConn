@@ -156,6 +156,26 @@ depends_on: []
 - {性能考虑}
 - {安全考虑}
 - {并发处理}
+
+**伪代码示例**（可选，用于说明关键逻辑）:
+
+*注：仅在逻辑复杂或设计需要说明时使用，避免过度设计*
+
+```
+// 示例：关键算法或流程说明
+function processData(input):
+    // 1. 验证输入
+    if not validate(input):
+        return error
+    
+    // 2. 核心处理
+    result = transform(input)
+    
+    // 3. 存储结果
+    save(result)
+    
+    return success
+```
 ```
 
 ---
@@ -298,6 +318,33 @@ depends_on: []
 - 密码加密：使用 bcrypt，cost factor = 12
 - 并发处理：邮箱唯一性使用数据库唯一索引
 - 错误处理：捕获所有异常，返回统一错误格式
+
+**伪代码示例**:
+
+```python
+# 注册核心流程
+def register_user(email, password):
+    # 1. 验证输入
+    if not validate_email(email):
+        return error("Invalid email format")
+    if not validate_password_strength(password):
+        return error("Password too weak")
+    
+    # 2. 检查重复
+    if user_exists(email):
+        return error("Email already registered")
+    
+    # 3. 加密密码
+    hashed_password = bcrypt.hash(password, cost=12)
+    
+    # 4. 创建用户
+    user = create_user(email, hashed_password)
+    
+    # 5. 异步发送邮件
+    send_verification_email.async(user.email)
+    
+    return success(user)
+```
 ```
 
 ### 示例 2: 技术实现 Story
@@ -360,6 +407,38 @@ depends_on: [STORY-01]
 - 过期策略：默认 TTL = 3600s（可配置）
 - 错误处理：Redis 不可用时自动降级，不影响业务
 - 监控：记录缓存命中率、错误率到日志
+
+**伪代码示例**:
+
+```python
+# 缓存层核心逻辑
+class RedisCache:
+    def get(self, key):
+        try:
+            # 尝试从 Redis 获取
+            value = self.redis_client.get(key)
+            if value:
+                self.metrics.record_hit()
+                return deserialize(value)
+            
+            self.metrics.record_miss()
+            return None
+        
+        except RedisError as e:
+            # 降级策略：Redis 失败时返回 None
+            self.logger.error(f"Redis error: {e}")
+            self.metrics.record_error()
+            return None
+    
+    def set(self, key, value, ttl=3600):
+        try:
+            serialized = serialize(value)
+            self.redis_client.setex(key, ttl, serialized)
+        except RedisError as e:
+            # 降级策略：写入失败不影响业务
+            self.logger.error(f"Redis error: {e}")
+            self.metrics.record_error()
+```
 ```
 
 ---

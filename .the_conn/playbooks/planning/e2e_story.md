@@ -185,16 +185,51 @@ Feature: {Feature 名称完整流程}
 
 **测试数据管理**:
 
-*数据准备*：
-- 使用 fixtures 或 factory 准备测试数据
-- 数据应该独立、可重复
-- 避免依赖外部数据源
+*数据准备（推荐使用 Factory Pattern）*：
+
+**Factory Pattern 说明**：
+- 使用工厂模式创建测试数据，提高可维护性和可复用性
+- 每个实体对应一个 Factory 类，负责创建该实体的测试数据
+- 支持默认值和自定义值，灵活组合
+
+**Factory 示例**（以用户数据为例）：
+
+```python
+# 工厂类定义
+class UserFactory:
+    @staticmethod
+    def create_user(email=None, password=None, **kwargs):
+        return User(
+            email=email or f"test_user_{random_id()}@example.com",
+            password=password or "Test@1234",
+            created_at=kwargs.get('created_at', datetime.now()),
+            status=kwargs.get('status', 'active')
+        )
+    
+    @staticmethod
+    def create_admin_user(**kwargs):
+        return UserFactory.create_user(
+            role='admin',
+            **kwargs
+        )
+
+# 使用示例
+user1 = UserFactory.create_user()
+user2 = UserFactory.create_user(email="specific@example.com")
+admin = UserFactory.create_admin_user()
+```
+
+**Factory Pattern 优势**：
+- ✅ 测试数据集中管理，易于维护
+- ✅ 支持默认值，减少重复代码
+- ✅ 灵活自定义，适应不同测试场景
+- ✅ 提高测试可读性
 
 *环境清理*：
 - **测试前（Setup）**：
   - 清理旧的测试数据
   - 初始化必要的测试环境
-  - 创建测试所需的基础数据
+  - 使用 Factory 创建测试所需的基础数据
   
 - **测试后（Teardown）**：
   - 清理测试产生的数据
@@ -203,7 +238,7 @@ Feature: {Feature 名称完整流程}
 
 *数据隔离*：
 - 使用独立的测试数据库
-- 测试数据添加特殊标识（如前缀 `test_`）
+- Factory 创建的数据自动添加特殊标识（如前缀 `test_`）
 - 避免测试数据污染生产环境
 ```
 
@@ -396,7 +431,53 @@ Feature: 用户认证完整流程
 **测试策略**:
 - 使用真实数据库（测试环境）
 - 使用真实 Session 存储
-- 测试前清理测试用户数据
+- 使用 Factory Pattern 管理测试数据
+
+**测试数据 Factory 示例**:
+
+```go
+// Go 版本的 Factory Pattern
+package testutil
+
+type UserFactory struct{}
+
+func (f *UserFactory) CreateUser(opts ...UserOption) *User {
+    // 默认值
+    user := &User{
+        Email:     fmt.Sprintf("test_user_%s@example.com", randomID()),
+        Password:  "Test@1234",
+        Status:    "active",
+        CreatedAt: time.Now(),
+    }
+    
+    // 应用自定义选项
+    for _, opt := range opts {
+        opt(user)
+    }
+    
+    return user
+}
+
+// 选项模式
+type UserOption func(*User)
+
+func WithEmail(email string) UserOption {
+    return func(u *User) {
+        u.Email = email
+    }
+}
+
+func WithRole(role string) UserOption {
+    return func(u *User) {
+        u.Role = role
+    }
+}
+
+// 使用示例
+user1 := UserFactory{}.CreateUser()
+user2 := UserFactory{}.CreateUser(WithEmail("specific@example.com"))
+admin := UserFactory{}.CreateUser(WithRole("admin"))
+```
 ```
 
 ---
