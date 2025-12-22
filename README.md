@@ -40,6 +40,7 @@ The Conn creates a structured workspace in your project:
 .the_conn/
 ├── epics/              # 📋 Planning - Your Stories and Features
 ├── context/            # 📚 Knowledge - Architecture & Design Docs
+├── rules/              # ⚖️  Core Rules - Framework constraints (auto-managed)
 ├── playbooks/          # 🤖 AI Tools - Command system (auto-managed)
 ├── docs/               # 📖 Documentation (auto-managed)
 └── ai_workspace/       # 🔧 Temporary work area (add to .gitignore)

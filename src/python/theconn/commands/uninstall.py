@@ -27,9 +27,9 @@ def run(target_path: Path) -> None:
     
     # Remove framework files only
     framework_items = [
-        "ai_prompts",
-        "GUIDE.md",
-        "README.md",
+        "rules",
+        "playbooks",
+        "docs",
         ".version",
     ]
     
