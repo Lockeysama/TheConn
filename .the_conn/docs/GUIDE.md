@@ -88,34 +88,26 @@ PR 合并后，确保"意图"与"实现"的一致性。
 
 #### 方案 A: 批量生成（推荐，快速高效）
 
-1. **需求与方案评审**：
+1. **需求评审与拆解**：
 
    ```
    @{需求文档} @playbooks/planning/requirements_review.md 开始评审
    ```
 
-   → 与 AI 讨论需求和技术方案，输出确定的技术方案文档
+   → 与 AI 讨论需求和技术方案，确认后自动触发批量生成
 
-2. **提取 Context 文档**（方案确定后）：
+2. **提取 Context 文档**（规划完成后）：
 
    ```
-   @{技术方案文档} @playbooks/context/extract.md 帮我提取 Context 文档
+   @{技术方案文档} @playbooks/context/add.md 帮我提取 Context 文档
    ```
 
    → 输出到 `.the_conn/context/global/` 或 `.the_conn/context/epics/EPIC-XX/`
 
-3. **批量生成规划**：
+3. **提取 Epic 专属 Context**（Epic 规划完成后）：
 
    ```
-   @{需求文档} @{技术方案} @playbooks/planning/requirements_breakdown.md 开始拆解
-   ```
-
-   → AI 展示大纲 → 用户确认 → 批量生成所有 Epic/Feature/Story
-
-4. **提取 Epic 专属 Context**（Epic 规划完成后）：
-
-   ```
-   @.the_conn/epics/EPIC-XX_Name/README.md @playbooks/context/extract.md 帮我提取 Epic 专属 Context
+   @.the_conn/epics/EPIC-XX_Name/README.md @playbooks/context/add.md 帮我提取 Epic 专属 Context
    ```
 
    → 输出到 `.the_conn/context/epics/EPIC-XX/`
@@ -123,9 +115,21 @@ PR 合并后，确保"意图"与"实现"的一致性。
 
 #### 方案 B: 逐个生成（精细控制）
 
-1. **需求与方案评审**（同上）
+1. **需求评审**：
 
-2. **提取 Context 文档**（同上）
+   ```
+   @{需求文档} @playbooks/planning/requirements_review.md 开始评审
+   ```
+
+   → 与 AI 讨论需求和技术方案
+
+2. **提取 Context 文档**：
+
+   ```
+   @{技术方案文档} @playbooks/context/add.md 帮我提取 Context 文档
+   ```
+
+   → 输出到 `.the_conn/context/global/` 或 `.the_conn/context/epics/EPIC-XX/`
 
 3. **生成 Epic 规划**：
 
@@ -134,6 +138,7 @@ PR 合并后，确保"意图"与"实现"的一致性。
    ```
 
    → 输出到 `.the_conn/epics/EPIC-XX_Name/README.md`
+   → AI 会自动处理 Epic 目录结构初始化
 
 4. **生成 Feature 规划**：
 
@@ -155,8 +160,8 @@ PR 合并后，确保"意图"与"实现"的一致性。
    # 生成性能测试 Story（性能验证）
    @{性能需求} @playbooks/planning/performance_test_story.md 帮我生成性能测试 Story
    
-   # 生成 Bug Fix Story（问题修复）
-   @{Bug信息} @playbooks/planning/bug_fix_story.md 帮我生成 Bug Fix Story
+   # 生成快速变更 Story（小改进/Bug修复）
+   @{变更描述} @playbooks/planning/quick_router.md 帮我创建快速变更
    ```
 
    → 输出到 `.the_conn/epics/.../stories/STORY-XX_Name.md`
@@ -164,7 +169,7 @@ PR 合并后，确保"意图"与"实现"的一致性。
 6. **提取 Epic 专属 Context**（Epic 规划完成后）：
 
    ```
-   @.the_conn/epics/EPIC-XX_Name/README.md @playbooks/context/extract.md 帮我提取 Epic 专属 Context
+   @.the_conn/epics/EPIC-XX_Name/README.md @playbooks/context/add.md 帮我提取 Epic 专属 Context
    ```
 
    → 输出到 `.the_conn/context/epics/EPIC-XX/`
@@ -206,31 +211,32 @@ PR 合并后，确保"意图"与"实现"的一致性。
 
 **步骤**:
 
-1. 启动任务：
+1. 启动任务（使用 task_execution.md）：
 
    ```
-   @.the_conn/ai_workspace/EPIC-XX/TASK-XX_STORY-XX_Name/ 开始任务
+   @.the_conn/ai_workspace/EPIC-XX/TASK-XX_STORY-XX_Name/ @playbooks/execution/task_execution.md 开始任务
    ```
 
 2. AI 按测试策略执行：
    - **E2E Story** (`type: e2e_test`): 先创建 `.feature` 文件和 Step Definitions，再实现业务逻辑
    - **性能测试 Story** (`type: perf_test`): 先准备性能测试环境和脚本，再实现/优化业务代码
    - **普通/Bug Fix Story** (`type: dev`, `type: bug_fix`): 先创建单元测试，再实现业务逻辑使测试通过
-   - 运行测试验证
+   - 运行测试并迭代修复
 
 3. **人工 Review 检查点** ⚠️：
+   - AI 完成开发后会暂停并等待确认
    - 审查代码实现
    - 审查测试覆盖
    - 确认符合预期
 
-4. 确认通过后，执行任务闭环（Step 6-7）：
+4. 确认通过后，AI 自动执行任务闭环（Step 11-12）：
 
    ```
-   请继续执行 Step 6 和 Step 7 完成任务闭环
+   用户输入：确认
    ```
 
-   - AI 自动生成变更摘要
-   - AI 自动同步 Story 状态
+   - AI 自动生成变更摘要（change_summary.md）
+   - AI 自动同步 Story 状态（story_sync.md）
 
 ### 流程四：任务闭环
 
@@ -288,30 +294,33 @@ PR 合并后，确保"意图"与"实现"的一致性。
 
 ### Context 管理 Playbooks
 
-| Playbook                       | 用途              | 输入         | 输出位置             |
-| ------------------------------ | ----------------- | ------------ | -------------------- |
-| `playbooks/context/extract.md` | 提取 Context 文档 | 技术方案     | `.the_conn/context/` |
-| `playbooks/context/add.md`     | 添加 Context 文档 | Context 内容 | `.the_conn/context/` |
-| `playbooks/context/update.md`  | 更新 Context 文档 | Context 变更 | 更新现有 Context     |
+| Playbook                      | 用途                   | 输入                   | 输出位置             |
+| ----------------------------- | ---------------------- | ---------------------- | -------------------- |
+| `playbooks/context/add.md`    | 添加/提取 Context 文档 | Context 内容或技术方案 | `.the_conn/context/` |
+| `playbooks/context/update.md` | 更新 Context 文档      | Context 变更           | 更新现有 Context     |
 
 ### 规划层 Playbooks
 
-| Playbook                                       | 用途                 | 输入              | 输出位置                        |
-| ---------------------------------------------- | -------------------- | ----------------- | ------------------------------- |
-| `playbooks/planning/requirements_review.md`    | 需求与方案评审       | 需求想法          | 技术方案文档                    |
-| `playbooks/planning/requirements_breakdown.md` | 需求拆解（批量生成） | 需求文档+技术方案 | Epic+Feature+Story              |
-| `playbooks/planning/epic_planning.md`          | 生成 Epic 规划       | 需求文档          | `.the_conn/epics/EPIC-XX_Name/` |
-| `playbooks/planning/feature_planning.md`       | 生成 Feature 规划    | 需求/Epic         | `.the_conn/epics/.../features/` |
-| `playbooks/planning/story_writing.md`          | 生成 Story           | 需求/Feature      | `.the_conn/epics/.../stories/`  |
-| `playbooks/planning/bug_fix_story.md`          | 生成 Bug Fix Story   | Bug 信息          | `.the_conn/epics/.../stories/`  |
+| Playbook                                       | 用途                             | 输入              | 输出位置                        |
+| ---------------------------------------------- | -------------------------------- | ----------------- | ------------------------------- |
+| `playbooks/planning/requirements_review.md`    | 需求评审（确认后自动触发拆解）   | 需求想法          | Epic+Feature+Story              |
+| `playbooks/planning/requirements_breakdown.md` | 需求拆解（仅在review确认后触发） | 需求文档+技术方案 | Epic+Feature+Story              |
+| `playbooks/planning/epic_planning.md`          | 生成 Epic 规划（含自动初始化）   | 需求文档          | `.the_conn/epics/EPIC-XX_Name/` |
+| `playbooks/planning/epic_init.md`              | Epic 目录初始化（高级用法）      | Epic 信息         | Epic 目录结构                   |
+| `playbooks/planning/feature_planning.md`       | 生成 Feature 规划                | 需求/Epic         | `.the_conn/epics/.../features/` |
+| `playbooks/planning/story_writing.md`          | 生成普通 Story                   | 需求/Feature      | `.the_conn/epics/.../stories/`  |
+| `playbooks/planning/e2e_story.md`              | 生成 E2E Story                   | Feature 信息      | `.the_conn/epics/.../stories/`  |
+| `playbooks/planning/performance_test_story.md` | 生成性能测试 Story               | 性能需求          | `.the_conn/epics/.../stories/`  |
+| `playbooks/planning/quick_router.md`           | 快速变更（智能路由）             | 变更描述          | `.the_conn/epics/.../stories/`  |
 
 ### 执行层 Playbooks
 
-| Playbook                                 | 用途           | 输入         | 输出位置                  |
-| ---------------------------------------- | -------------- | ------------ | ------------------------- |
-| `playbooks/execution/task_generation.md` | 生成 Task 简报 | Story 文件   | `.the_conn/ai_workspace/` |
-| `playbooks/execution/story_sync.md`      | 同步 Story     | Story + 代码 | 更新原 Story              |
-| `playbooks/execution/change_summary.md`  | 生成变更摘要   | 任务记录     | `.the_conn/ai_workspace/` |
+| Playbook                                 | 用途           | 输入              | 输出位置                  |
+| ---------------------------------------- | -------------- | ----------------- | ------------------------- |
+| `playbooks/execution/task_generation.md` | 生成 Task 简报 | Story 文件        | `.the_conn/ai_workspace/` |
+| `playbooks/execution/task_execution.md`  | 执行 Task      | Task 工作目录     | 代码 + 测试               |
+| `playbooks/execution/change_summary.md`  | 生成变更摘要   | 任务记录          | `.the_conn/ai_workspace/` |
+| `playbooks/execution/story_sync.md`      | 同步 Story     | Story + 代码      | 更新原 Story              |
 
 ---
 

@@ -288,9 +288,9 @@ Step 4: 应用默认测试策略
 
 ---
 
-### Phase 5: 方案确认和输出（5 分钟）
+### Phase 5: 方案确认和后续流程（5 分钟）
 
-**目标**: 确认最终方案并输出文档
+**目标**: 确认最终方案并决定是否立即进入拆解流程
 
 **确认要点**:
 
@@ -299,6 +299,52 @@ Step 4: 应用默认测试策略
 3. 关键技术点实现方案
 4. 风险和应对措施
 5. 后续行动计划
+
+**流程决策**:
+
+用户确认技术方案后，AI 询问：
+
+```
+✅ 技术方案已确认
+
+📋 下一步选项：
+1. 立即进入完整拆解流程（推荐）→ 提取 Context → 初始化 Epic → 批量生成规划
+2. 仅保存方案 → 输出技术方案文档，稍后手动拆解
+
+请选择 [1]:
+```
+
+**选项 1 - 立即进入完整拆解流程**（推荐）:
+
+```
+Step 1: 初始化 Epic 基础设施
+    ↓
+调用 @playbooks/planning/epic_init.md
+自动识别下一个 Epic 编号
+创建 Epic 目录结构和上下文目录
+    ↓
+Step 2: 提取/更新全局 Context
+    ↓
+调用 @playbooks/context/add.md
+从技术方案中提取全局 Context（Architecture、Tech_Stack 等）
+如果已存在则使用 @playbooks/context/update.md 更新
+输出到 .the_conn/context/global/
+    ↓
+Step 3: 添加 Epic 专属 Context
+    ↓
+调用 @playbooks/context/add.md
+从技术方案中提取 Epic 专属 Context（Module Design、Data Model 等）
+输出到 .the_conn/context/epics/EPIC-XX/
+    ↓
+Step 4: 批量生成规划
+    ↓
+调用 @playbooks/planning/requirements_breakdown.md
+AI 展示大纲 → 用户确认 → 批量生成所有 Epic/Feature/Story
+```
+
+**选项 2 - 仅保存方案**:
+- 输出技术方案文档
+- 用户稍后可手动执行完整流程
 
 **输出格式**:
 
@@ -354,10 +400,82 @@ Step 4: 应用默认测试策略
 
 ## 6. 后续行动
 
-- [ ] 创建 Context 文档
-- [ ] 拆解 Epic/Feature/Story
+**如果选择立即拆解**：
+- ✅ 自动触发 requirements_breakdown.md
+- ✅ 批量生成 Epic/Feature/Story
+- [ ] 创建 Context 文档（规划生成后）
 - [ ] 技术预研（如需要）
 - [ ] 团队技术分享（如需要）
+
+**如果选择仅保存方案**：
+- [ ] 创建 Context 文档
+- [ ] 手动拆解 Epic/Feature/Story（使用 requirements_breakdown.md）
+- [ ] 技术预研（如需要）
+- [ ] 团队技术分享（如需要）
+```
+
+---
+
+## 触发完整拆解流程
+
+当用户选择"立即进入完整拆解流程"时，AI 按顺序执行：
+
+**AI 执行流程**：
+
+```markdown
+✅ 技术方案已确认并保存
+
+🚀 开始完整拆解流程...
+
+---
+
+🏗️ Step 1: 初始化 Epic 基础设施...
+
+加载: @playbooks/planning/epic_init.md
+参数: Epic 名称
+输出: .the_conn/epics/EPIC-XX_{Name}/ 目录结构
+
+✅ Epic 初始化完成
+
+---
+
+📝 Step 2: 提取/更新全局 Context...
+
+加载: @playbooks/context/add.md
+参数: 技术方案文档
+目标: 提取 Architecture、Tech_Stack、Coding_Standard、Testing_Strategy
+处理: 检查已存在的文件，如存在则使用 @playbooks/context/update.md 更新
+输出: .the_conn/context/global/
+
+✅ 全局 Context 处理完成
+
+---
+
+📝 Step 3: 添加 Epic 专属 Context...
+
+加载: @playbooks/context/add.md
+参数: 技术方案文档 + Epic 信息
+目标: 提取 Module Design、Data Model、API Spec、Protocol 等
+输出: .the_conn/context/epics/EPIC-XX/
+
+✅ Epic Context 添加完成
+
+---
+
+📋 Step 4: 批量生成规划...
+
+加载: @playbooks/planning/requirements_breakdown.md
+参数: 需求文档 + 技术方案
+
+（AI 展示大纲，等待用户确认后生成所有 Epic/Feature/Story）
+
+✅ 规划生成完成
+
+---
+
+🎉 完整拆解流程已完成！
+
+请审查生成的文档，确认无误后提交。
 ```
 
 ---
