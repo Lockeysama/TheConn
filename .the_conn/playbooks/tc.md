@@ -67,7 +67,8 @@
 | `@tc.md plan change`    | `@tc.md plan chg`                    | 需求变更管理         | `@planning/requirements_change.md`    |
 | `@tc.md plan status`    | `@tc.md plan st`                     | 查看项目状态         | `@planning/project_status.md`         |
 | `@tc.md plan next`      | `@tc.md plan n`                      | 下一步行动建议       | `@planning/next_step_advisor.md`      |
-| `@tc.md plan epic`      | `@tc.md plan e`                      | 生成 Epic            | `@planning/epic_planning.md`          |
+| `@tc.md plan epic-init` | `@tc.md plan ei`                     | 初始化 Epic 基础设施 | `@planning/epic_init.md`              |
+| `@tc.md plan epic`      | `@tc.md plan e`                      | 生成 Epic 规划       | `@planning/epic_planning.md`          |
 | `@tc.md plan feature`   | `@tc.md plan feat` / `@tc.md plan f` | 生成 Feature         | `@planning/feature_planning.md`       |
 | `@tc.md plan story`     | `@tc.md plan s`                      | 生成普通 Story       | `@planning/story_writing.md`          |
 | `@tc.md plan e2e`       | -                                    | 生成 E2E Story       | `@planning/e2e_story.md`              |
@@ -79,6 +80,7 @@
 ```
 @tc.md status     → @tc.md plan status
 @tc.md next       → @tc.md plan next
+@tc.md epic-init  → @tc.md plan epic-init
 @tc.md epic       → @tc.md plan epic
 @tc.md feature    → @tc.md plan feature
 @tc.md story      → @tc.md plan story
@@ -147,6 +149,7 @@
   "init": "@initialization/project_init.md",
   "status": "@planning/project_status.md",
   "next": "@planning/next_step_advisor.md",
+  "epic-init": "@planning/epic_init.md",
   "epic": "@planning/epic_planning.md",
   "feature": "@planning/feature_planning.md",
   "story": "@planning/story_writing.md",
@@ -173,6 +176,8 @@
     "st": "@planning/project_status.md",
     "next": "@planning/next_step_advisor.md",
     "n": "@planning/next_step_advisor.md",
+    "epic-init": "@planning/epic_init.md",
+    "ei": "@planning/epic_init.md",
     "epic": "@planning/epic_planning.md",
     "e": "@planning/epic_planning.md",
     "feature": "@planning/feature_planning.md",
@@ -262,7 +267,16 @@
 AI：加载 @initialization/project_init.md 并执行初始化
 ```
 
-### 示例 2：生成 Story（一级命令）
+### 示例 2：初始化 Epic 基础设施
+
+```
+用户：@tc.md epic-init 用户管理系统
+AI：加载 @planning/epic_init.md
+    自动识别下一个 Epic 编号
+    创建目录结构和初始 README
+```
+
+### 示例 3：生成 Story（一级命令）
 
 ```
 用户：@tc.md story 用户登录功能
@@ -270,7 +284,7 @@ AI：加载 @planning/story_writing.md
     参数：用户登录功能
 ```
 
-### 示例 3：生成 Story（二级命令）
+### 示例 4：生成 Story（二级命令）
 
 ```
 用户：@tc.md plan story 用户登录功能
@@ -278,7 +292,7 @@ AI：加载 @planning/story_writing.md
     参数：用户登录功能
 ```
 
-### 示例 4：使用缩写
+### 示例 5：使用缩写
 
 ```
 用户：@tc.md plan s 用户注册
@@ -287,7 +301,7 @@ AI：识别缩写 's' → story
     参数：用户注册
 ```
 
-### 示例 5：上下文管理
+### 示例 6：上下文管理
 
 ```
 用户：@tc.md ctx add --type=architecture
@@ -295,7 +309,7 @@ AI：加载 @context/add.md
     参数：--type=architecture
 ```
 
-### 示例 6：上下文管理（缩写）
+### 示例 7：上下文管理（缩写）
 
 ```
 用户：@tc.md ctx a --type=architecture

@@ -160,9 +160,39 @@ AI：正在初始化项目结构...
 
 ---
 
+### `@tc.md epic-init` / `@tc.md plan epic-init` / `@tc.md plan ei`
+
+**功能**：初始化 Epic 基础设施（自动编号、创建目录结构）
+
+**语法**：
+
+```bash
+@tc.md epic-init <Epic名称>
+@tc.md plan epic-init <Epic名称>
+@tc.md plan ei <Epic名称>
+```
+
+**示例**：
+
+```bash
+@tc.md epic-init 用户管理系统
+@tc.md plan epic-init 数据分析模块
+@tc.md plan ei 电商平台
+```
+
+**功能说明**：
+- 自动识别下一个可用的 Epic 编号（如 EPIC-01, EPIC-02）
+- 创建 Epic 目录：`.the_conn/epics/EPIC-XX_{PascalCaseName}/`
+- 创建上下文目录：`.the_conn/context/epics/EPIC-XX/`
+- 生成初始 Epic README.md 文件
+
+**调用的 Playbook**：`@planning/epic_init.md`
+
+---
+
 ### `@tc.md epic` / `@tc.md plan epic` / `@tc.md plan e`
 
-**功能**：生成 Epic
+**功能**：生成 Epic 规划内容
 
 **语法**：
 

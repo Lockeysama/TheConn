@@ -75,6 +75,7 @@ The Conn 提供了统一的命令入口 `@tc`，让你无需记住复杂的 Play
 | **初始化** | `@tc.md init` | - | `initialization/project_init.md` |
 | **项目状态** | `@tc.md status` | `@tc.md plan st` | `planning/project_status.md` |
 | **下一步建议** | `@tc.md next` | `@tc.md plan n` | `planning/next_step_advisor.md` |
+| **初始化 Epic** | `@tc.md epic-init` | `@tc.md plan ei` | `planning/epic_init.md` |
 | **生成 Epic** | `@tc.md epic` | `@tc.md plan e` | `planning/epic_planning.md` |
 | **生成 Feature** | `@tc.md feature` | `@tc.md plan f` | `planning/feature_planning.md` |
 | **生成 Story** | `@tc.md story` | `@tc.md plan s` | `planning/story_writing.md` |
