@@ -20,35 +20,54 @@
 
 ### Step 1: 解析用户输入与 Context 加载 🆕
 
-#### Step 1.1: 初步解析
+#### Step 1.1: 提取关键信息
 
 从描述中提取：
 1. **父 Story ID**（如果提到 STORY-XX）
-2. **关键词**（bug、失败、增加、优化等）
-3. **功能模块**（登录、缓存、配置等）
+2. **变更类型关键词**（bug、失败、增加、优化等）
+3. **功能模块关键词**（登录、缓存、配置等）
 4. **技术关键词**（API、数据库、缓存等）
+
+**关键词提取规范**：参考 `@rules/keyword_extraction_rules.md`
+
+**Quick Change 特定提取策略**：
+- **优先提取功能模块名**：用于推断归属关系（如"登录"→ 搜索登录相关 Story）
+- **提取问题关键词**：用于判断类型（如"崩溃"→ bug_fix）
+- **提取技术术语**：用于搜索相关 Context（如"并发"→ 搜索并发相关设计）
+
+**示例**：
+```
+输入: "STORY-03 在并发时崩溃"
+提取结果:
+- 父 Story: STORY-03
+- 变更类型: ["崩溃"] → bug_fix
+- 功能模块: ["并发"]
+- 技术关键词: ["concurrency", "thread", "async"]
+```
 
 #### Step 1.2: Context 搜索与加载
 
-**使用提取的信息搜索相关 Context**:
+调用 @playbooks/context/search.md：
 
+```json
+输入: {
+  "keywords": ["功能模块1", "技术关键词1", ...],
+  "task_type": "quick_change",
+  "epic": "EPIC-XX"  // 如果提到 STORY-XX，从 Story 获取；否则留空
+}
+
+输出: {
+  "contexts": ["路径1", "路径2", ...],
+  "total": N
+}
 ```
-调用: @playbooks/context/search.md
 
-输入参数:
-- 关键词: {Step 1.1 提取的功能模块 + 技术关键词}
-- 任务类型: quick_change
-- Epic: {如果提到 STORY-XX，从 Story 中获取 Epic ID；否则不指定}
-```
-
-**快速浏览返回的 Context**:
+**快速浏览返回的 Context**：
 - 了解相关模块的设计意图和实现
 - 确认变更是否与原设计冲突
 - 为后续根因分析或改进方案提供背景
 
-**如果未找到精确匹配**:
-- 使用保底返回的 Global Context
-- 如果连 Global Context 也没有，继续正常流程
+> 💡 **Quick Change 特点**：Context 搜索通常返回空或很少，因为 Bug/Hotfix 通常只需要代码本身。如果搜索到相关 Context，说明涉及架构级问题，需要更谨慎处理。
 
 ### Step 2: 判断变更类型
 

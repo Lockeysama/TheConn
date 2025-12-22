@@ -113,27 +113,101 @@
 **AI 工作流程**：
 
 ```
+Step 0: 🔴 强制搜索检查（不可跳过）
+    ↓
+必须调用 @playbooks/context/search.md
+    ↓
+检查是否已有相关 Context
+    ↓
+如果搜到相关 Context → 询问用户是更新还是新建
+    ↓
 Step 1: 分析材料
     ↓
 识别知识类型、作用范围、关键决策、技术要点
     ↓
-Step 2: 检查已有 Context（避免重复）
-    ↓
-使用内部搜索机制检查是否已有相关 Context
-    ↓
-Step 3: 确定 Context 类型和作用域
+Step 2: 确定 Context 类型和作用域
     ↓
 根据内容判断：global（公约类型）或 epic（专属内容）
     ↓
-Step 4: 提取核心内容
+Step 3: 提取核心内容
     ↓
 提取设计决策、接口边界、约束原则、架构信息
 保持抽象，避免实现细节
     ↓
-Step 5: 生成 Context 文档
+Step 4: 生成 Context 文档
     ↓
 使用对应模板生成文档
 ```
+
+---
+
+## Step 0: 强制搜索检查 🔴
+
+**⚠️ 重要**: 在添加任何 Context 之前，**必须**先执行搜索检查，避免重复创建。
+
+### 搜索流程
+
+**Step 0.1: 提取搜索关键词**
+
+从用户提供的内容中提取 3-6 个关键词：
+
+- 如果是直接添加模式：从 Context 内容中提取技术术语
+- 如果是提取添加模式：从原始材料中提取核心概念
+
+**提取规范**: 参考 `@rules/keyword_extraction_rules.md` 的标准化流程
+
+**快速流程**:
+```
+Step 1: 初步提取 → Step 2: 优先级排序 → Step 3: 归一化 → Step 4: 精简 → Step 5: 验证
+```
+
+**提取原则**:
+- 技术术语优先（框架、库、架构模式）
+- 关键词数量: 3-6 个
+- 统一格式: 小写、英文、单数形式
+- 排除通用词（create, update 等）
+
+**示例**：
+```
+用户要添加: "UDP 可靠传输协议设计"
+
+提取过程:
+1. 初步提取: ["UDP", "reliable", "transmission", "protocol", "redundancy", "design"]
+2. 优先级排序: 
+   - 高: udp, protocol (技术术语)
+   - 中: reliable, transmission, redundancy (功能特征)
+   - 低: design (通用词)
+3. 最终关键词: ["udp", "reliable", "transmission", "protocol", "redundancy"]
+```
+
+**Step 0.2: 调用 Context 搜索**
+
+调用 @playbooks/context/search.md：
+
+```json
+输入: {
+  "keywords": ["关键词1", "关键词2", ...],
+  "task_type": "context_add",
+  "epic": "EPIC-XX",  // 如果是 Global Context，留空
+  "type_filter": ["protocol", "module_design"]  // 可选
+}
+
+输出: {
+  "contexts": ["路径1", "路径2", ...],
+  "total": N,
+  "message": "..."
+}
+```
+
+**Step 0.3: 根据搜索结果决策**
+
+| 搜索结果                              | AI 行动                                           |
+| ------------------------------------- | ------------------------------------------------- |
+| **找到高度相关** (total > 0)          | 询问用户：[1] 更新已有 / [2] 创建新 / [3] 取消    |
+| **未找到相关** (total = 0)            | 继续 Step 1（安全创建）                           |
+| **公约类型** (检测到 architecture 等) | 提示用户应更新对应的 4 个 Global Context 文件之一 |
+
+> 💡 详细的搜索逻辑和结果处理见 `@playbooks/context/search.md` 的"标准调用接口"章节
 
 ---
 
@@ -790,6 +864,93 @@ A: 足够让 AI 理解设计意图即可：
 
 ---
 
+## 执行检查点
+
+### ✓ 检查点 0: 强制搜索完成
+
+**已完成**:
+- [x] 提取搜索关键词
+- [x] 调用 context/search.md
+- [x] 分析搜索结果
+- [x] 用户确认操作（创建新文件 / 更新已有 / 取消）
+
+**产出**:
+- 搜索执行记录
+- 决策依据
+
+**下一步**: 
+- 如果选择创建 → 继续 Step 1
+- 如果选择更新 → 调用 context/update.md
+- 如果选择取消 → 结束操作
+
+---
+
+### ✓ 检查点 1: 材料分析完成
+
+**已完成**:
+- [x] 识别知识类型
+- [x] 判断作用范围（global / epic）
+- [x] 提取关键决策和技术要点
+
+**产出**:
+- Context 类型确认
+- 作用域确认
+
+**下一步**: 确定 Context 类型和作用域
+
+---
+
+### ✓ 检查点 2: 类型和作用域确定完成
+
+**已完成**:
+- [x] 确定 Context type
+- [x] 确定 Context scope
+- [x] 确定文件路径和命名
+
+**产出**:
+- 文件路径: `.the_conn/context/{scope}/{type}_{descriptor}.md`
+
+**下一步**: 提取核心内容
+
+---
+
+### ✓ 检查点 3: 核心内容提取完成
+
+**已完成**:
+- [x] 提取设计决策和理由
+- [x] 提取接口和边界
+- [x] 提取约束和原则
+- [x] 过滤实现细节（确保只保留设计层面）
+
+**产出**:
+- 结构化的 Context 内容
+
+**下一步**: 生成 Context 文档
+
+---
+
+### ✓ 检查点 4: Context 文档生成完成
+
+**已完成**:
+- [x] 生成 Frontmatter
+- [x] 生成文档正文
+- [x] 应用对应模板
+- [x] 验证内容抽象层次
+
+**产出**:
+- 完整的 Context 文档
+- 文件路径: `.the_conn/context/{scope}/{type}_{descriptor}.md`
+
+**质量检查**:
+- [ ] Frontmatter 字段完整且正确
+- [ ] 内容聚焦设计，无实现细节
+- [ ] 文件命名符合规范（PascalCase）
+- [ ] 文件保存在正确的目录
+
+**任务完成**
+
+---
+
 现在，请根据用户提供的信息创建 Context 文档。
 
-**提醒**: 创建前先使用 `@prompts/context/search.md` 检查是否已有相关 Context！
+**🔴 强制要求**: 开始前必须先执行 Step 0 强制搜索检查！

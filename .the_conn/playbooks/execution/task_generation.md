@@ -19,13 +19,12 @@
 
 - Story 文件（包含 frontmatter、验收标准和技术要点）
 
----
 
 ## 输出要求
 
 ### 1. 输出目录路径
 
-```
+```text
 .the_conn/ai_workspace/EPIC-{序号}/TASK-{序号}_STORY-{序号}_{PascalCaseName}/
 ```
 
@@ -40,12 +39,12 @@
 - **说明**: Task ID 按 Epic 内执行顺序递增，一个 Story 可能对应多个 Task
 - **示例**:
 
-  ```
-  TASK-01 → STORY-01 (首次开发)
-  TASK-02 → STORY-01 (补充测试)
-  TASK-03 → STORY-02 (首次开发)
-  TASK-04 → STORY-02.1 (Bug 修复)
-  ```
+```text
+TASK-01 → STORY-01 (首次开发)
+TASK-02 → STORY-01 (补充测试)
+TASK-03 → STORY-02 (首次开发)
+TASK-04 → STORY-02.1 (Bug 修复)
+```
 
 **目录命名规则**：
 
@@ -74,7 +73,6 @@
 - ❌ 不要为每个小函数创建单独的 Task
 - ❌ 不要过度细分导致 Task 数量激增
 
----
 
 ## 输出文件
 
@@ -403,7 +401,6 @@
 6. **边界明确**：清晰列出"禁止"范围，避免 AI 越界
 7. **避免重复**：不要在 task.md 中重复 context.manifest.json 中的信息（如上下文文件列表、原始 Story 路径等）
 
----
 
 ## 上下文分析流程
 
@@ -417,66 +414,83 @@
 2. **技术关键词提取**: 从验收标准和技术要点中提取关键技术术语
 3. **依赖关系识别**: 该 Story 是否依赖其他 Story 或现有模块？
 
-### Phase 2: Context 文件搜索
+---
 
-**优先使用 Context 搜索工具**:
+## 技术关键词提取（标准化流程）
 
-调用 `@playbooks/context/search.md` 搜索相关 Context
+**⚠️ 重要**: 关键词提取直接影响 Context 搜索精度，必须遵循标准流程
 
-**输入参数**:
-- **关键词**: {从 Phase 1 提取的技术关键词数组}
-- **任务类型**: task_generation
-- **Epic**: {Story 所属 Epic ID}
-- **类型过滤**（可选）: 根据 Story 类型指定（如 `module_design`, `architecture` 等）
+**📋 完整规范**: 参考 `@rules/keyword_extraction_rules.md`
 
-**返回结果示例**:
-```json
-{
-  "contexts": [
-    ".the_conn/context/global/Architecture.md",
-    ".the_conn/context/global/Tech_Stack.md",
-    ".the_conn/context/epics/EPIC-01/Module_Design_Auth.md"
-  ],
-  "total": 3
-}
+本节提供快速参考，完整的提取规则、步骤、模板和示例请查阅上述规范文件。
+
+### 快速参考
+
+#### 6 层提取规则
+
+1. **多层次提取**: 从标题、验收标准、技术要点、标签、依赖等多个来源提取
+2. **技术术语优先**: 框架/库名称 > 架构模式 > 技术领域 > 功能模块 > 通用词
+3. **英文关键词提取**: 中文内容需要提取对应的英文技术术语
+4. **关键词归一化**: 小写、单数、去除连字符和下划线
+5. **关键词数量控制**: 3-6 个（最多 8 个）
+6. **排除通用词**: create, update, delete 等通用动词（除非有特殊含义）
+
+#### 5 步提取流程
+
+```
+Step 1: 初步提取（10-15 个）
+  ↓
+Step 2: 优先级排序（高/中/低）
+  ↓
+Step 3: 归一化（统一格式）
+  ↓
+Step 4: 去重与精简（保留 4-6 个）
+  ↓
+Step 5: 验证（确保能代表技术特征）
 ```
 
-将返回的 Context 文件路径直接用于 `context.manifest.json` 的 `contexts` 数组。
+### 快速示例
+
+**输入 Story**: "创建 The Conn 框架的标准目录结构"
+
+**提取结果**:
+```json
+["pathlib", "cli", "bdd", "initialization", "project structure"]
+```
+
+**为什么选择这些关键词**:
+- pathlib: 核心技术栈（路径处理）
+- cli: 交互方式（命令行工具）
+- bdd: 测试策略（行为驱动开发）
+- initialization: 功能领域（初始化）
+- project structure: 核心目标（项目结构）
 
 ---
 
-**备选方案**：如果未使用搜索工具，手动扫描 `.the_conn/context/` 目录，根据 Phase 1 的分析结果匹配相关文件：
+**详细的提取规则、完整的提取模板和更多示例，请参考**:
+👉 `@rules/keyword_extraction_rules.md`
 
-**扫描路径**:
+### Phase 2: Context 文件搜索
 
-1. `.the_conn/context/global/` - 公共 Context
-2. `.the_conn/context/epics/EPIC-{序号}/` - Epic 专属 Context
+调用 @playbooks/context/search.md：
 
-**匹配规则（分级加载）**:
+```json
+输入: {
+  "keywords": ["关键词1", "关键词2", ...],
+  "task_type": "task_generation",
+  "epic": "EPIC-XX",
+  "type_filter": ["module_design", "architecture"]  // 可选
+}
 
-**级别 1：核心 Global Context（几乎总是包含）**
+输出: {
+  "contexts": ["路径1", "路径2", ...],
+  "total": N
+}
+```
 
-| Context 文件                    | 包含条件  | 理由             |
-| ------------------------------- | --------- | ---------------- |
-| `Architecture.md`               | 所有 Task | 理解系统整体设计 |
-| `Coding_Standard_{Language}.md` | 所有 Task | 确保代码风格一致 |
+**将返回的 Context 文件路径直接用于 `context.manifest.json` 的 `contexts` 数组。**
 
-**级别 2：按 Story 类型包含**
-
-| Context 文件          | 包含条件                                | 理由                        |
-| --------------------- | --------------------------------------- | --------------------------- |
-| `Testing_Strategy.md` | Story type 为 `e2e_test` 或 `perf_test` | 测试相关 Story 需要测试策略 |
-| `Tech_Stack.md`       | Story type 为 `dev` 且涉及技术选型      | 了解可用的技术栈            |
-
-**级别 3：按功能领域包含**
-
-| 匹配规则                 | 示例                                                         |
-| ------------------------ | ------------------------------------------------------------ |
-| 文件名包含功能领域关键词 | Story 涉及 "DataStream" → 包含 `Module_Design_DataStream.md` |
-| Frontmatter type 匹配    | Story 涉及模块设计 → 包含 `type: module_design` 的文档       |
-
-**排除规则**：
-- ❌ 不引用测试文件：排除 `*_test.*`, `tests/*`
+> 💡 详细的搜索逻辑（相关度评分、保底返回等）见 `@playbooks/context/search.md`
 
 ### Phase 3: 相关代码文件识别
 
@@ -515,7 +529,6 @@
 - ✅ 不要盲目包含所有 Global Context，按需选择
 - ✅ 估算上下文大小：Global (2-3 个) + Epic (1-2 个) + 代码 (2-3 个) = 5-8 个文件
 
----
 
 ## 示例
 
@@ -574,5 +587,98 @@
 ```
 
 ---
+
+## 执行检查点
+
+### ✓ 检查点 1: Story 内容分析完成
+
+**已完成**:
+
+- [x] 功能领域识别
+- [x] 技术关键词提取（使用标准化流程）
+- [x] 依赖关系识别
+
+**产出**:
+
+- 功能领域清单
+- 关键词列表（4-6 个）
+- 依赖 Story 列表
+
+**下一步**: Context 文件搜索
+
+
+### ✓ 检查点 2: Context 搜索完成
+
+**已完成**:
+
+- [x] 调用 context/search.md
+- [x] 获取相关 Context 文件列表
+- [x] 按优先级排序
+
+**产出**:
+
+- Context 文件路径列表
+
+**下一步**: 文件列表整合
+
+
+### ✓ 检查点 3: 文件列表整合完成
+
+**已完成**:
+
+- [x] 整合 Global Context
+- [x] 整合 Epic Context
+- [x] 整合接口定义文件
+- [x] 整合依赖 Story 文件
+- [x] 估算上下文大小（5-8 个文件）
+
+**产出**:
+
+- 完整的 `contexts` 数组
+
+**下一步**: 生成 context.manifest.json
+
+
+### ✓ 检查点 4: context.manifest.json 生成完成
+
+**已完成**:
+
+- [x] 生成 JSON 文件
+- [x] 填写所有必填字段
+- [x] 包含完整的 contexts 数组
+
+**产出**:
+
+- `.the_conn/ai_workspace/EPIC-{序号}/TASK-{序号}_STORY-{序号}_{Name}/context.manifest.json`
+
+**下一步**: 生成 task.md
+
+
+### ✓ 检查点 5: task.md 生成完成
+
+**已完成**:
+
+- [x] 判断 Story type（e2e_test / dev / bug_fix）
+- [x] 选择对应的 Task 格式（格式 A / 格式 B）
+- [x] 填写核心目标
+- [x] 填写验收标准
+- [x] 填写开发流程（包含测试迭代）
+- [x] 填写技术实现要点
+- [x] 填写工作范围与边界
+- [x] 填写任务闭环流程
+
+**产出**:
+
+- `.the_conn/ai_workspace/EPIC-{序号}/TASK-{序号}_STORY-{序号}_{Name}/task.md`
+
+**质量检查**:
+
+- [ ] task.md 包含明确的测试执行与迭代修复流程
+- [ ] task.md 强调了"测试先行"原则
+- [ ] task.md 禁止了为通过测试而修改测试代码
+- [ ] task.md 没有包含重复信息（如上下文文件列表）
+
+**任务完成**
+
 
 现在，请根据用户提供的 Story 生成 Task 简报。

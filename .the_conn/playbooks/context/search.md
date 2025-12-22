@@ -18,10 +18,12 @@
 
 - **关键词**：从 Story 或任务描述中提取的技术关键词（数组）
   - 示例：`["authentication", "JWT", "token"]`
+  - **提取规范**：参考 `@rules/keyword_extraction_rules.md` 的标准化流程
 
 - **任务类型**：调用方 playbook 的任务类型，用于智能推断需要的 Context 🆕
   - `requirements_review` - 需求评审（技术方案设计）
   - `task_generation` - Task 生成（实现指导）
+  - `context_add` - Context 添加/更新（避免重复）
   - `quick_change` - 快速变更（Bug/Hotfix）
   - `e2e_test` - E2E 测试规划
   - `performance_test` - 性能测试规划
@@ -37,6 +39,264 @@
   - `data_model` - 数据模型
   - `testing_strategy` - 测试策略
   - `coding_standard` - 编码规范
+
+---
+
+## 标准调用接口 🆕
+
+### 输入格式（JSON）
+
+```json
+{
+  "keywords": ["keyword1", "keyword2", "keyword3"],
+  "task_type": "requirements_review",
+  "epic": "EPIC-01",
+  "type_filter": ["module_design", "architecture"]
+}
+```
+
+**字段说明**：
+
+| 字段 | 类型 | 必需 | 说明 |
+|------|------|------|------|
+| `keywords` | array | ✅ | 技术关键词数组（3-6 个） |
+| `task_type` | string | ✅ | 任务类型（见上方枚举） |
+| `epic` | string | ❌ | Epic ID（如 `EPIC-01`） |
+| `type_filter` | array | ❌ | Context 类型过滤（见上方枚举） |
+
+### 输出格式（JSON）
+
+```json
+{
+  "contexts": [
+    ".the_conn/context/global/Architecture.md",
+    ".the_conn/context/global/Tech_Stack.md",
+    ".the_conn/context/epics/EPIC-01/Module_Design_Auth.md"
+  ],
+  "total": 3,
+  "task_type": "requirements_review",
+  "search_keywords": ["authentication", "jwt", "redis"],
+  "message": "找到 3 个匹配的 Context"
+}
+```
+
+**字段说明**：
+
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| `contexts` | array | Context 文件路径数组（按相关度排序） |
+| `total` | integer | 返回的 Context 文件数量 |
+| `task_type` | string | 任务类型（回显） |
+| `search_keywords` | array | 搜索使用的关键词（回显） |
+| `message` | string | 搜索结果描述 |
+
+### 调用示例
+
+#### 示例 1: requirements_review - 需求评审
+
+**输入**：
+```json
+{
+  "keywords": ["authentication", "jwt", "redis"],
+  "task_type": "requirements_review",
+  "epic": null
+}
+```
+
+**输出**：
+```json
+{
+  "contexts": [
+    ".the_conn/context/global/Architecture.md",
+    ".the_conn/context/global/Tech_Stack.md",
+    ".the_conn/context/epics/EPIC-01/Module_Design_Auth.md"
+  ],
+  "total": 3,
+  "task_type": "requirements_review",
+  "search_keywords": ["authentication", "jwt", "redis"],
+  "message": "找到 3 个匹配的 Context"
+}
+```
+
+#### 示例 2: task_generation - Task 生成
+
+**输入**：
+```json
+{
+  "keywords": ["pathlib", "cli", "bdd", "initialization"],
+  "task_type": "task_generation",
+  "epic": "EPIC-01"
+}
+```
+
+**输出**：
+```json
+{
+  "contexts": [
+    ".the_conn/context/global/Architecture.md",
+    ".the_conn/context/global/Coding_Standard_Python.md",
+    ".the_conn/context/epics/EPIC-01/Module_Design_Init.md"
+  ],
+  "total": 3,
+  "task_type": "task_generation",
+  "search_keywords": ["pathlib", "cli", "bdd", "initialization"],
+  "message": "找到 3 个匹配的 Context"
+}
+```
+
+#### 示例 3: context_add - Context 添加（避免重复）
+
+**输入**：
+```json
+{
+  "keywords": ["udp", "reliable", "transmission", "protocol"],
+  "task_type": "context_add",
+  "epic": "EPIC-02",
+  "type_filter": ["protocol", "module_design"]
+}
+```
+
+**输出**：
+```json
+{
+  "contexts": [
+    ".the_conn/context/epics/EPIC-02/Protocol_Design_UDP.md"
+  ],
+  "total": 1,
+  "task_type": "context_add",
+  "search_keywords": ["udp", "reliable", "transmission", "protocol"],
+  "message": "找到 1 个匹配的 Context（检测到可能重复）"
+}
+```
+
+#### 示例 4: 未找到精确匹配（保底返回）
+
+**输入**：
+```json
+{
+  "keywords": ["unknown_feature", "new_module"],
+  "task_type": "requirements_review",
+  "epic": null
+}
+```
+
+**输出**：
+```json
+{
+  "contexts": [
+    ".the_conn/context/global/Architecture.md",
+    ".the_conn/context/global/Tech_Stack.md"
+  ],
+  "total": 2,
+  "task_type": "requirements_review",
+  "search_keywords": ["unknown_feature", "new_module"],
+  "message": "未找到精确匹配，根据任务类型返回相关 Global Context"
+}
+```
+
+#### 示例 5: 完全无 Context
+
+**输入**：
+```json
+{
+  "keywords": ["some_keyword"],
+  "task_type": "general",
+  "epic": null
+}
+```
+
+**输出**：
+```json
+{
+  "contexts": [],
+  "total": 0,
+  "task_type": "general",
+  "search_keywords": ["some_keyword"],
+  "message": "项目尚未建立 Context，建议使用 @playbooks/context/add.md 创建"
+}
+```
+
+---
+
+## 调用方 Playbook 集成指南 🆕
+
+### 在 requirements_review.md 中调用
+
+```markdown
+#### Step 1.2: Context 搜索与加载
+
+使用提取的关键词搜索相关 Context：
+
+调用 @playbooks/context/search.md：
+
+输入参数（JSON）:
+{
+  "keywords": ["authentication", "api", "database"],
+  "task_type": "requirements_review",
+  "epic": null
+}
+
+返回结果:
+{
+  "contexts": [
+    ".the_conn/context/global/Architecture.md",
+    ".the_conn/context/global/Tech_Stack.md"
+  ],
+  "total": 2,
+  "message": "找到 2 个匹配的 Context"
+}
+
+快速浏览返回的 Context：
+- 重点关注：Architecture.md、Tech_Stack.md
+- 了解：现有技术栈、架构设计、类似模块的实现
+```
+
+### 在 task_generation.md 中调用
+
+```markdown
+### Phase 2: Context 文件搜索
+
+调用 @playbooks/context/search.md：
+
+输入参数（JSON）:
+{
+  "keywords": ["pathlib", "cli", "bdd", "initialization", "project structure"],
+  "task_type": "task_generation",
+  "epic": "EPIC-01"
+}
+
+返回结果示例:
+{
+  "contexts": [
+    ".the_conn/context/global/Architecture.md",
+    ".the_conn/context/global/Coding_Standard_Python.md",
+    ".the_conn/context/epics/EPIC-01/Module_Design_Init.md"
+  ],
+  "total": 3
+}
+
+将返回的 Context 文件路径直接用于 context.manifest.json 的 contexts 数组。
+```
+
+### 在 context/add.md 中调用
+
+```markdown
+#### Step 0.2: 调用 Context 搜索
+
+调用 @playbooks/context/search.md：
+
+输入参数（JSON）:
+{
+  "keywords": ["udp", "reliable", "transmission", "protocol", "redundancy"],
+  "task_type": "context_add",
+  "epic": "EPIC-02",
+  "type_filter": ["protocol", "module_design"]
+}
+
+返回结果:
+- 如果 total > 0 → 询问用户是更新还是新建
+- 如果 total = 0 → 安全创建新 Context
+```
 
 ---
 
