@@ -4,15 +4,15 @@
 
 ## ⚠️ 重要：遵守基础公约
 
-**本 Playbook 严格遵守 `@playbooks/core/base_rules.md` 中定义的所有基础公约。**
+**本 Playbook 严格遵守 `@rules/base_rules.md` 中定义的所有基础公约。**
 
 **📋 规范引用**：
 
 本 Playbook 依赖以下规范文件（AI 必须先加载）：
-- **基础公约**: `@playbooks/core/base_rules.md` - 禁止事项、文件路径约定、质量标准
-- **测试策略**: `@playbooks/core/test_strategy_rules.md` - 测试策略和决策规则
-- **复杂度评估**: `@playbooks/core/complexity_rules.md` - 复杂度评分标准
-- **BDD 语言配置**: `@playbooks/core/bdd_language_rules.md` - BDD 关键字和描述语言规范
+- **基础公约**: `@rules/base_rules.md` - 禁止事项、文件路径约定、质量标准
+- **测试策略**: `@rules/test_strategy_rules.md` - 测试策略和决策规则
+- **复杂度评估**: `@rules/complexity_rules.md` - 复杂度评分标准
+- **BDD 语言配置**: `@rules/bdd_language_rules.md` - BDD 关键字和描述语言规范
 
 ## 本 Playbook 的工作范围
 
@@ -196,7 +196,7 @@ Step 4: 应用默认测试策略
 
 3. **BDD Feature 文件语言**
    - 关键字 (Keywords): 统一使用英文 (Feature/Scenario/Given/When/Then...)
-   - 描述 (Descriptions): 跟随项目交互的自然语言（AI 根据 Context 指定或用户对话语言自动判断，参考 `@playbooks/core/bdd_language_rules.md`）
+   - 描述 (Descriptions): 跟随项目交互的自然语言（AI 根据 Context 指定或用户对话语言自动判断，参考 `@rules/bdd_language_rules.md`）
    - AI 自行分析并确保关键字未被翻译
 
 4. **测试策略**（自动应用，不需要用户决策）

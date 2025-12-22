@@ -4,13 +4,13 @@
 
 ## ⚠️ 重要：遵守基础公约
 
-**本 Playbook 严格遵守 `@playbooks/core/base_rules.md` 中定义的所有基础公约。**
+**本 Playbook 严格遵守 `@rules/base_rules.md` 中定义的所有基础公约。**
 
 **📋 规范引用**：
 
 本 Playbook 依赖以下规范文件（AI 必须先加载）：
-- **基础公约**: `@playbooks/core/base_rules.md` - 禁止事项、文件路径约定、质量标准
-- **测试策略**: `@playbooks/core/test_strategy_rules.md` - 评估变更对测试策略的影响
+- **基础公约**: `@rules/base_rules.md` - 禁止事项、文件路径约定、质量标准
+- **测试策略**: `@rules/test_strategy_rules.md` - 评估变更对测试策略的影响
 
 **原因**: requirements_change 需要分析需求变更的影响，包括对测试策略的影响
 

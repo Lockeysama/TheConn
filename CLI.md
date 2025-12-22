@@ -57,8 +57,8 @@ npx theconn-cli init [--branch=BRANCH] [--path=PATH]
 
 ```
 .the_conn/
+├── rules/              # 核心规则和约束（从 GitHub 下载）
 ├── playbooks/          # AI 操作剧本系统（从 GitHub 下载）
-│   ├── core/
 │   ├── initialization/
 │   ├── planning/
 │   ├── context/

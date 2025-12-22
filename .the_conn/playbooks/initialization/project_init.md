@@ -4,12 +4,12 @@
 
 ## ⚠️ 重要：遵守基础公约
 
-**本 Playbook 严格遵守 `@playbooks/core/base_rules.md` 中定义的所有基础公约。**
+**本 Playbook 严格遵守 `@rules/base_rules.md` 中定义的所有基础公约。**
 
 **📋 上下文依赖**：
 
 本 Playbook 依赖以下规范文件（AI 必须先加载）：
-- **基础公约**: `@playbooks/core/base_rules.md` - 禁止修改 docs/、命名规范、文件路径约定等
+- **基础公约**: `@rules/base_rules.md` - 禁止修改 docs/、命名规范、文件路径约定等
 
 本 Playbook **不依赖**以下规范：
 - ❌ `test_strategy_rules.md` - 测试策略由项目自定义
@@ -239,8 +239,8 @@ tags:
 ## 5. 参考规范
 
 详细的测试策略规范请参考 The Conn 框架文档：
-- Story 类型与测试策略: `@playbooks/core/test_strategy_rules.md`
-- BDD 语言配置规范: `@playbooks/core/bdd_language_rules.md`
+- Story 类型与测试策略: `@rules/test_strategy_rules.md`
+- BDD 语言配置规范: `@rules/bdd_language_rules.md`
 
 使用 The Conn 框架进行开发时，AI 会自动遵循这些规范。
 ```

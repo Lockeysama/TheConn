@@ -120,6 +120,18 @@ export async function downloadFrameworkFiles (targetDir, branch = 'stable', upda
         const commitSha = await client.getBranchCommit(branch);
         spinner.succeed(`Branch: ${branch} (${commitSha.substring(0, 7)})`);
 
+        // Download rules/
+        spinner.start('Downloading rules...');
+        const rulesDir = join(targetDir, 'rules');
+        try {
+            await rm(rulesDir, { recursive: true, force: true });
+        } catch (error) {
+            // Ignore if doesn't exist
+        }
+        await mkdir(rulesDir, { recursive: true });
+        await client.downloadDirectory(branch, '.the_conn/rules', rulesDir, []);
+        spinner.succeed('Downloaded rules');
+
         // Download playbooks/
         spinner.start('Downloading playbooks...');
         const playbooksDir = join(targetDir, 'playbooks');

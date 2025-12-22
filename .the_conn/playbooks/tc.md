@@ -11,7 +11,7 @@
 4. 执行 playbook 任务
 ```
 
-**详细的加载策略请参考**: `playbooks/core/base_rules.md`
+**详细的加载策略请参考**: `rules/base_rules.md`
 
 ---
 
@@ -301,7 +301,7 @@ AI 执行：加载 planning/requirements_breakdown.md
 
 ## ⚠️ 重要提醒
 
-1. **遵守核心规则**：所有操作必须遵循 `core/base_rules.md`
+1. **遵守核心规则**：所有操作必须遵循 `rules/base_rules.md`
 2. **文档保护**：严格禁止修改 `.the_conn/docs/` 目录
 3. **大小写不敏感**：命令识别不区分大小写
 4. **参数完整性**：确保所有参数正确传递给目标 Playbook

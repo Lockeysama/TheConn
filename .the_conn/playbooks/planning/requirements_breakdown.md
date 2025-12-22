@@ -4,15 +4,15 @@
 
 ## ⚠️ 重要：遵守基础公约
 
-**本 Playbook 严格遵守 `@playbooks/core/base_rules.md` 中定义的所有基础公约。**
+**本 Playbook 严格遵守 `@rules/base_rules.md` 中定义的所有基础公约。**
 
 **📋 规范引用**：
 
 本 Playbook 依赖以下规范文件（AI 必须先加载）：
-- **基础公约**: `@playbooks/core/base_rules.md` - 禁止事项、文件路径约定、质量标准
-- **测试策略**: `@playbooks/core/test_strategy_rules.md` - Story 类型判断、测试决策规则
-- **复杂度评估**: `@playbooks/core/complexity_rules.md` - 复杂度评分标准
-- **BDD 语言配置**: `@playbooks/core/bdd_language_rules.md` - BDD 关键字和描述语言规范
+- **基础公约**: `@rules/base_rules.md` - 禁止事项、文件路径约定、质量标准
+- **测试策略**: `@rules/test_strategy_rules.md` - Story 类型判断、测试决策规则
+- **复杂度评估**: `@rules/complexity_rules.md` - 复杂度评分标准
+- **BDD 语言配置**: `@rules/bdd_language_rules.md` - BDD 关键字和描述语言规范
 
 ## 本 Playbook 的工作范围
 
@@ -58,7 +58,7 @@
 
 - 如果 Context 中有完整信息 → 直接使用
 - 如果缺少信息 → 仅询问缺失部分
-- 确认 BDD 格式（统一使用英文关键字，描述使用项目交互语言：AI 根据 Context 指定或用户对话语言自动适配，参考 `@playbooks/core/bdd_language_rules.md`）
+- 确认 BDD 格式（统一使用英文关键字，描述使用项目交互语言：AI 根据 Context 指定或用户对话语言自动适配，参考 `@rules/bdd_language_rules.md`）
 
 **Step 3: 分析需求**
 

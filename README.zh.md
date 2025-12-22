@@ -40,6 +40,7 @@ The Conn 在你的项目中创建结构化工作空间：
 .the_conn/
 ├── epics/              # 📋 规划 - 你的 Story 和 Feature
 ├── context/            # 📚 知识 - 架构和设计文档
+├── rules/              # ⚖️  核心规则 - 框架约束（自动管理）
 ├── playbooks/          # 🤖 AI 工具 - 命令系统（自动管理）
 ├── docs/               # 📖 文档（自动管理）
 └── ai_workspace/       # 🔧 临时工作区（添加到 .gitignore）

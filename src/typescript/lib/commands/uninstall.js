@@ -18,9 +18,9 @@ export async function uninstall (targetPath) {
 
     // Remove framework files only
     const frameworkItems = [
-        'ai_prompts',
-        'GUIDE.md',
-        'README.md',
+        'rules',
+        'playbooks',
+        'docs',
         '.version'
     ];
 

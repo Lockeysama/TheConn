@@ -154,6 +154,14 @@ def download_framework_files(
         commit_sha = client.get_branch_commit(branch)
         progress.update(task, description=f"✓ Branch: {branch} ({commit_sha[:7]})")
         
+        # Download rules/
+        progress.add_task("Downloading rules...", total=None)
+        rules_dir = target_dir / "rules"
+        if rules_dir.exists():
+            shutil.rmtree(rules_dir)
+        rules_dir.mkdir(parents=True, exist_ok=True)
+        client.download_directory(branch, ".the_conn/rules", rules_dir, exclude=[])
+        
         # Download playbooks/
         progress.add_task("Downloading playbooks...", total=None)
         playbooks_dir = target_dir / "playbooks"
