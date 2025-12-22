@@ -523,13 +523,104 @@ cd ~/projects/my-project  # 可能污染真实项目
 
 ---
 
+## 📦 发布流程
+
+> 📌 **本节面向项目维护者**
+
+### 发布前检查
+
+- [ ] 所有代码已提交到 Git
+- [ ] 版本号已更新（`pyproject.toml` 和 `src/typescript/package.json`）
+- [ ] 已在本地测试所有命令
+- [ ] Python 和 TypeScript 版本号已同步
+
+### 更新版本号
+
+**Python 包** - 编辑 `pyproject.toml`:
+
+```toml
+[project]
+version = "0.2.0"  # 更新版本号
+```
+
+**Node.js 包**:
+
+```bash
+cd src/typescript
+npm version patch   # 0.1.0 -> 0.1.1
+npm version minor   # 0.1.1 -> 0.2.0
+npm version major   # 0.2.0 -> 1.0.0
+```
+
+### 发布 Python 包到 PyPI
+
+```bash
+# 1. 构建
+mise run build-py
+
+# 2. 测试发布到 TestPyPI（推荐）
+twine upload --repository testpypi dist/*
+uvx --index-url https://test.pypi.org/simple/ theconn --help
+
+# 3. 发布到正式 PyPI
+twine upload dist/*
+
+# 4. 验证
+uvx theconn --version
+```
+
+### 发布 Node.js 包到 npm
+
+```bash
+# 1. 测试
+cd src/typescript
+npm pack --dry-run
+
+# 2. 登录 npm（如果还没登录）
+npm login
+
+# 3. 发布
+npm publish --access public  # 首次发布
+npm publish                   # 后续更新
+
+# 4. 验证
+npx theconn-cli --version
+```
+
+### 完整发布流程
+
+```bash
+# 1. 更新版本号并提交
+git add .
+git commit -m "chore: bump version to 0.2.0"
+git tag v0.2.0
+git push origin main
+git push origin v0.2.0
+
+# 2. 发布 Python 包
+mise run build-py
+twine upload dist/*
+
+# 3. 发布 Node.js 包
+cd src/typescript
+npm publish
+```
+
+### 发布后检查
+
+- [ ] PyPI 上能找到新版本
+- [ ] npm 上能找到新版本
+- [ ] `uvx theconn --version` 显示正确版本
+- [ ] `npx theconn-cli --version` 显示正确版本
+- [ ] 测试所有命令（init, update, check, uninstall）
+
+---
+
 ## 📚 相关文档
 
-- [README.md](README.md) - 项目介绍（面向用户）
-- [CLI.md](CLI.md) - CLI 使用文档（面向用户）
-- [RELEASING.md](RELEASING.md) - 发布流程（面向维护者）
-- [CONTRIBUTING.md](CONTRIBUTING.md) - 贡献指南（面向贡献者）
-- [.the_conn/GUIDE.md](.the_conn/GUIDE.md) - 框架使用指南（面向最终用户）
+- [README.md](README.md) - 项目介绍
+- [CLI.md](CLI.md) - CLI 使用文档
+- [CONTRIBUTING.md](CONTRIBUTING.md) - 贡献指南
 
 ---
 
@@ -542,15 +633,11 @@ cd ~/projects/my-project  # 可能污染真实项目
 ## 📞 获取帮助
 
 - 查看 [Issues](https://github.com/Lockeysama/TheConn/issues)
-- 阅读文档
 - 提交新 Issue
-- 加入讨论
 
 ---
 
 ## 🎉 开始开发
-
-你已经准备好了！现在可以：
 
 1. **查看所有任务**：`mise tasks`
 2. **测试 Python CLI**：`mise run py-cli --help`
