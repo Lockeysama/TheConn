@@ -59,7 +59,9 @@ tc init [参数]
 | `tc plan story`     | `tc plan s`                  | 生成普通 Story       | `planning/story_writing.md`          |
 | `tc plan e2e`       | -                            | 生成 E2E Story       | `planning/e2e_story.md`              |
 | `tc plan perf`      | `tc plan performance`        | 生成性能测试 Story   | `planning/performance_test_story.md` |
-| `tc plan bugfix`    | `tc plan bug` / `tc plan bf` | 生成 Bug Fix Story   | `planning/bug_fix_story.md`          |
+| `tc plan quick`     | `tc plan q`                  | 快速变更（AI 智能路由）| `planning/quick_router.md`         |
+| `tc plan bugfix`    | `tc plan bug` / `tc plan bf` | Bug 修复（明确指定）  | `planning/bug_fix_story.md`         |
+| `tc plan hotfix`    | `tc plan hf`                 | 小改进（明确指定）    | `planning/hotfix_story.md`          |
 
 **一级命令快捷方式**（常用命令）：
 
@@ -72,7 +74,10 @@ tc feature    → tc plan feature
 tc story      → tc plan story
 tc e2e        → tc plan e2e
 tc perf       → tc plan perf
+tc quick      → tc plan quick
+tc q          → tc plan quick
 tc bugfix     → tc plan bugfix
+tc hotfix     → tc plan hotfix
 ```
 
 ---
@@ -256,6 +261,120 @@ AI 执行：加载 planning/requirements_breakdown.md
 
 ---
 
+## 🚀 快速变更（Quick Change）
+
+### 使用场景
+
+当你需要快速完成小的变更时，使用 `tc quick` 命令：
+
+- 修复简单的 bug（功能不正常）
+- 小的功能改进（功能正常但想优化）
+- 配置调整
+- 日志增强
+- 代码重构
+- 性能优化
+
+### 命令用法
+
+```bash
+# 推荐：让 AI 智能判断类型
+tc quick <描述>
+tc q <描述>         # 缩写
+
+# 明确指定类型（跳过 AI 判断）
+tc bugfix <描述>    # 明确是 bug 修复
+tc hotfix <描述>    # 明确是小改进
+```
+
+### AI 智能路由
+
+`tc quick` 会自动分析你的描述并判断类型：
+
+- **bug_fix**: 功能不正常（崩溃、异常、错误）→ 需要根因分析
+- **hotfix**: 功能正常但需改进（优化、新增小功能）→ 快速实现
+
+**判断依据**：
+- 关键词分析："崩溃"、"失败"、"异常" → bug_fix
+- 关键词分析："增加"、"优化"、"改进" → hotfix  
+- 读取原 Story 验收标准
+- 模糊情况下询问用户确认
+
+### 归属关系推断
+
+AI 会自动推断变更属于哪个 Epic/Feature：
+
+**优先级 1**: 描述中提到 STORY-XX → 自动关联该 Story
+**优先级 2**: git 变更分析 → 查看修改的文件属于哪个 Story
+**优先级 3**: 关键词搜索 → 搜索相关的已完成 Story
+**优先级 4**: 最近活动分析 → 列出最近活跃的 Epic/Feature
+**优先级 5**: 交互式选择 → 让用户从列表中选择
+
+### Story ID 格式
+
+- **子 Story** (属于某个已完成的 Story): `STORY-03.1`, `STORY-03.2`
+- **独立 Story** (不属于任何 Story): `STORY-04`, `STORY-05`
+
+### 示例
+
+#### 示例 1: 明确的 bug
+
+```bash
+tc quick "STORY-03 在并发时崩溃"
+
+# AI 自动判断:
+# - 类型: bug_fix (关键词"崩溃")
+# - 父 Story: STORY-03
+# - 新 ID: STORY-03.1
+# - 路由到: bug_fix_story.md (需要根因分析)
+```
+
+#### 示例 2: 明确的改进
+
+```bash
+tc quick "给登录增加详细日志"
+
+# AI 自动判断:
+# - 类型: hotfix (关键词"增加")
+# - 搜索"登录"相关 Story
+# - 询问: 是否关联到 STORY-03？
+# - 路由到: hotfix_story.md (无需根因分析)
+```
+
+#### 示例 3: 模糊情况
+
+```bash
+tc quick "STORY-03 登录很慢"
+
+# AI 分析:
+# - 关键词"慢"模糊
+# - 读取 STORY-03 验收标准: "响应时间 < 200ms"
+# - 询问: 当前是否 > 200ms？
+#   - 是 → bug_fix (不符合验收标准)
+#   - 否 → hotfix (性能优化)
+```
+
+#### 示例 4: 使用明确命令
+
+```bash
+# 跳过 AI 判断，直接创建 bug fix
+tc bugfix "STORY-03 的并发问题"
+
+# 跳过 AI 判断，直接创建 hotfix
+tc hotfix "增加请求日志"
+```
+
+### 与标准 Story 的对比
+
+| 特性         | 标准 Story       | Quick (bugfix)    | Quick (hotfix)    |
+| ------------ | ---------------- | ----------------- | ----------------- |
+| 复杂度       | 不限             | 不限              | ≤ 2.0 分          |
+| 文档长度     | ~300 行          | ~200 行           | ~100 行           |
+| 根因分析     | 可选             | ✅ 必须 (5-Why)   | ❌ 不需要         |
+| 生成速度     | 中等             | 快                | 很快              |
+| 适用场景     | 复杂功能开发     | Bug 修复          | 小改进/小功能     |
+
+---
+
 ## 🌐 中文命令支持
 
 支持中文命令别名：
@@ -268,6 +387,7 @@ AI 执行：加载 planning/requirements_breakdown.md
 | `tc 故事`   | `tc story`   |
 | `tc 特性`   | `tc feature` |
 | `tc 史诗`   | `tc epic`    |
+| `tc 快速`   | `tc quick`   |
 | `tc 缺陷`   | `tc bugfix`  |
 | `tc 任务`   | `tc task`    |
 | `tc 同步`   | `tc sync`    |
@@ -292,7 +412,9 @@ AI 执行：加载 planning/requirements_breakdown.md
 | -------------------- | -------------------------------- |
 | "我想开始一个新项目" | `tc init`                        |
 | "创建一个新功能"     | `tc story` 或 `tc feature`       |
-| "修复一个 bug"       | `tc bugfix`                      |
+| "修复一个小问题"     | `tc quick` 或 `tc bugfix`        |
+| "增加一个小功能"     | `tc quick` 或 `tc hotfix`        |
+| "优化某个功能"       | `tc quick`                       |
 | "我该做什么"         | `tc next`                        |
 | "看看进度"           | `tc status`                      |
 | "添加架构文档"       | `tc ctx add --type=architecture` |
