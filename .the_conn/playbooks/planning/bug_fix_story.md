@@ -8,7 +8,9 @@
 
 **📋 规范引用**：
 
-- **测试策略**：`@playbooks/core/test_strategy_rules.md`
+本 Playbook 依赖以下规范文件（AI 必须先加载）：
+- **基础公约**: `@playbooks/core/base_rules.md` - 禁止事项、文件路径约定、质量标准
+- **测试策略**: `@playbooks/core/test_strategy_rules.md` - Bug Fix Story 的测试策略
 
 ## 本 Playbook 的工作范围
 

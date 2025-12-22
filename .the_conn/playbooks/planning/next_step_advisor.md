@@ -8,6 +8,14 @@
 
 **本 Playbook 严格遵守 `@playbooks/core/base_rules.md` 中定义的所有基础公约。**
 
+**📋 规范引用**：
+
+本 Playbook 依赖以下规范文件（AI 必须先加载）：
+- **基础公约**: `@playbooks/core/base_rules.md` - 禁止事项、文件路径约定、质量标准
+- **测试策略**: `@playbooks/core/test_strategy_rules.md` - 用于判断是否需要补充测试 Story
+
+**原因**: next_step_advisor 需要分析项目状态并建议下一步行动，包括测试策略建议
+
 ---
 
 ## 使用场景

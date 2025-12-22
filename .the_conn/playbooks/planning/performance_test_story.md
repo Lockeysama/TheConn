@@ -6,6 +6,12 @@
 
 **本 Playbook 严格遵守 `@playbooks/core/base_rules.md` 中定义的所有基础公约。**
 
+**📋 规范引用**：
+
+本 Playbook 依赖以下规范文件（AI 必须先加载）：
+- **基础公约**: `@playbooks/core/base_rules.md` - 禁止事项、文件路径约定、质量标准
+- **测试策略**: `@playbooks/core/test_strategy_rules.md` - 性能测试策略和决策规则
+
 ## 本 Playbook 的工作范围
 
 **专注于**：
@@ -13,10 +19,6 @@
 - ✅ **生成性能测试 Story 文档**：创建性能测试 Story 文件
 - ✅ **定义性能指标**：明确响应时间、吞吐量、并发等指标
 - ✅ **设计压测场景**：规划负载测试、压力测试、容量测试等场景
-
-**📋 规范引用**：
-
-- **测试策略**：`@playbooks/core/test_strategy_rules.md`
 
 ---
 

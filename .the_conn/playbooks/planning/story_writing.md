@@ -6,6 +6,13 @@
 
 **本 Playbook 严格遵守 `@playbooks/core/base_rules.md` 中定义的所有基础公约。**
 
+**📋 规范引用**：
+
+本 Playbook 依赖以下规范文件（AI 必须先加载）：
+- **基础公约**: `@playbooks/core/base_rules.md` - 禁止事项、文件路径约定、质量标准
+- **测试策略**: `@playbooks/core/test_strategy_rules.md` - Story 类型判断、测试策略
+- **复杂度评估**: `@playbooks/core/complexity_rules.md` - 复杂度评分标准
+
 ## 本 Playbook 的工作范围
 
 **专注于**：
@@ -13,11 +20,6 @@
 - ✅ **生成普通 Story 文档**：创建功能开发 Story 文件
 - ✅ **编写功能清单**：使用功能清单作为验收标准
 - ✅ **设计指导**：在"实现指导"中使用代码片段说明设计
-
-**📋 规范引用**：
-
-- **测试策略**：`@playbooks/core/test_strategy_rules.md`
-- **复杂度评估**：`@playbooks/core/complexity_rules.md`
 
 **不包括**：
 

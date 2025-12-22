@@ -8,9 +8,11 @@
 
 **📋 规范引用**：
 
-- **测试策略**：`@playbooks/core/test_strategy_rules.md`
-- **复杂度评估**：`@playbooks/core/complexity_rules.md`
-- **BDD 语言配置**：`@playbooks/core/bdd_language_rules.md`
+本 Playbook 依赖以下规范文件（AI 必须先加载）：
+- **基础公约**: `@playbooks/core/base_rules.md` - 禁止事项、文件路径约定、质量标准
+- **测试策略**: `@playbooks/core/test_strategy_rules.md` - 测试策略和决策规则
+- **复杂度评估**: `@playbooks/core/complexity_rules.md` - 复杂度评分标准
+- **BDD 语言配置**: `@playbooks/core/bdd_language_rules.md` - BDD 关键字和描述语言规范
 
 ## 本 Playbook 的工作范围
 
