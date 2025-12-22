@@ -154,96 +154,60 @@ Step 4: 生成 Context 文档
 - 如果是直接添加模式：从 Context 内容中提取技术术语
 - 如果是提取添加模式：从原始材料中提取核心概念
 
+**提取规范**: 参考 `@rules/keyword_extraction_rules.md` 的标准化流程
+
+**快速流程**:
+```
+Step 1: 初步提取 → Step 2: 优先级排序 → Step 3: 归一化 → Step 4: 精简 → Step 5: 验证
+```
+
+**提取原则**:
+- 技术术语优先（框架、库、架构模式）
+- 关键词数量: 3-6 个
+- 统一格式: 小写、英文、单数形式
+- 排除通用词（create, update 等）
+
 **示例**：
 ```
 用户要添加: "UDP 可靠传输协议设计"
-提取关键词: ["UDP", "reliable", "transmission", "protocol", "redundancy"]
+
+提取过程:
+1. 初步提取: ["UDP", "reliable", "transmission", "protocol", "redundancy", "design"]
+2. 优先级排序: 
+   - 高: udp, protocol (技术术语)
+   - 中: reliable, transmission, redundancy (功能特征)
+   - 低: design (通用词)
+3. 最终关键词: ["udp", "reliable", "transmission", "protocol", "redundancy"]
 ```
 
 **Step 0.2: 调用 Context 搜索**
 
-```
-调用: @playbooks/context/search.md
+调用 @playbooks/context/search.md：
 
-输入参数:
-- 关键词: {Step 0.1 提取的关键词数组}
-- 任务类型: context_add
-- Epic: {如果是 Epic Context，指定 Epic ID；如果是 Global Context，留空}
-- 类型过滤（可选）: {指定要搜索的 Context 类型，如 "protocol", "module_design" 等}
-```
+```json
+输入: {
+  "keywords": ["关键词1", "关键词2", ...],
+  "task_type": "context_add",
+  "epic": "EPIC-XX",  // 如果是 Global Context，留空
+  "type_filter": ["protocol", "module_design"]  // 可选
+}
 
-**Step 0.3: 分析搜索结果**
-
-**场景 A: 搜索到相关 Context**
-
-```markdown
-🔍 搜索结果：找到 {N} 个相关 Context
-
-| 文件        | 相关度 | 类型   | 摘要       |
-| ----------- | ------ | ------ | ---------- |
-| {文件路径1} | 高     | {类型} | {内容摘要} |
-| {文件路径2} | 中     | {类型} | {内容摘要} |
-
-⚠️ **检测到可能重复**
-
-**选项**:
-1. **更新已有 Context** → 使用 @playbooks/context/update.md 更新文件
-2. **创建新 Context** → 继续当前流程（如果确认不重复）
-3. **取消操作** → 如果发现完全重复
-
-请选择: [1/2/3]
+输出: {
+  "contexts": ["路径1", "路径2", ...],
+  "total": N,
+  "message": "..."
+}
 ```
 
-**用户选择处理**：
-- 选择 1 → 调用 `@playbooks/context/update.md`，结束当前流程
-- 选择 2 → 继续 Step 1（分析材料）
-- 选择 3 → 结束操作
+**Step 0.3: 根据搜索结果决策**
 
-**场景 B: 未搜索到相关 Context**
+| 搜索结果                              | AI 行动                                           |
+| ------------------------------------- | ------------------------------------------------- |
+| **找到高度相关** (total > 0)          | 询问用户：[1] 更新已有 / [2] 创建新 / [3] 取消    |
+| **未找到相关** (total = 0)            | 继续 Step 1（安全创建）                           |
+| **公约类型** (检测到 architecture 等) | 提示用户应更新对应的 4 个 Global Context 文件之一 |
 
-```markdown
-🔍 搜索结果：未找到相关 Context
-
-✅ 可以安全创建新 Context
-
-继续执行 Step 1（分析材料）
-```
-
-**场景 C: Global Context 特殊处理**
-
-如果用户提供的内容属于公约类型（架构、技术栈、编码规范、测试策略）：
-
-```markdown
-🔍 搜索结果：检测到公约类型内容
-
-⚠️ **Global Context 固定为 4 个文件，不应创建新文件**
-
-**检测到的内容类型**: {architecture / tech_stack / coding_standard / testing_strategy}
-
-**建议操作**:
-- 如果 {对应文件} 已存在 → 使用 @playbooks/context/update.md 更新
-- 如果 {对应文件} 不存在 → 创建该文件
-
-**固定文件映射**:
-- 架构/设计/部署/API 约定 → Architecture.md
-- 技术选型/工具/框架 → Tech_Stack.md
-- 编码规范/最佳实践 → Coding_Standard_{Language}.md
-- 测试方法/策略 → Testing_Strategy.md
-
-继续创建 {固定文件名}？[Y/N]
-```
-
-**Step 0.4: 记录搜索结果**
-
-无论结果如何，AI 应记录搜索过程：
-
-```markdown
-**Step 0 执行记录**:
-- 关键词: {关键词列表}
-- 搜索结果: {找到 N 个 / 未找到}
-- 决策: {创建新文件 / 更新已有文件 / 取消操作}
-- 依据: {为什么做这个决策}
-```
+> 💡 详细的搜索逻辑和结果处理见 `@playbooks/context/search.md` 的"标准调用接口"章节
 
 ---
 

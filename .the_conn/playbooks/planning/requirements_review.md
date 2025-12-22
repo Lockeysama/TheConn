@@ -168,6 +168,8 @@
    - 示例：用户认证、支付处理、数据分析、消息推送等
 
 2. **技术关键词提取**: 从需求中识别技术术语
+   - **提取规范**: 参考 `@rules/keyword_extraction_rules.md` 的标准化流程
+   - 使用 6 层提取规则（多层次、技术术语优先、英文提取、归一化、数量控制、排除通用词）
    - 示例：API、数据库、缓存、队列、微服务等
 
 3. **业务场景理解**: 核心业务场景是什么？
@@ -175,29 +177,39 @@
 
 **输出**: 关键词列表（3-6 个），如：`["authentication", "API", "database", "user management"]`
 
+**提取流程**（详见 `@rules/keyword_extraction_rules.md`）：
+```
+Step 1: 初步提取（10-15 个）
+  ↓
+Step 2: 优先级排序（高/中/低）
+  ↓
+Step 3: 归一化（统一格式）
+  ↓
+Step 4: 去重与精简（保留 4-6 个）
+  ↓
+Step 5: 验证（确保能代表技术特征）
+```
+
 #### Step 1.2: Context 搜索与加载
 
-**使用提取的关键词搜索相关 Context**:
+调用 @playbooks/context/search.md：
 
+```json
+输入: {
+  "keywords": ["关键词1", "关键词2", ...],
+  "task_type": "requirements_review",
+  "epic": null
+}
+
+输出: {
+  "contexts": ["路径1", "路径2", ...],
+  "total": N
+}
 ```
-调用: @playbooks/context/search.md
 
-输入参数:
-- 关键词: {Step 1.1 提取的关键词数组}
-- 任务类型: requirements_review
-- Epic: (不指定，搜索全局)
-```
+**快速浏览返回的 Context**，重点关注：Architecture.md、Tech_Stack.md
 
-**快速浏览返回的 Context**:
-
-- 重点关注：Architecture.md、Tech_Stack.md
-- 了解：现有技术栈、架构设计、类似模块的实现
-- 目的：后续技术决策与项目现状保持一致
-
-**如果未找到精确匹配的 Context**:
-
-- 使用保底返回的 Global Context（Architecture.md、Tech_Stack.md）
-- 如果连 Global Context 也没有，说明是新项目，继续正常流程
+> 💡 详细的调用接口和搜索逻辑见 `@playbooks/context/search.md` 的"标准调用接口"章节
 
 #### Step 1.3: 需求澄清（基于 Context）
 

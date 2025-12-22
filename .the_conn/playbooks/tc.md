@@ -482,6 +482,239 @@ Playbook: {playbook_name}
 
 ---
 
+---
+
+## 🔗 Playbook 衔接规则 🆕
+
+### 衔接类型
+
+Playbook 之间的衔接分为两种类型：
+
+1. **自动衔接**：AI 自动触发下一个 playbook，无需用户确认
+2. **手动衔接**：AI 询问用户是否继续，等待确认后才执行
+
+---
+
+### 自动衔接场景
+
+以下场景 AI **必须自动触发**下一个 playbook（无需用户确认）：
+
+#### 场景 1: requirements_review → 完整拆解流程
+
+**触发条件**：
+- 用户在 requirements_review 中确认技术方案
+- 用户选择"立即进入完整拆解流程"
+
+**自动执行序列**：
+```text
+requirements_review（确认方案）
+    ↓ 自动
+context/add 或 context/update（提取/更新 Context）
+    ↓ 自动
+requirements_breakdown（批量生成规划）
+```
+
+**说明**：
+- 这是一个完整的工作流，中间不需要人工干预
+- 用户在 requirements_review 阶段已经做了所有决策
+
+---
+
+#### 场景 2: task_execution → 变更摘要 + Story 同步
+
+**触发条件**：
+- task_execution 完成所有开发步骤（Step 1-9）
+- 用户 Review 通过（输入"确认"）
+
+**自动执行序列**：
+```text
+task_execution（用户确认）
+    ↓ 自动
+execution/change_summary（生成变更摘要）
+    ↓ 自动
+execution/story_sync（同步 Story 状态）
+```
+
+**说明**：
+- 这是 Task 闭环的标准流程
+- 用户确认后不需要额外干预
+
+---
+
+#### 场景 3: context/add → context/update（检测到重复）
+
+**触发条件**：
+- context/add 的 Step 0 强制搜索检测到已有相关 Context
+- 搜索相关度 ≥ 0.8（高度相似）
+
+**自动执行序列**：
+```text
+context/add（Step 0 搜索）
+    ↓ 检测到高度相似 Context
+询问用户：更新 / 新建 / 取消
+    ↓ 用户选择"更新"
+context/update（更新已有 Context）
+```
+
+**说明**：
+- 避免重复创建 Context
+- 用户选择"更新"后自动调用 context/update
+
+---
+
+### 手动衔接场景
+
+以下场景 AI **必须询问用户**是否继续：
+
+#### 场景 4: requirements_breakdown → 生成详细文档
+
+**触发条件**：
+- requirements_breakdown 展示完整大纲
+- 用户可能需要调整大纲
+
+**询问模板**：
+```markdown
+✅ 拆解大纲已生成
+
+📋 大纲概览：
+- Epic: {N} 个
+- Feature: {M} 个
+- Story: {K} 个
+
+请确认大纲，确认后我将生成详细文档。
+
+输入：
+- "确认，请生成详细文档" - 继续生成
+- "修改 XXX" - 说明需要调整的内容
+```
+
+**说明**：
+- 大纲可能需要多轮迭代
+- 只有用户明确确认后才生成详细文档
+
+---
+
+#### 场景 5: epic_planning → feature_planning
+
+**触发条件**：
+- epic_planning 完成 Epic 规划文档生成
+- 用户可能想逐个生成 Feature，也可能想批量生成
+
+**询问模板**：
+```markdown
+✅ Epic 规划已生成
+
+📄 已生成文件：
+- .the_conn/epics/EPIC-01_Base_Init/README.md
+
+**下一步选项**：
+1. 继续生成 Feature 规划（逐个）
+2. 批量生成所有 Feature 规划
+3. 暂停（稍后继续）
+
+请选择 [1/2/3]:
+```
+
+**说明**：
+- 给用户选择权
+- 支持逐个生成或批量生成
+
+---
+
+#### 场景 6: context/add → 提取 Epic Context
+
+**触发条件**：
+- 用户使用 requirements_review 生成技术方案
+- 技术方案中包含 Epic 专属设计内容
+
+**询问模板**：
+```markdown
+✅ 技术方案已生成
+
+💡 **提示**：技术方案中包含以下可提取为 Epic Context 的内容：
+- 模块设计（Module Design）
+- 数据模型（Data Model）
+- API 规范（API Spec）
+
+是否提取为 Epic Context？
+- "是" - 调用 context/add 提取
+- "否" - 跳过（稍后手动提取）
+```
+
+**说明**：
+- 提醒用户提取 Context，但不强制
+- 用户可以选择稍后手动提取
+
+---
+
+### 衔接状态追踪 🆕
+
+**AI 在执行多个 playbook 衔接时，必须维护衔接状态**：
+
+```markdown
+## 🔗 Playbook 衔接追踪
+
+**当前工作流**: requirements_review → 完整拆解流程
+
+| Step | Playbook               | 状态 | 输出                                  |
+| ---- | ---------------------- | ---- | ------------------------------------- |
+| 1    | requirements_review    | ✅    | 技术方案已确认                        |
+| 2    | context/add (Global)   | ✅    | Architecture.md, Tech_Stack.md 已更新 |
+| 3    | context/add (Epic)     | 🔄    | 正在提取 Epic Context...              |
+| 4    | requirements_breakdown | ⏳    | 等待 Step 3 完成                      |
+
+**预计剩余步骤**: 2 个
+```
+
+---
+
+### 衔接异常处理
+
+**如果衔接过程中某个 playbook 失败，AI 必须：**
+
+1. **暂停衔接流程**
+2. **标记失败的 playbook**
+3. **报告失败原因**
+4. **询问用户如何处理**
+
+**异常处理模板**：
+
+```markdown
+❌ Playbook 衔接失败
+
+**失败 Playbook**: context/add
+**失败原因**: {具体错误信息}
+**当前位置**: requirements_review → context/add → requirements_breakdown
+                                    ↑ 失败
+
+**已完成**：
+- ✅ requirements_review
+
+**未完成**：
+- ❌ context/add (Global)
+- ⏳ context/add (Epic) - 未开始
+- ⏳ requirements_breakdown - 未开始
+
+**处理选项**：
+1. 重试 context/add
+2. 跳过 context/add，继续 requirements_breakdown
+3. 终止衔接流程
+
+请选择 [1/2/3]:
+```
+
+---
+
+### 衔接最佳实践
+
+1. **保持透明**：AI 必须明确告知用户正在执行哪个 playbook
+2. **及时反馈**：每完成一个 playbook，输出简要状态
+3. **错误恢复**：衔接失败时提供明确的恢复选项
+4. **避免过度自动化**：关键决策点必须询问用户
+5. **状态追踪**：维护完整的衔接状态，便于用户了解进度
+
+---
+
 ## 开始使用
 
 现在你已准备好处理用户的命令。
@@ -493,5 +726,6 @@ Playbook: {playbook_name}
 - 支持所有定义的缩写
 - 不区分大小写
 - 将所有额外参数传递给目标 Playbook
+- **遵守 Playbook 衔接规则**，正确处理自动/手动衔接
 
 让我们开始吧！🚀

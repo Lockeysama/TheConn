@@ -420,253 +420,77 @@ TASK-04 → STORY-02.1 (Bug 修复)
 
 **⚠️ 重要**: 关键词提取直接影响 Context 搜索精度，必须遵循标准流程
 
+**📋 完整规范**: 参考 `@rules/keyword_extraction_rules.md`
 
-### 提取规则
+本节提供快速参考，完整的提取规则、步骤、模板和示例请查阅上述规范文件。
 
-#### 规则 1: 多层次提取
+### 快速参考
 
-从 Story 的不同部分提取关键词：
+#### 6 层提取规则
 
-| 提取源          | 关键词类型 | 示例                                                 |
-| --------------- | ---------- | ---------------------------------------------------- |
-| **Story 标题**  | 核心功能词 | "Create_Structure" → ["structure", "create", "init"] |
-| **验收标准**    | 功能关键词 | "目录创建" → ["directory", "folder", "filesystem"]   |
-| **技术要点**    | 技术术语   | "使用 pathlib" → ["pathlib", "path", "file"]         |
-| **Frontmatter** | 标签和类型 | tags: ["cli", "init"] → ["cli", "init"]              |
-| **依赖 Story**  | 关联功能   | depends_on: STORY-01 → 读取 STORY-01 的关键词        |
+1. **多层次提取**: 从标题、验收标准、技术要点、标签、依赖等多个来源提取
+2. **技术术语优先**: 框架/库名称 > 架构模式 > 技术领域 > 功能模块 > 通用词
+3. **英文关键词提取**: 中文内容需要提取对应的英文技术术语
+4. **关键词归一化**: 小写、单数、去除连字符和下划线
+5. **关键词数量控制**: 3-6 个（最多 8 个）
+6. **排除通用词**: create, update, delete 等通用动词（除非有特殊含义）
 
-#### 规则 2: 技术术语优先
+#### 5 步提取流程
 
-优先选择具有技术含义的关键词：
-
-| 优先级 | 关键词类型  | 示例                                   |
-| ------ | ----------- | -------------------------------------- |
-| **高** | 框架/库名称 | pathlib, asyncio, gRPC, Redis          |
-| **高** | 架构模式    | microservices, event-driven, REST      |
-| **高** | 技术领域    | authentication, caching, queue         |
-| **中** | 功能模块    | user-management, payment, notification |
-| **中** | 数据结构    | tree, graph, hash-table                |
-| **低** | 通用动词    | create, update, delete                 |
-
-#### 规则 3: 英文关键词提取
-
-如果 Story 内容为中文，需要提取对应的英文技术术语：
-
-| 中文     | 英文关键词                        |
-| -------- | --------------------------------- |
-| 用户认证 | authentication, auth, user, login |
-| 缓存管理 | cache, caching, redis, memory     |
-| 消息队列 | queue, message, mq, kafka         |
-| 数据库   | database, db, sql, nosql          |
-| API 接口 | api, rest, graphql, endpoint      |
-
-#### 规则 4: 关键词归一化
-
-统一关键词格式：
-
-- 全部转为小写
-- 使用单数形式（除非复数有特殊含义）
-- 去除连字符和下划线
-- 保留技术术语的标准拼写
-
-**示例**：
 ```
-原始词: "User-Management", "APIs", "data_models"
-归一化: "user management", "api", "data model"
+Step 1: 初步提取（10-15 个）
+  ↓
+Step 2: 优先级排序（高/中/低）
+  ↓
+Step 3: 归一化（统一格式）
+  ↓
+Step 4: 去重与精简（保留 4-6 个）
+  ↓
+Step 5: 验证（确保能代表技术特征）
 ```
 
-#### 规则 5: 关键词数量控制
+### 快速示例
 
-- **最少**: 3 个关键词
-- **推荐**: 4-6 个关键词
-- **最多**: 8 个关键词
+**输入 Story**: "创建 The Conn 框架的标准目录结构"
 
-#### 规则 6: 排除通用词
-
-排除以下通用词（除非有特殊含义）：
-
-- 通用动词: create, update, delete, read, write
-- 通用名词: file, data, system, module, function
-- 修饰词: new, old, simple, complex
-
-**除非**这些词与技术术语结合（如 "file system", "data model", "create index"）
-
-### 提取步骤
-
-#### Step 1: 初步提取
-
-从 Story 的各个部分提取所有可能的关键词（10-15 个）
-
-**Step 2: 优先级排序**
-
-按照"规则 2: 技术术语优先"对关键词排序
-
-#### Step 3: 归一化
-
-应用"规则 4: 关键词归一化"统一格式
-
-#### Step 4: 去重与精简
-
-- 去除重复词
-- 去除通用词
-- 保留 4-6 个最具代表性的关键词
-
-#### Step 5: 验证
-
-检查关键词是否能准确描述 Story 的技术特征
-
-### 提取模板
-
-```markdown
-## 关键词提取记录
-
-#### Step 1: 初步提取
-
-| 提取源   | 原始词 | 归一化后   |
-| -------- | ------ | ---------- |
-| 标题     | {词1}  | {词1-norm} |
-| 验收标准 | {词2}  | {词2-norm} |
-| 技术要点 | {词3}  | {词3-norm} |
-| 标签     | {词4}  | {词4-norm} |
-
-#### Step 2: 优先级排序
-
-1. 🔴 高优先级: {词A}, {词B} (框架/架构/技术领域)
-2. 🟡 中优先级: {词C}, {词D} (功能模块/数据结构)
-3. ⚪ 低优先级: {词E}, {词F} (通用词)
-
-#### Step 3: 最终关键词列表
-
-```json
-["keyword1", "keyword2", "keyword3", "keyword4", "keyword5"]
-```
-
-#### Step 4: 验证说明
-
-{为什么选择这些关键词？它们能否准确描述 Story 的技术特征？}
-```
-
-### 示例
-
-**输入 Story**: STORY-01_Create_Structure
-
-```yaml
----
-title: 创建 The Conn 框架的标准目录结构
-type: dev
-tags:
-  - initialization
-  - project-structure
-  - cli
----
-```
-
-**验收标准**:
-- 创建 `.the_conn/` 目录
-- 创建 `tests/bdd/features/` 目录
-
-**技术要点**:
-- 使用 `pathlib` 处理路径
-- 实现幂等性（重复执行不报错）
-
-**提取过程**:
-
-```markdown
-## 关键词提取记录
-
-#### Step 1: 初步提取
-
-| 提取源   | 原始词                                 | 归一化后                               |
-| -------- | -------------------------------------- | -------------------------------------- |
-| 标题     | Create, Structure                      | create, structure                      |
-| 验收标准 | directory, tests, bdd, features        | directory, test, bdd, feature          |
-| 技术要点 | pathlib, idempotent                    | pathlib, idempotent                    |
-| 标签     | initialization, project-structure, cli | initialization, project structure, cli |
-
-#### Step 2: 优先级排序
-
-1. 🔴 高优先级: pathlib, cli, bdd (技术术语)
-2. 🟡 中优先级: initialization, project structure (功能模块)
-3. ⚪ 低优先级: create, directory (通用词)
-
-#### Step 3: 最终关键词列表
-
+**提取结果**:
 ```json
 ["pathlib", "cli", "bdd", "initialization", "project structure"]
 ```
 
-#### Step 4: 验证说明
-
-这 5 个关键词准确描述了 Story 的技术特征：
-
-- pathlib: 核心技术栈
-- cli: 交互方式
-- bdd: 测试策略
-- initialization: 功能领域
-- project structure: 核心目标
-```
-
-### Phase 2: Context 文件搜索
-
-**优先使用 Context 搜索工具**:
-
-调用 `@playbooks/context/search.md` 搜索相关 Context
-
-**输入参数**:
-- **关键词**: {从 Phase 1 提取的技术关键词数组}
-- **任务类型**: task_generation
-- **Epic**: {Story 所属 Epic ID}
-- **类型过滤**（可选）: 根据 Story 类型指定（如 `module_design`, `architecture` 等）
-
-**返回结果示例**:
-```json
-{
-  "contexts": [
-    ".the_conn/context/global/Architecture.md",
-    ".the_conn/context/global/Tech_Stack.md",
-    ".the_conn/context/epics/EPIC-01/Module_Design_Auth.md"
-  ],
-  "total": 3
-}
-```
-
-将返回的 Context 文件路径直接用于 `context.manifest.json` 的 `contexts` 数组。
+**为什么选择这些关键词**:
+- pathlib: 核心技术栈（路径处理）
+- cli: 交互方式（命令行工具）
+- bdd: 测试策略（行为驱动开发）
+- initialization: 功能领域（初始化）
+- project structure: 核心目标（项目结构）
 
 ---
 
-**备选方案**：如果未使用搜索工具，手动扫描 `.the_conn/context/` 目录，根据 Phase 1 的分析结果匹配相关文件：
+**详细的提取规则、完整的提取模板和更多示例，请参考**:
+👉 `@rules/keyword_extraction_rules.md`
 
-**扫描路径**:
+### Phase 2: Context 文件搜索
 
-1. `.the_conn/context/global/` - 公共 Context
-2. `.the_conn/context/epics/EPIC-{序号}/` - Epic 专属 Context
+调用 @playbooks/context/search.md：
 
-**匹配规则（分级加载）**:
+```json
+输入: {
+  "keywords": ["关键词1", "关键词2", ...],
+  "task_type": "task_generation",
+  "epic": "EPIC-XX",
+  "type_filter": ["module_design", "architecture"]  // 可选
+}
 
-#### 级别 1：核心 Global Context（几乎总是包含）
+输出: {
+  "contexts": ["路径1", "路径2", ...],
+  "total": N
+}
+```
 
-| Context 文件                    | 包含条件  | 理由             |
-| ------------------------------- | --------- | ---------------- |
-| `Architecture.md`               | 所有 Task | 理解系统整体设计 |
-| `Coding_Standard_{Language}.md` | 所有 Task | 确保代码风格一致 |
+**将返回的 Context 文件路径直接用于 `context.manifest.json` 的 `contexts` 数组。**
 
-#### 级别 2：按 Story 类型包含
-
-| Context 文件          | 包含条件                                | 理由                        |
-| --------------------- | --------------------------------------- | --------------------------- |
-| `Testing_Strategy.md` | Story type 为 `e2e_test` 或 `perf_test` | 测试相关 Story 需要测试策略 |
-| `Tech_Stack.md`       | Story type 为 `dev` 且涉及技术选型      | 了解可用的技术栈            |
-
-#### 级别 3：按功能领域包含
-
-| 匹配规则                 | 示例                                                         |
-| ------------------------ | ------------------------------------------------------------ |
-| 文件名包含功能领域关键词 | Story 涉及 "DataStream" → 包含 `Module_Design_DataStream.md` |
-| Frontmatter type 匹配    | Story 涉及模块设计 → 包含 `type: module_design` 的文档       |
-
-**排除规则**：
-
-- ❌ 不引用测试文件：排除 `*_test.*`, `tests/*`
+> 💡 详细的搜索逻辑（相关度评分、保底返回等）见 `@playbooks/context/search.md`
 
 ### Phase 3: 相关代码文件识别
 
