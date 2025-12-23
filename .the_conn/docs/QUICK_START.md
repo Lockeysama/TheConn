@@ -50,8 +50,7 @@ The Conn 提供了统一的命令入口文件 `tc.md`，让你通过简单的命
 @tc.md quick "修复登录bug"
 # 或缩写
 @tc.md q "修复登录bug"
-# 或完整命令
-@tc.md plan quick "修复登录bug"
+# AI 会询问是否自动衔接: Story → Task → 执行
 ```
 
 ### 查看项目状态
@@ -86,8 +85,8 @@ AI 会与你讨论需求和技术方案，确认后自动：
 @tc.md quick "修复登录按钮样式"
 # 或缩写
 @tc.md q "优化查询性能"
-# 或完整命令
-@tc.md plan quick "添加用户头像显示"
+# AI 生成 Story 后询问: 继续 / 仅生成 Story / 修改 Story
+# 选择"继续"时自动执行: gtask → etask → summary → sync
 ```
 
 ### 创建规划文档
@@ -191,7 +190,6 @@ AI 会与你讨论需求和技术方案，确认后自动：
 | `@tc.md exec sync`    | 同步 Story |
 | `@tc.md exec summary` | 变更摘要   |
 
----
 
 ## 💡 使用技巧
 
@@ -286,43 +284,37 @@ AI 会与你讨论需求和技术方案，确认后自动：
 @tc.md next
 ```
 
-### 场景 3：快速变更（⭐ 推荐）
+### 场景 3：快速变更
 
 ```bash
-# 使用 quick 命令，AI 自动判断类型
+# 使用 quick 命令，AI 自动判断类型并生成 Story
 @tc.md quick "STORY-05 商品价格显示错误"
-# AI 分析: "错误" → bug_fix
-# 生成: STORY-05.1 (Bug Fix Story，包含根因分析)
+# AI 生成 Story 后询问: "是否继续？"
+# - 继续 → 自动执行 gtask + etask + summary + sync
+# - 仅生成 Story → 结束
+# - 修改 Story → 提出修改建议
 
 @tc.md quick "给商品列表增加筛选功能"
-# AI 分析: "增加" → hotfix  
-# 生成: STORY-06 (Hotfix Story，简化流程)
-
-# 后续流程相同
-@tc.md task STORY-05.1
-@tc.md sync
+# 选择"仅生成 Story"，稍后手动执行
+@tc.md gtask STORY-06
+@tc.md etask
 ```
 
 ### 场景 4：追溯补录（代码已完成）
 
 ```bash
-# 情况：你已经手动修改了代码，现在需要补录文档
-
-# 1. 使用 quick 创建 Story
+# 代码已完成，补录文档
 @tc.md quick "修复登录时的空指针检查"
-# AI 检测到 git diff 有变更
-# 询问: "检测到未提交的变更，是否为追溯模式？"
-# 选择: y
+# AI 检测到 git diff，询问是否追溯模式，选择: y
+# AI 从 git diff 自动填充涉及文件
+# 选择"仅生成 Story"
 
-# 2. AI 从 git diff 自动填充"涉及文件"
-# 3. 你补充验收标准
-
-# 4. 直接生成变更摘要（跳过 Task）
-@tc.md summary
-
-# 5. 同步 Story 状态
-@tc.md sync
+# 直接生成变更摘要
+@tc.md exec summary
+@tc.md exec sync
 ```
+
+---
 
 ### 场景 5：管理 Context
 
@@ -468,11 +460,12 @@ Task 加载时按需引用 (通过 context/search.md)
    - 分析依赖关系和开发顺序
    - 使用粒度控制标准（避免过度拆分）
 
-### tc quick（快速变更）
+### tc quick（快速变更 + 自动衔接）
 
-执行 `@tc.md quick "描述"` 后，AI 会：
-1. **quick_router.md** - 分析并判断类型
-2. 路由到 **bug_fix_story.md** 或 **hotfix_story.md**
+执行 `@tc.md quick "描述"` 后：
+1. AI 分析并判断类型（bug_fix / hotfix）
+2. 生成 Story 后询问：继续 / 仅生成 Story / 修改 Story
+3. 选择"继续"时自动执行：`gtask` → `etask` → 人工 Review → `summary` → `sync`
 
 ### Task 执行闭环
 
