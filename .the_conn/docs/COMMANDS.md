@@ -77,7 +77,10 @@
 @tc.md q "优化首页加载速度"
 ```
 
-**说明**：AI 会自动判断变更类型并创建相应的 Story
+**说明**：
+- AI 自动判断变更类型（bug_fix / hotfix）并生成 Story
+- Story 生成后询问：继续（自动衔接）/ 仅生成 Story / 修改 Story
+- 选择"继续"时自动执行：`gtask` → `etask` → `summary` → `sync`
 
 **调用的 Playbook**：`planning/quick_router.md`
 
@@ -429,7 +432,10 @@
 
 ```bash
 @tc.md quick "修复登录按钮样式"
+# 选择"继续" → 自动执行 gtask → etask → summary → sync
+
 @tc.md q "优化查询性能"
+# 选择"仅生成 Story" → 稍后手动执行
 ```
 
 ### 场景 4：创建规划

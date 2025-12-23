@@ -72,6 +72,7 @@ The Conn follows a simple 5-stage process:
 ```bash
 @tc.md quick "STORY-03 crashes under high concurrency"
 @tc.md q "Add detailed login logs"  # 'q' is shortcut for 'quick'
+# AI will ask if you want to auto-chain: Story → Task → Execution
 ```
 
 **Key principles:**
@@ -80,7 +81,7 @@ The Conn follows a simple 5-stage process:
 - **Context is King** - Maintain architecture docs in `context/` for consistent AI output
 - **Test-First** - Always write tests before implementation (BDD/TDD)
 - **Human Review** - Always review AI's work before merging
-- **Fast Iterations** - Use `@tc.md quick` for small changes while maintaining documentation
+- **Fast Iterations** - Use `@tc.md quick` for streamlined small changes
 
 For detailed workflows and all commands, see [Complete Usage Guide](.the_conn/docs/GUIDE.md)
 
