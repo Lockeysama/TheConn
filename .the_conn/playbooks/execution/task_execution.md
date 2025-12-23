@@ -87,17 +87,17 @@
 ```markdown
 ## 执行检查点追踪
 
-| Step | 内容 | 状态 | 输出 | 备注 |
-|------|------|------|------|------|
-| Step 1 | 加载 Task 上下文 | ✅ | task.md, context.manifest.json | 已加载 3 个 Context |
-| Step 2 | 创建测试文件 | ✅ | tests/unit/test_init.py | 测试文件已创建 |
-| Step 3 | 编写测试用例 | ✅ | 5 个测试用例 | 基于验收标准 |
-| Step 4 | 运行测试（Red） | ✅ | 5/5 失败 | 预期失败（业务代码未实现） |
-| Step 5 | 实现业务代码 | 🔄 | src/init.py | 正在实现... |
-| Step 6 | 运行测试（Green） | ⏳ | - | 等待 Step 5 完成 |
-| Step 7 | 重构与优化 | ⏳ | - | 等待测试通过 |
-| Step 8 | Linter 检查 | ⏳ | - | 等待重构完成 |
-| Step 9 | 验收标准检查 | ⏳ | - | 等待所有步骤完成 |
+| Step   | 内容              | 状态 | 输出                           | 备注                       |
+| ------ | ----------------- | ---- | ------------------------------ | -------------------------- |
+| Step 1 | 加载 Task 上下文  | ✅    | task.md, context.manifest.json | 已加载 3 个 Context        |
+| Step 2 | 创建测试文件      | ✅    | tests/unit/test_init.py        | 测试文件已创建             |
+| Step 3 | 编写测试用例      | ✅    | 5 个测试用例                   | 基于验收标准               |
+| Step 4 | 运行测试（Red）   | ✅    | 5/5 失败                       | 预期失败（业务代码未实现） |
+| Step 5 | 实现业务代码      | 🔄    | src/init.py                    | 正在实现...                |
+| Step 6 | 运行测试（Green） | ⏳    | -                              | 等待 Step 5 完成           |
+| Step 7 | 重构与优化        | ⏳    | -                              | 等待测试通过               |
+| Step 8 | Linter 检查       | ⏳    | -                              | 等待重构完成               |
+| Step 9 | 验收标准检查      | ⏳    | -                              | 等待所有步骤完成           |
 
 **图例**：
 - ✅ 已完成
@@ -287,9 +287,41 @@ Step 失败
 
 ---
 
-### Step 11: 生成变更摘要
+### Step 11-12: 任务闭环（自动衔接）
 
-**用户确认后执行**：
+**用户确认后，AI 自动执行以下衔接流程**：
+
+#### 衔接追踪
+
+```markdown
+## 🔗 任务闭环衔接追踪
+
+**当前工作流**: task_execution → 任务闭环
+
+| Step | Playbook       | 状态 | 输出 | 备注             |
+| ---- | -------------- | ---- | ---- | ---------------- |
+| 1    | change_summary | ⏳    | -    | 等待用户确认     |
+| 2    | story_sync     | ⏳    | -    | 等待 Step 1 完成 |
+
+**图例**：✅ 已完成 | 🔄 进行中 | ⏳ 等待中 | ❌ 失败
+
+**预计剩余步骤**: 2 个
+
+**说明**：
+- 人工 Review 完成 → 用户确认 → 启动衔接追踪
+- Step 编号从 1 开始（不包含 task_execution 自身的 Step 1-9）
+
+**预计剩余步骤**: 2 个
+```
+
+**更新规则**：
+- 用户确认后，Step 11 状态 → 🔄
+- Step 11 完成后，状态 → ✅，Step 12 状态 → 🔄
+- 全部完成后，两个步骤都标记为 ✅
+
+---
+
+#### Step 11: 生成变更摘要
 
 调用 `@playbooks/execution/change_summary.md`：
 
@@ -305,7 +337,7 @@ Step 失败
 
 ---
 
-### Step 12: 同步 Story 状态
+#### Step 12: 同步 Story 状态
 
 调用 `@playbooks/execution/story_sync.md`：
 
@@ -315,6 +347,23 @@ Step 失败
 - 实际涉及文件
 - 实际复杂度
 - 完成时间
+```
+
+---
+
+#### 衔接完成输出
+
+```markdown
+✅ 任务闭环已完成
+
+📊 衔接执行结果：
+- ✅ Step 11: 变更摘要已生成
+- ✅ Step 12: Story 状态已同步
+
+📄 生成文件：
+- 变更摘要: .the_conn/ai_workspace/EPIC-XX/TASK-XX_STORY-XX_Name/change_summary.md
+
+🎉 Task 已完成，Story 状态已更新为 done
 ```
 
 ---

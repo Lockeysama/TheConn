@@ -18,6 +18,31 @@
 
 ## 工作流程
 
+### 执行流程追踪
+
+**AI 必须在执行过程中维护以下追踪表格**：
+
+```markdown
+## 🔄 Quick Change 执行追踪
+
+| Step | 内容               | 状态 | 输出 | 备注   |
+| ---- | ------------------ | ---- | ---- | ------ |
+| 1.1  | 提取关键信息       | ⏳    | -    | 待开始 |
+| 1.2  | Context 搜索与加载 | ⏳    | -    | 待开始 |
+| 2    | 判断变更类型       | ⏳    | -    | 待开始 |
+| 3    | 推断归属关系       | ⏳    | -    | 待开始 |
+| 4    | 路由到具体模板     | ⏳    | -    | 待开始 |
+
+**图例**：✅ 已完成 | 🔄 进行中 | ⏳ 等待中 | ❌ 失败
+```
+
+**更新规则**：
+- 进入某个 Step → 状态更新为 🔄
+- 完成某个 Step → 状态更新为 ✅，填写输出
+- Step 失败 → 状态更新为 ❌，记录失败原因
+
+---
+
 ### Step 1: 解析用户输入与 Context 加载 🆕
 
 #### Step 1.1: 提取关键信息
@@ -690,6 +715,168 @@ Step 3: 归属关系
 
 ---
 
+## Step 5: Story 生成后的自动衔接 🆕
+
+### 场景说明
+
+Quick Change 通常只涉及 1 个 Story，用户期望快速完成。因此在 Story 生成后，提供自动衔接选项。
+
+### 执行流程
+
+**当 bug_fix_story.md 或 hotfix_story.md 完成 Story 生成后**：
+
+#### 5.1 输出 Story 生成结果
+
+```markdown
+✅ Story 已生成
+
+📄 生成文件：
+- .the_conn/epics/EPIC-{序号}_{Name}/features/FEAT-{序号}_{Name}/stories/STORY-{ID}_{Name}.md
+
+📋 Story 信息：
+- ID: STORY-{ID}
+- Type: {bug_fix / hotfix}
+- Epic: EPIC-{序号}
+- Feature: FEAT-{序号}
+- 复杂度: {估算值}
+```
+
+#### 5.2 询问用户是否继续
+
+```markdown
+🚀 **Quick 模式 - 自动衔接**
+
+由于这是 Quick Change（单个 Story），我可以为你自动完成：
+
+**选项 1: 自动衔接（推荐）**
+✅ 自动生成 Task 简报（gtask）
+✅ 自动执行开发任务（etask）
+✅ 等待你 Review 后完成闭环
+
+**选项 2: 仅生成 Story**
+⏸️  暂停，稍后手动执行 `tc gtask` 和 `tc etask`
+
+**选项 3: 修改 Story**
+✏️  调整 Story 内容后再决定
+
+请选择 [1/2/3] 或输入 [继续/暂停/修改]:
+```
+
+#### 5.3 根据用户选择执行
+
+**如果用户选择 "1" 或 "继续"**：
+
+```text
+→ 自动调用 @playbooks/execution/task_generation.md
+    ↓
+  生成 Task 简报
+    ↓
+→ 自动调用 @playbooks/execution/task_execution.md
+    ↓
+  执行开发流程（测试先行）
+    ↓
+→ 暂停，等待用户 Review（人工检查点）
+    ↓
+  用户确认后
+    ↓
+→ 自动生成变更摘要 + 同步 Story
+```
+
+**如果用户选择 "2" 或 "暂停"**：
+
+```markdown
+✅ Story 已生成，任务暂停
+
+📝 后续步骤：
+1. 执行 `tc gtask @.the_conn/epics/EPIC-{序号}_*/features/FEAT-{序号}_*/stories/STORY-{ID}_*.md`
+2. 执行 `tc etask @.the_conn/ai_workspace/EPIC-{序号}/TASK-{序号}_STORY-{ID}_*/`
+
+任务结束。
+```
+
+**如果用户选择 "3" 或 "修改"**：
+
+```markdown
+✏️  请说明需要修改的内容：
+- 修改验收标准
+- 修改技术要点
+- 修改复杂度估算
+- 其他...
+
+（等待用户输入）
+```
+
+---
+
+### 衔接状态追踪 🆕
+
+**AI 在自动衔接过程中必须维护状态追踪**：
+
+```markdown
+## 🔗 Quick 自动衔接追踪
+
+**当前工作流**: quick_router → 任务生成与执行
+
+| Step | Playbook        | 状态 | 输出                  | 备注             |
+| ---- | --------------- | ---- | --------------------- | ---------------- |
+| 1    | task_generation | 🔄    | 正在生成 Task 简报... | -                |
+| 2    | task_execution  | ⏳    | 等待 Step 1 完成      | 包含后续闭环流程 |
+
+**图例**：✅ 已完成 | 🔄 进行中 | ⏳ 等待中 | ❌ 失败
+
+**预计剩余步骤**: 2 个
+
+**说明**：
+- Story 生成完成 → 用户确认"继续" → 启动衔接追踪
+- task_execution 完成后会自动衔接 change_summary 和 story_sync（由 task_execution 的衔接追踪管理）
+```
+
+**更新规则**：
+- 每完成一个 Playbook → 状态更新为 ✅，更新"预计剩余步骤"
+- 进入一个 Playbook → 状态更新为 🔄
+- Playbook 失败 → 状态更新为 ❌，暂停衔接，询问用户
+
+---
+
+### 衔接异常处理
+
+**如果衔接过程中某个 Playbook 失败，AI 必须：**
+
+1. **暂停衔接流程**
+2. **标记失败的 Playbook**
+3. **报告失败原因**
+4. **询问用户如何处理**
+
+**异常处理模板**：
+
+```markdown
+❌ 自动衔接失败
+
+**失败 Phase**: {Phase 名称}
+**失败原因**: {具体错误信息}
+**当前位置**: quick_router → bug_fix_story → task_generation
+                                            ↑ 失败
+
+**已完成**：
+- ✅ Phase 1: quick_router
+- ✅ Phase 2: bug_fix_story
+- ✅ Phase 3: 用户确认
+
+**未完成**：
+- ❌ Phase 4: task_generation (失败)
+- ⏳ Phase 5: task_execution - 未开始
+- ⏳ Phase 6-8: 后续步骤 - 未开始
+
+**处理选项**：
+1. 重试 task_generation
+2. 手动执行 `tc gtask` 和 `tc etask`
+3. 终止衔接流程
+
+请选择 [1/2/3]:
+```
+
+---
+
 ## 注意事项
 
 1. **保持交互友好**: 判断不明确时，给出清晰的选项供用户选择
@@ -697,6 +884,8 @@ Step 3: 归属关系
 3. **明确反馈**: 路由前输出完整的分析报告，让用户清楚了解即将创建什么
 4. **容错处理**: 如果推断失败，降级到交互式选择
 5. **信息传递**: 确保路由到目标 Playbook 时传递所有必需信息
+6. **自动衔接透明**: 用户必须明确知道 AI 正在执行哪个阶段 🆕
+7. **失败恢复**: 衔接失败时提供明确的恢复选项 🆕
 
 ---
 
