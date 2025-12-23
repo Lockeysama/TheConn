@@ -172,6 +172,188 @@ func (s *DefaultSender) Send(event Event) error {
 
 ---
 
+### 3.3 边界案例指南 🎯
+
+**以下是常见的边界情况判断指南，帮助 AI 准确区分"允许"和"禁止"**：
+
+#### 案例 1: 代码片段的边界
+
+| 场景 | ✅ 允许（设计说明） | ❌ 禁止（实现代码） |
+|------|-------------------|-------------------|
+| **接口定义** | 只定义函数签名、参数类型、返回值 | 包含完整的实现逻辑 |
+| **数据结构** | 定义字段名称、类型、约束 | 包含初始化、序列化等实现 |
+| **算法说明** | 使用伪代码描述流程（如"遍历列表"）| 使用具体语言的循环语法（如 `for i in range`）|
+
+**示例对比**：
+
+```python
+# ✅ 允许：接口定义（设计层面）
+class UserRepository:
+    def find_by_id(user_id: int) -> User:
+        """根据 ID 查找用户"""
+        pass
+    
+    def save(user: User) -> bool:
+        """保存用户数据"""
+        pass
+
+# ❌ 禁止：包含实现逻辑
+class UserRepository:
+    def find_by_id(user_id: int) -> User:
+        conn = db.get_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM users WHERE id = ?", (user_id,))
+        return cursor.fetchone()
+```
+
+---
+
+#### 案例 2: Context 文档的边界
+
+| 场景 | ✅ 允许（设计文档） | ❌ 禁止（实现手册） |
+|------|-------------------|-------------------|
+| **架构设计** | 描述模块职责、接口约定、数据流向 | 描述具体的函数调用顺序、变量赋值 |
+| **API 规范** | 定义请求格式、响应格式、错误码 | 描述服务器端如何解析请求、如何构造响应 |
+| **算法说明** | 描述算法思路、复杂度、适用场景 | 描述循环如何嵌套、变量如何命名 |
+
+**示例对比**：
+
+```markdown
+# ✅ 允许：架构设计文档
+## 认证模块设计
+
+**职责**：验证用户身份，生成访问令牌
+
+**接口**：
+- `authenticate(username, password) -> Token`
+- `validate_token(token) -> User`
+
+**约束**：
+- Token 有效期 2 小时
+- 使用 JWT 格式
+- 密码必须加密存储
+
+---
+
+# ❌ 禁止：实现细节文档
+## 认证模块实现
+
+**步骤**：
+1. 接收用户名和密码
+2. 使用 bcrypt.check_password_hash() 验证密码
+3. 如果验证通过，调用 jwt.encode() 生成 token
+4. 将 token 存入 Redis，key 格式为 "session:{user_id}"
+5. 返回 token 给客户端
+```
+
+---
+
+#### 案例 3: Story 文档的边界
+
+| 场景 | ✅ 允许（验收标准） | ❌ 禁止（实现指导） |
+|------|-------------------|-------------------|
+| **功能描述** | 用户可以做什么、预期结果是什么 | 用什么函数、如何调用 |
+| **技术要点** | 使用什么技术、性能要求、约束条件 | 具体的代码结构、错误处理实现 |
+| **边界说明** | 禁止修改哪些模块、接口约束 | 具体的文件路径、函数名称 |
+
+**示例对比**：
+
+```markdown
+# ✅ 允许：Story 验收标准
+## 验收标准
+
+- [ ] 用户点击"登录"后，系统验证用户名和密码
+- [ ] 验证成功后跳转到首页，验证失败提示错误信息
+- [ ] 单元测试覆盖率 ≥ 80%
+
+**技术要点**：
+- 使用 JWT 生成访问令牌
+- 密码验证使用 bcrypt
+- 响应时间 < 200ms
+
+---
+
+# ❌ 禁止：包含实现细节
+## 实现步骤
+
+1. 在 `auth.py` 中创建 `login()` 函数
+2. 使用 `bcrypt.check_password_hash()` 验证密码
+3. 调用 `jwt.encode({"user_id": user.id})` 生成 token
+4. 使用 `try-except` 捕获异常
+5. 在 `templates/login.html` 中添加错误提示的 div
+```
+
+---
+
+#### 案例 4: 测试代码的边界
+
+| 场景 | ✅ 允许（规划阶段） | ❌ 禁止（规划阶段） |
+|------|-------------------|-------------------|
+| **BDD 场景** | 编写 Gherkin 场景（Given/When/Then）| 编写 Step Definitions 实现 |
+| **测试清单** | 列出需要测试的场景、边界条件 | 编写具体的测试函数代码 |
+| **覆盖率要求** | 指定覆盖率目标（如 80%）| 编写测试代码 |
+
+**示例对比**：
+
+```gherkin
+# ✅ 允许：BDD 场景定义（Story 文档中）
+Feature: 用户登录
+
+  Scenario: 成功登录
+    Given 用户名为 "alice" 且密码为 "password123"
+    When 用户点击登录按钮
+    Then 应该跳转到首页
+    And 显示欢迎消息 "欢迎，alice"
+
+---
+
+# ❌ 禁止：Step Definitions 实现（规划阶段不应包含）
+@given('用户名为 "{username}" 且密码为 "{password}"')
+def step_given_credentials(context, username, password):
+    context.username = username
+    context.password = password
+
+@when('用户点击登录按钮')
+def step_when_click_login(context):
+    context.response = login(context.username, context.password)
+```
+
+**注意**：Task 执行阶段（`task_execution.md`）会指导 AI 编写实际的 Step Definitions 和单元测试代码。
+
+---
+
+#### 案例 5: 文件修改的边界
+
+| 场景 | ✅ 允许 | ❌ 禁止 |
+|------|--------|--------|
+| **规划文档** | 创建/修改 `.the_conn/epics/`, `.the_conn/context/` | 修改 `.the_conn/docs/`（用户文档） |
+| **Task 工作区** | 创建/修改 `.the_conn/ai_workspace/` | 修改项目源代码目录（除执行阶段外） |
+| **Story 同步** | 更新 Story 的 `status` 字段 | 修改 Story 的验收标准、技术要点 |
+
+---
+
+#### 边界判断原则
+
+**如果不确定是否允许，问自己以下问题**：
+
+1. **是否在"规划阶段"？**
+   - 是 → 只能生成文档，不能编写实现代码
+   - 否（在 Task 执行阶段）→ 可以编写代码
+
+2. **是否是"设计"还是"实现"？**
+   - 设计（是什么、为什么、用什么技术）→ 允许
+   - 实现（怎么写代码、怎么调用）→ 禁止（规划阶段）
+
+3. **是否会影响用户文档或源代码？**
+   - 影响 → 禁止（除非在 Task 执行阶段且用户授权）
+   - 不影响 → 可能允许
+
+4. **是否是 Task 执行阶段？**
+   - 是 → 遵循 `task_execution.md` 的指导
+   - 否 → 严格遵守本公约的禁止事项
+
+---
+
 ## 4. 文件路径约定
 
 ### 4.1 目录结构
