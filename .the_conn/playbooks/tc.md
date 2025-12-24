@@ -2,6 +2,34 @@
 
 你是一位 AI 开发助手，通过 The Conn 框架与用户协作。这是统一的命令入口，你将根据用户的命令参数加载对应的 playbook。
 
+## 📋 速览（AI 快速决策）
+
+```mermaid
+graph TD
+    A[用户输入: tc 命令 参数] --> B{第1层}
+    B -->|强制加载| C[@.the_conn/rules/base_rules.md]
+    C --> D{第2层: 命令解析}
+    D -->|匹配路由表| E[加载目标 Playbook]
+    D -->|未匹配| F[❌ 错误提示]
+    E --> G{第3层: 规范引用}
+    G -->|按 Playbook 声明| H[加载领域规范<br/>自动去重]
+    H --> I{第4层: 项目上下文}
+    I -->|按需加载| J[Epic/Story/Context]
+    J --> K{第5层: 用户@引用}
+    K -->|显式加载| L[用户引用的文件]
+    L --> M[✅ 执行 Playbook]
+    M --> N[📋 输出加载清单]
+    N --> O[🚀 执行任务]
+```
+
+**关键点**：
+- ✅ **只加载1个 Playbook**：路由表中的路径是"命令映射"，不是待加载列表
+- ✅ **去重机制**：第3层自动去重，同一规范只加载一次
+- ✅ **失败分级**：强制文件（1-2层）失败→终止 | 规范文件（3层）失败→警告+继续
+- ✅ **加载清单**：Phase 5 强制输出，列出所有已加载文件
+
+---
+
 ## 🔴 执行流程
 
 ```text
@@ -315,6 +343,83 @@ graph TD
 ```
 
 ---
+
+---
+
+## 🚨 常见错误与解决方案
+
+### AI 执行时的典型错误
+
+| #     | 错误类型             | 错误表现                               | 正确做法                               | 为什么错误                                  |
+| ----- | -------------------- | -------------------------------------- | -------------------------------------- | ------------------------------------------- |
+| **1** | **遍历路由表加载**   | AI 加载了表格中的所有 Playbook 路径    | **只加载用户命令对应的1个 Playbook**   | 路由表是"命令→Playbook"映射，不是待加载列表 |
+| **2** | **重复加载规范**     | `complexity_rules.md` 被加载3次        | **第3层自动去重**，同一文件只加载1次   | 多个 Playbook 可能引用同一规范，必须去重    |
+| **3** | **加载 @文档内路径** | 加载了 Playbook 文档内部提到的所有路径 | **只加载用户 Prompt 中显式 @ 的文件**  | 文档内路径是指令说明，不是引用              |
+| **4** | **规范文件失败终止** | `bdd_language_rules.md` 不存在就停止   | **规范文件失败→警告+继续**（使用默认） | 非强制文件缺失不应阻塞执行                  |
+| **5** | **未输出加载清单**   | 直接开始执行，未列出已加载文件         | **Phase 5 必须输出清单**（见下方格式） | 透明度要求，用户需知道加载了什么            |
+
+### 错误示例与纠正
+
+#### ❌ 错误示例 1：遍历加载
+
+```markdown
+AI 错误行为：
+"我看到命令体系表格，开始加载：
+1. planning/requirements_review.md
+2. planning/quick_router.md
+3. planning/project_status.md
+..."
+
+✅ 正确行为：
+"用户命令：tc quick
+→ 路由映射：planning/quick_router.md
+→ 只加载这1个 Playbook"
+```
+
+#### ❌ 错误示例 2：未去重
+
+```markdown
+AI 错误行为：
+"加载 base_rules.md
+加载 quick_router.md（引用 complexity_rules.md）
+加载 complexity_rules.md ← 第1次
+加载 bug_fix_story.md（引用 complexity_rules.md）
+加载 complexity_rules.md ← 第2次（重复！）"
+
+✅ 正确行为：
+"已加载列表：[base_rules.md, quick_router.md, complexity_rules.md]
+准备加载 bug_fix_story.md 的规范：
+- complexity_rules.md → ✓ 已加载，跳过"
+```
+
+### 快速自检清单
+
+AI 在执行前必须检查：
+
+- [ ] 我只加载了用户命令对应的**1个 Playbook**（不是表格中的所有路径）
+- [ ] 我维护了"已加载文件列表"用于第3层去重
+- [ ] 我区分了"用户@引用"和"文档内路径说明"
+- [ ] 我在 Phase 5 输出了加载清单
+- [ ] 强制文件失败我终止了，非强制文件失败我警告+继续
+
+---
+
+## 📚 命令速查表
+
+**快速查找命令**（按使用频率排序）：
+
+| 命令               | 一级快捷 | Playbook                         | 用途                 | 典型场景              |
+| ------------------ | -------- | -------------------------------- | -------------------- | --------------------- |
+| `tc quick <描述>`  | `tc q`   | `planning/quick_router.md`       | 快速变更（Bug/改进） | 修Bug、加日志、小优化 |
+| `tc gtask <Story>` | -        | `execution/task_generation.md`   | 生成Task简报         | Story写完后生成Task   |
+| `tc etask <Task>`  | -        | `execution/task_execution.md`    | 执行Task开发         | Task生成后开始编码    |
+| `tc status`        | -        | `planning/project_status.md`     | 查看项目进度         | 站会前、汇报前        |
+| `tc init`          | -        | `initialization/project_init.md` | 初始化项目           | 新项目开始时          |
+| `tc plan status`   | -        | `planning/project_status.md`     | 查看项目状态         | 同 tc status          |
+| `tc ctx add`       | -        | `context/add.md`                 | 添加Context          | 新增设计文档          |
+| `tc ctx update`    | -        | `context/update.md`              | 更新Context          | 修改已有设计          |
+
+**完整命令列表**：见下方"命令格式"和"核心命令"章节
 
 ---
 
