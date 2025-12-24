@@ -94,12 +94,12 @@
 
 ### Context 同步检查清单
 
-在考虑同步 Context 前，检查：
-
-- [ ] 变更是否真的影响架构/设计？（vs 只是实现细节）
-- [ ] 是实现偏离了设计，还是设计本身需要修正？
-- [ ] 如果不同步，会不会误导后续开发？
-- [ ] 变更是临时的还是永久的？
+| 检查项 | 问题 |
+| --- | --- |
+| 影响范围 | 变更是否真的影响架构/设计？（vs 只是实现细节） |
+| 原因分析 | 是实现偏离了设计，还是设计本身需要修正？ |
+| 影响评估 | 如果不同步，会不会误导后续开发？ |
+| 持久性 | 变更是临时的还是永久的？ |
 
 ### Context 同步建议格式
 
@@ -164,16 +164,10 @@
 
 ## 数据获取方式
 
-### 原始 Story
-
-- 从上下文中获取
-- 路径: `.the_conn/epics/EPIC-{序号}_{Name}/features/FEAT-{序号}_{Name}/stories/STORY-{序号}_{Name}.md`
-
-### 最终变更代码
-
-- 通过 Git Diff 获取: `git diff <start-commit> <end-commit>`
-- 或查看最近提交: `git log -p -1`
-- 或读取变更摘要: `.the_conn/ai_workspace/EPIC-{序号}/TASK-{序号}_STORY-{序号}_{Name}/change_summary.md`
+| 数据类型 | 来源 |
+| --- | --- |
+| 原始Story | 上下文或路径：`.the_conn/epics/EPIC-XX_Name/features/FEAT-XX_Name/stories/STORY-XX_Name.md` |
+| 最终变更代码 | • `git diff <start-commit> <end-commit>`<br/>• `git log -p -1`<br/>• 变更摘要：`.the_conn/ai_workspace/EPIC-XX/TASK-XX_STORY-XX_Name/change_summary.md` |
 
 ---
 
@@ -238,47 +232,24 @@ depends_on: []
 
 ---
 
-### 示例 2: 含 Context 同步建议
+### 示例 2: 含Context同步建议
 
-#### 代码实现发现
+**发现**: Story描述REST API，实际实现为gRPC（架构重大变更）
 
-- Story 描述的 REST API 实际实现为 gRPC
-- 这是架构层面的重大变更
-
-#### 同步后的 Story
+**同步后Story**（内容省略）+ **Context同步建议**：
 
 ```markdown
----
-id: STORY-05
-type: dev
-epic: EPIC-02
-feature: FEAT-03
-status: done
-created: 2025-12-10
-updated: 2025-12-11
-depends_on: []
----
-
-（Story 内容...）
-```
-
----
-
 ## ⚠️ Context 同步建议
 
-检测到以下 Context 可能需要更新：
-
 ### Context: Architecture.md
-
 **变更类型**: 架构调整
 **原描述**: "服务间使用 REST API 通信"
 **实际实现**: 服务间使用 gRPC 通信
 **影响**: 后续服务集成需基于 gRPC 设计
 **建议**: 使用 @prompts/context/update.md 更新 Architecture.md 的"服务通信"章节
 
----
-
 **请用户确认后，再执行 Context 更新操作。**
+```
 
 ---
 

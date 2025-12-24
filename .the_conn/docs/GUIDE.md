@@ -289,20 +289,20 @@ PR 合并后，确保"意图"与"实现"的一致性。
 ### 初始化 Playbooks
 
 | Playbook                                   | 用途       | 输入     | 输出位置              |
-| ------------------------------------------ | ---------- | -------- | --------------------- |
+| --- | --- | --- | --- |
 | `playbooks/initialization/project_init.md` | 项目初始化 | 项目信息 | `.the_conn/` 目录结构 |
 
 ### Context 管理 Playbooks
 
 | Playbook                      | 用途                   | 输入                   | 输出位置             |
-| ----------------------------- | ---------------------- | ---------------------- | -------------------- |
+| --- | --- | --- | --- |
 | `playbooks/context/add.md`    | 添加/提取 Context 文档 | Context 内容或技术方案 | `.the_conn/context/` |
 | `playbooks/context/update.md` | 更新 Context 文档      | Context 变更           | 更新现有 Context     |
 
 ### 规划层 Playbooks
 
 | Playbook                                       | 用途                             | 输入              | 输出位置                        |
-| ---------------------------------------------- | -------------------------------- | ----------------- | ------------------------------- |
+| --- | --- | --- | --- |
 | `playbooks/planning/requirements_review.md`    | 需求评审（确认后自动触发拆解）   | 需求想法          | Epic+Feature+Story              |
 | `playbooks/planning/requirements_breakdown.md` | 需求拆解（仅在review确认后触发） | 需求文档+技术方案 | Epic+Feature+Story              |
 | `playbooks/planning/epic_planning.md`          | 生成 Epic 规划（含自动初始化）   | 需求文档          | `.the_conn/epics/EPIC-XX_Name/` |
@@ -316,7 +316,7 @@ PR 合并后，确保"意图"与"实现"的一致性。
 ### 执行层 Playbooks
 
 | Playbook                                 | 用途           | 输入              | 输出位置                  |
-| ---------------------------------------- | -------------- | ----------------- | ------------------------- |
+| --- | --- | --- | --- |
 | `playbooks/execution/task_generation.md` | 生成 Task 简报 | Story 文件        | `.the_conn/ai_workspace/` |
 | `playbooks/execution/task_execution.md`  | 执行 Task      | Task 工作目录     | 代码 + 测试               |
 | `playbooks/execution/change_summary.md`  | 生成变更摘要   | 任务记录          | `.the_conn/ai_workspace/` |
@@ -329,7 +329,7 @@ PR 合并后，确保"意图"与"实现"的一致性。
 ### ID 命名规范
 
 | 类型    | 格式                    | 示例         |
-| ------- | ----------------------- | ------------ |
+| --- | --- | --- |
 | Epic    | `EPIC-{序号}`           | `EPIC-01`    |
 | Feature | `FEAT-{序号}`           | `FEAT-01`    |
 | Story   | `STORY-{序号}`          | `STORY-01`   |
@@ -446,7 +446,7 @@ story/STORY-01 (可选)
 ## ID 分配记录
 
 | 类型  | 下一个可用 ID | 最后分配者 | 更新时间   |
-| ----- | ------------- | ---------- | ---------- |
+| --- | --- | --- | --- |
 | Story | STORY-06      | @user1     | 2025-12-22 |
 | Task  | TASK-08       | @user2     | 2025-12-22 |
 ```

@@ -46,26 +46,21 @@
 
 ---
 
-## 输出格式
+## 输出格式（精简模板）
 
 ```markdown
 # 项目状态报告
 
-**生成时间**: {yyyy-mm-dd HH:mm}
-**报告范围**: 所有 Epic
+**生成时间**: {yyyy-mm-dd HH:mm} | **范围**: 所有 Epic
 
 ---
 
 ## 📊 总体概览
 
-| 指标         | 数量 | 完成率 |
-| ------------ | ---- | ------ |
-| Epic 总数    | {N}  | -      |
-| Feature 总数 | {N}  | -      |
-| Story 总数   | {N}  | -      |
-| 已完成 Story | {N}  | {X}%   |
-| 进行中 Story | {N}  | -      |
-| 待开始 Story | {N}  | -      |
+| 指标                        | 数量        | 完成率    |
+| --- | --- | --- |
+| Epic/Feature/Story 总数     | {N}/{N}/{N} | -         |
+| Story: 已完成/进行中/待开始 | {N}/{N}/{N} | {X}%/- /- |
 
 ---
 
@@ -73,49 +68,23 @@
 
 ### EPIC-01: {名称}
 
-**状态**: {进行中 / 已完成 / 未开始}
-**进度**: {X}% ({已完成}/{总数} Stories)
+**状态**: {进行中/已完成/未开始} | **进度**: {X}% ({已完成}/{总数} Stories)
 
 ```
-
 [████████░░] 80%
-
 ```
 
-**Features**:
-- FEAT-01: {名称} ✅ 100%
-- FEAT-02: {名称} [████░░░░░░] 40%
-- FEAT-03: {名称} ⏸️ 未开始
+**Features**: FEAT-01:{名称}✅100% / FEAT-02:{名称}[████░░░░░░]40% / FEAT-03:⏸️未开始
 
-**关键 Stories**:
-- ✅ STORY-01: {名称} (已完成)
-- ✅ STORY-02: {名称} (已完成)
-- 🚧 STORY-03: {名称} (进行中)
-- ⏸️ STORY-04: {名称} (待开始)
+**关键Stories**: ✅STORY-01/✅STORY-02/🚧STORY-03/⏸️STORY-04
 
 ---
 
-### EPIC-02: {名称}
+## 🚧 当前进行中 / ⏸️ 待开始（Top 5）
 
-...
-
----
-
-## 🚧 当前进行中
-
-| Story ID | 名称   | Epic    | Feature | 预计完成       |
-| -------- | ------ | ------- | ------- | -------------- |
-| STORY-03 | {名称} | EPIC-01 | FEAT-02 | {日期或"未知"} |
-| STORY-07 | {名称} | EPIC-02 | FEAT-04 | {日期或"未知"} |
-
----
-
-## ⏸️ 待开始（Top 5）
-
-| Story ID | 名称   | Epic    | 依赖状态        | 可开始时间      |
-| -------- | ------ | ------- | --------------- | --------------- |
-| STORY-04 | {名称} | EPIC-01 | ✅ 无阻塞        | 立即            |
-| STORY-08 | {名称} | EPIC-02 | ⚠️ 等待 STORY-05 | STORY-05 完成后 |
+| Story ID | 名称   | Epic    | Feature | 依赖状态 | 可开始时间 |
+| --- | --- | --- | --- | --- | --- |
+| STORY-03 | {名称} | EPIC-01 | FEAT-02 | -        | -          |
 
 ---
 
@@ -123,25 +92,19 @@
 
 ### 阻塞 Story
 
-| Story ID | 名称   | 被阻塞原因 | 依赖的 Story | 影响范围                |
-| -------- | ------ | ---------- | ------------ | ----------------------- |
-| STORY-08 | {名称} | 依赖未完成 | STORY-05     | 阻塞 STORY-09, STORY-10 |
+| Story ID | 名称   | 被阻塞原因 | 依赖的Story | 影响范围              |
+| --- | --- | --- | --- | --- |
+| STORY-08 | {名称} | 依赖未完成 | STORY-05    | 阻塞STORY-09,STORY-10 |
 
-### 依赖链路
+### 依赖链路（Mermaid可选）
 
 ```mermaid
 graph TD
   STORY-05[STORY-05 进行中] --> STORY-08[STORY-08 被阻塞]
   STORY-08 --> STORY-09[STORY-09 被阻塞]
-  STORY-08 --> STORY-10[STORY-10 被阻塞]
-  
-  style STORY-05 fill:#ffa500
-  style STORY-08 fill:#ff6b6b
-  style STORY-09 fill:#ff6b6b
-  style STORY-10 fill:#ff6b6b
 ```
 
-**建议**: 优先完成 STORY-05，可解除 3 个 Story 的阻塞
+**建议**: 优先完成关键路径Story
 
 ---
 
@@ -185,7 +148,7 @@ FEAT-04: ░░░░░░░░░░ 0%
 ## 📅 里程碑
 
 | 里程碑    | 目标日期 | 关联 Epic | 状态     |
-| --------- | -------- | --------- | -------- |
+| --- | --- | --- | --- |
 | {里程碑1} | {日期}   | EPIC-01   | ✅ 已达成 |
 | {里程碑2} | {日期}   | EPIC-02   | 🚧 进行中 |
 | {里程碑3} | {日期}   | EPIC-03   | ⏸️ 未开始 |
@@ -213,89 +176,45 @@ FEAT-04: ░░░░░░░░░░ 0%
 ### Story 状态分布
 
 | 状态    | 数量 | 占比 |
-| ------- | ---- | ---- |
+| --- | --- | --- |
 | done    | {N}  | {X}% |
 | pending | {N}  | {X}% |
 
 ### Epic 分布
 
 | Epic    | Stories | 已完成 | 进行中 | 待开始 |
-| ------- | ------- | ------ | ------ | ------ |
+| --- | --- | --- | --- | --- |
 | EPIC-01 | {N}     | {N}    | {N}    | {N}    |
 | EPIC-02 | {N}     | {N}    | {N}    | {N}    |
 
 ---
 
-## 📝 备注
+## 📝 备注 / 图例说明
+
+| 符号 | 含义     | 说明               |
+| --- | --- | --- |
+| ✅    | 已完成   | status:done        |
+| 🚧    | 进行中   | pending+有Task     |
+| ⏸️    | 待开始   | pending+依赖已满足 |
+| 🚨    | 被阻塞   | pending+依赖未满足 |
+| ⚠️    | 需要关注 | -                  |
 
 - 本报告基于 Frontmatter 的 `status` 字段生成
-- "进行中" Story 指当前有 Task 正在执行的 Story
-- 阻塞识别基于 `depends_on` 字段的依赖关系
-- 如需更新 Story 状态，使用 @prompts/execution/story_sync.md
-
+- "进行中" 指当前有 Task 正在执行的 Story
+- 阻塞识别基于 `depends_on` 字段
+- 更新状态使用 @prompts/execution/story_sync.md
 ```
 
 ---
 
 ## 生成逻辑
 
-### 1. 扫描所有 Story
-
-```
-
-遍历 .the_conn/epics/**/stories/*.md
-提取每个 Story 的:
-
-- id
-- status (pending/done)
-- epic
-- feature
-- depends_on
-
-```
-
-### 2. 计算统计数据
-
-```
-
-总 Story 数 = 所有 Story 文件数量
-已完成数 = status: done 的数量
-待开始数 = status: pending 且依赖已满足的数量
-进行中数 = status: pending 且当前有 Task 的数量（基于 ai_workspace 目录）
-
-```
-
-### 3. 识别阻塞
-
-```
-
-对每个 pending Story:
-  检查 depends_on 列表
-  如果有任何依赖 Story 的 status != done
-    标记为"被阻塞"
-
-```
-
-### 4. 生成进度条
-
-```
-
-Epic 进度 = (Epic 下已完成 Story 数) / (Epic 下总 Story 数) *100%
-Feature 进度 = (Feature 下已完成 Story 数) / (Feature 下总 Story 数)* 100%
-
-```
-
----
-
-## 图例说明
-
-| 符号 | 含义            |
-| ---- | --------------- |
-| ✅    | 已完成          |
-| 🚧    | 进行中          |
-| ⏸️    | 待开始          |
-| 🚨    | 被阻塞 / 风险项 |
-| ⚠️    | 警告 / 需要关注 |
+| 步骤          | 操作                                                                                                                   | 说明                                        |
+| --- | --- | --- |
+| 1. 扫描Story  | 遍历 `.the_conn/epics/**/stories/*.md`                                                                                 | 提取: id/status/epic/feature/depends_on     |
+| 2. 计算统计   | 总数=所有文件数<br/>已完成=status:done数量<br/>待开始=status:pending且依赖已满足<br/>进行中=status:pending且当前有Task | 基于ai_workspace目录判断进行中              |
+| 3. 识别阻塞   | 对每个pending Story检查depends_on                                                                                      | 任何依赖Story的status≠done → 标记为"被阻塞" |
+| 4. 生成进度条 | Epic进度=(已完成Story/总Story)×100%<br/>Feature进度同理                                                                | -                                           |
 
 ---
 

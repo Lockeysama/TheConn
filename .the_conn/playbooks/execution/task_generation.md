@@ -414,7 +414,7 @@ TASK-04 → STORY-02.1 (Bug 修复)
 ## 🔄 Task 生成执行追踪
 
 | Phase | 内容                       | 状态 | 输出 | 备注   |
-| ----- | -------------------------- | ---- | ---- | ------ |
+| --- | --- | --- | --- | --- |
 | 1     | Story 内容分析             | ⏳    | -    | 待开始 |
 | 2     | Context 文件搜索           | ⏳    | -    | 待开始 |
 | 3     | 相关代码文件识别           | ⏳    | -    | 待开始 |
@@ -623,95 +623,14 @@ Step 5: 验证（确保能代表技术特征）
 
 ## 执行检查点
 
-### ✓ 检查点 1: Story 内容分析完成
+| # | 检查点 | 已完成 | 产出 | 下一步 |
+|---| --- | --- | --- | --- |
+| **1** | Story内容分析 | 功能领域识别/技术关键词提取/依赖关系识别 | 功能领域清单/关键词列表/依赖Story列表 | Context搜索 |
+| **2** | Context搜索 | 调用context/search.md/获取Context列表/按优先级排序 | 相关Context文件列表 | 文件列表整合 |
+| **3** | 文件列表整合 | 合并Context+依赖Story/去重 | 完整Context文件列表 | 生成manifest |
+| **4** | context.manifest.json生成 | 按规范格式生成JSON | context.manifest.json | 生成task.md |
+| **5** | task.md生成 | 根据Story type选择格式/生成Task简报 | task.md | ✅完成 |
 
-**已完成**:
+---
 
-- [x] 功能领域识别
-- [x] 技术关键词提取（使用标准化流程）
-- [x] 依赖关系识别
-
-**产出**:
-
-- 功能领域清单
-- 关键词列表（4-6 个）
-- 依赖 Story 列表
-
-**下一步**: Context 文件搜索
-
-
-### ✓ 检查点 2: Context 搜索完成
-
-**已完成**:
-
-- [x] 调用 context/search.md
-- [x] 获取相关 Context 文件列表
-- [x] 按优先级排序
-
-**产出**:
-
-- Context 文件路径列表
-
-**下一步**: 文件列表整合
-
-
-### ✓ 检查点 3: 文件列表整合完成
-
-**已完成**:
-
-- [x] 整合 Global Context
-- [x] 整合 Epic Context
-- [x] 整合接口定义文件
-- [x] 整合依赖 Story 文件
-- [x] 估算上下文大小（5-8 个文件）
-
-**产出**:
-
-- 完整的 `contexts` 数组
-
-**下一步**: 生成 context.manifest.json
-
-
-### ✓ 检查点 4: context.manifest.json 生成完成
-
-**已完成**:
-
-- [x] 生成 JSON 文件
-- [x] 填写所有必填字段
-- [x] 包含完整的 contexts 数组
-
-**产出**:
-
-- `.the_conn/ai_workspace/EPIC-{序号}/TASK-{序号}_STORY-{序号}_{Name}/context.manifest.json`
-
-**下一步**: 生成 task.md
-
-
-### ✓ 检查点 5: task.md 生成完成
-
-**已完成**:
-
-- [x] 判断 Story type（e2e_test / dev / bug_fix）
-- [x] 选择对应的 Task 格式（格式 A / 格式 B）
-- [x] 填写核心目标
-- [x] 填写验收标准
-- [x] 填写开发流程（包含测试迭代）
-- [x] 填写技术实现要点
-- [x] 填写工作范围与边界
-- [x] 填写任务闭环流程
-
-**产出**:
-
-- `.the_conn/ai_workspace/EPIC-{序号}/TASK-{序号}_STORY-{序号}_{Name}/task.md`
-
-**质量检查**:
-
-- [ ] task.md 包含明确的测试执行与迭代修复流程
-- [ ] task.md 强调了"测试先行"原则
-- [ ] task.md 禁止了为通过测试而修改测试代码
-- [ ] task.md 没有包含重复信息（如上下文文件列表）
-
-**任务完成**
-
-
-现在，请根据用户提供的 Story 生成 Task 简报。
+现在，请开始生成 Task 简报。

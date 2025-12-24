@@ -7,7 +7,7 @@
 ### 初始化命令
 
 | @tc.md 命令   | Playbook 路径                     |
-| ------------- | --------------------------------- |
+| --- | --- |
 | `@tc.md init` | `@initialization/project_init.md` |
 
 ---
@@ -17,7 +17,7 @@
 #### 完整命令
 
 | @tc.md 命令                | Playbook 路径                            |
-| -------------------------- | ---------------------------------------- |
+| --- | --- |
 | `@tc.md plan review`       | `@planning/requirements_review.md`       |
 | `@tc.md plan breakdown`    | `@planning/requirements_breakdown.md`    |
 | `@tc.md plan change`       | `@planning/requirements_change.md`       |
@@ -34,7 +34,7 @@
 #### 缩写命令
 
 | @tc.md 缩写             | 原命令                  | Playbook 路径                            |
-| ----------------------- | ----------------------- | ---------------------------------------- |
+| --- | --- | --- |
 | `@tc.md plan rv`        | `@tc.md plan review`    | `@planning/requirements_review.md`       |
 | `@tc.md plan bd`        | `@tc.md plan breakdown` | `@planning/requirements_breakdown.md`    |
 | `@tc.md plan chg`       | `@tc.md plan change`    | `@planning/requirements_change.md`       |
@@ -54,7 +54,7 @@
 #### 一级快捷命令
 
 | @tc.md 快捷命令    | 等同于                  | Playbook 路径                         |
-| ------------------ | ----------------------- | ------------------------------------- |
+| --- | --- | --- |
 | `@tc.md status`    | `@tc.md plan status`    | `@planning/project_status.md`         |
 | `@tc.md next`      | `@tc.md plan next`      | `@planning/next_step_advisor.md`      |
 | `@tc.md epic-init` | `@tc.md plan epic-init` | `@planning/epic_init.md`              |
@@ -72,7 +72,7 @@
 #### 完整命令
 
 | @tc.md 命令          | Playbook 路径         |
-| -------------------- | --------------------- |
+| --- | --- |
 | `@tc.md ctx extract` | `@context/extract.md` |
 | `@tc.md ctx add`     | `@context/add.md`     |
 | `@tc.md ctx update`  | `@context/update.md`  |
@@ -81,7 +81,7 @@
 #### 缩写命令
 
 | @tc.md 缩写      | 原命令               | Playbook 路径         |
-| ---------------- | -------------------- | --------------------- |
+| --- | --- | --- |
 | `@tc.md ctx ext` | `@tc.md ctx extract` | `@context/extract.md` |
 | `@tc.md ctx e`   | `@tc.md ctx extract` | `@context/extract.md` |
 | `@tc.md ctx a`   | `@tc.md ctx add`     | `@context/add.md`     |
@@ -96,7 +96,7 @@
 #### 完整命令
 
 | @tc.md 命令           | Playbook 路径                   |
-| --------------------- | ------------------------------- |
+| --- | --- |
 | `@tc.md exec task`    | `@execution/task_generation.md` |
 | `@tc.md exec sync`    | `@execution/story_sync.md`      |
 | `@tc.md exec summary` | `@execution/change_summary.md`  |
@@ -104,7 +104,7 @@
 #### 缩写命令
 
 | @tc.md 缩写       | 原命令                | Playbook 路径                   |
-| ----------------- | --------------------- | ------------------------------- |
+| --- | --- | --- |
 | `@tc.md exec t`   | `@tc.md exec task`    | `@execution/task_generation.md` |
 | `@tc.md exec sy`  | `@tc.md exec sync`    | `@execution/story_sync.md`      |
 | `@tc.md exec sum` | `@tc.md exec summary` | `@execution/change_summary.md`  |
@@ -112,7 +112,7 @@
 #### 一级快捷命令
 
 | @tc.md 快捷命令  | 等同于                | Playbook 路径                   |
-| ---------------- | --------------------- | ------------------------------- |
+| --- | --- | --- |
 | `@tc.md task`    | `@tc.md exec task`    | `@execution/task_generation.md` |
 | `@tc.md sync`    | `@tc.md exec sync`    | `@execution/story_sync.md`      |
 | `@tc.md summary` | `@tc.md exec summary` | `@execution/change_summary.md`  |
@@ -122,7 +122,7 @@
 ### 帮助命令
 
 | @tc.md 命令   | 功能                                      |
-| ------------- | ----------------------------------------- |
+| --- | --- |
 | `@tc.md help` | 显示帮助信息（内置功能，无对应 Playbook） |
 | `@tc.md list` | 列出所有命令（内置功能，无对应 Playbook） |
 
@@ -133,7 +133,7 @@
 如果你知道 Playbook 文件，想知道对应的 @tc.md 命令：
 
 | Playbook 文件                        | 推荐命令                | 所有可用命令                                                                 |
-| ------------------------------------ | ----------------------- | ---------------------------------------------------------------------------- |
+| --- | --- | --- |
 | `initialization/project_init.md`     | `@tc.md init`           | `@tc.md init`                                                                |
 | `planning/requirements_review.md`    | `@tc.md plan review`    | `@tc.md plan review`, `@tc.md plan rv`                                       |
 | `planning/requirements_breakdown.md` | `@tc.md plan breakdown` | `@tc.md plan breakdown`, `@tc.md plan bd`                                    |
@@ -192,7 +192,7 @@
 以下是核心规则文件，不通过 @tc.md 命令直接调用，而是被 Playbook 引用：
 
 | 规则文件                      | 用途           |
-| ----------------------------- | -------------- |
+| --- | --- |
 | `rules/base_rules.md`         | 基础公约       |
 | `rules/test_strategy_rules.md`| 测试策略规范   |
 | `rules/complexity_rules.md`   | 复杂度评估规范 |

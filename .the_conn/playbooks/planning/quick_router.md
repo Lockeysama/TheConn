@@ -26,7 +26,7 @@
 ## 🔄 Quick Change 执行追踪
 
 | Step | 内容               | 状态 | 输出 | 备注   |
-| ---- | ------------------ | ---- | ---- | ------ |
+| --- | --- | --- | --- | --- |
 | 1.1  | 提取关键信息       | ⏳    | -    | 待开始 |
 | 1.2  | Context 搜索与加载 | ⏳    | -    | 待开始 |
 | 2    | 判断变更类型       | ⏳    | -    | 待开始 |
@@ -43,56 +43,19 @@
 
 ---
 
-### Step 1: 解析用户输入与 Context 加载 🆕
+### Step 1: 解析输入 + Context加载
 
-#### Step 1.1: 提取关键信息
+| Step    | 操作         | 提取内容                                                                                                                             | 规范参考                             |
+| --- | --- | --- | --- |
+| **1.1** | 提取关键信息 | • 父Story ID（STORY-XX）<br/>• 变更关键词（bug/失败/增加/优化）<br/>• 功能模块（登录/缓存/配置）<br/>• 技术关键词（API/数据库/并发） | `@rules/keyword_extraction_rules.md` |
+| **1.2** | Context搜索  | 调用 search.md<br/>输入：关键词 + task_type                                                                                          | `@playbooks/context/search.md`       |
 
-从描述中提取：
-1. **父 Story ID**（如果提到 STORY-XX）
-2. **变更类型关键词**（bug、失败、增加、优化等）
-3. **功能模块关键词**（登录、缓存、配置等）
-4. **技术关键词**（API、数据库、缓存等）
+**Quick Change特定策略**：
+- 优先功能模块名（推断归属）→ "登录" → 搜索登录Story
+- 提取问题词（判断类型）→ "崩溃" → bug_fix
+- 提取技术词（Context背景）→ "并发" → 搜索并发设计
 
-**关键词提取规范**：参考 `@rules/keyword_extraction_rules.md`
-
-**Quick Change 特定提取策略**：
-- **优先提取功能模块名**：用于推断归属关系（如"登录"→ 搜索登录相关 Story）
-- **提取问题关键词**：用于判断类型（如"崩溃"→ bug_fix）
-- **提取技术术语**：用于搜索相关 Context（如"并发"→ 搜索并发相关设计）
-
-**示例**：
-```
-输入: "STORY-03 在并发时崩溃"
-提取结果:
-- 父 Story: STORY-03
-- 变更类型: ["崩溃"] → bug_fix
-- 功能模块: ["并发"]
-- 技术关键词: ["concurrency", "thread", "async"]
-```
-
-#### Step 1.2: Context 搜索与加载
-
-调用 @playbooks/context/search.md：
-
-```json
-输入: {
-  "keywords": ["功能模块1", "技术关键词1", ...],
-  "task_type": "quick_change",
-  "epic": "EPIC-XX"  // 如果提到 STORY-XX，从 Story 获取；否则留空
-}
-
-输出: {
-  "contexts": ["路径1", "路径2", ...],
-  "total": N
-}
-```
-
-**快速浏览返回的 Context**：
-- 了解相关模块的设计意图和实现
-- 确认变更是否与原设计冲突
-- 为后续根因分析或改进方案提供背景
-
-> 💡 **Quick Change 特点**：Context 搜索通常返回空或很少，因为 Bug/Hotfix 通常只需要代码本身。如果搜索到相关 Context，说明涉及架构级问题，需要更谨慎处理。
+**Context搜索特点** 💡：通常返回少/空（Bug/Hotfix仅需代码）。如搜到相关Context → 涉及架构级问题，需谨慎。
 
 ### Step 2: 判断变更类型
 
@@ -203,126 +166,40 @@ add、improve、optimize、enhance、refactor、update、
 
 ### Step 4: 路由到具体模板
 
-根据判断结果，输出路由指令并执行：
+**统一输出格式**：
 
-#### 路由到 bug_fix_story.md
-
-**条件**: 类型判断为 bug_fix
-
-**输出格式**:
 ```markdown
 # 🔍 Quick Change 分析报告
 
 ## 用户输入
-描述: "{用户的描述}"
+"{用户描述}"
 
 ## 分析结果
-
-### 1. 关键词提取
-- 检测到: "{关键词列表}"
-
-### 2. 类型判断
-- **结论**: Bug Fix
-- **理由**: 关键词 "{具体关键词}" 表示功能不正常
-
-### 3. 归属关系
-- **父 Story**: STORY-XX ({Story 标题})
-- **Epic**: EPIC-XX
-- **Feature**: FEAT-XX
-- **新 ID**: STORY-XX.Y
-
-### 4. 路由决策
-- **目标 Playbook**: `bug_fix_story.md`
-- **需要**: 根因分析 (5-Why)
-
----
+| 项目   | 内容                                                 |
+| --- | --- |
+| 关键词 | {关键词列表}                                         |
+| 类型   | bug_fix/hotfix                                       |
+| 理由   | 关键词"{XX}"表示{功能不正常/改进}                    |
+| 归属   | 父Story: STORY-XX / Epic: EPIC-XX / Feature: FEAT-XX |
+| 新ID   | STORY-XX.Y                                           |
+| 路由   | bug_fix_story.md / hotfix_story.md                   |
 
 ## 🤔 请确认
+📝 将创建 {Bug Fix/Hotfix} Story:
+- ID: STORY-XX.Y | Type: {type}
+- 父Story/Epic/Feature: {信息}
 
-📝 将创建 Bug Fix Story:
-- ID: STORY-XX.Y
-- Type: bug_fix
-- 父 Story: STORY-XX ({Story 标题})
-- Epic: EPIC-XX / Feature: FEAT-XX
+文档包含:
+{bug_fix: 1.问题描述 2.根因分析(5-Why) 3.修复方案}
+{hotfix: 1.目标描述 2.验收标准 3.实现指导}
 
-文档将包含:
-1. 问题描述 (现象/预期/实际/影响)
-2. 根因分析 (5-Why 分析)
-3. 修复方案 (短期修复 + 长期改进)
-
-继续创建？[y/n]:
+继续？[y/n]:
 ```
 
-**如果用户确认**:
+**用户确认后**：
 ```
-→ 加载 @playbooks/planning/bug_fix_story.md
-
-传递信息:
-- 父 Story ID: STORY-XX
-- 新 Story ID: STORY-XX.Y
-- Epic: EPIC-XX
-- Feature: FEAT-XX
-- 问题描述: {从用户输入提取}
-```
-
-#### 路由到 hotfix_story.md
-
-**条件**: 类型判断为 hotfix
-
-**输出格式**:
-```markdown
-# 🔍 Quick Change 分析报告
-
-## 用户输入
-描述: "{用户的描述}"
-
-## 分析结果
-
-### 1. 关键词提取
-- 检测到: "{关键词列表}"
-
-### 2. 类型判断
-- **结论**: Hotfix (小改进/小功能)
-- **理由**: 关键词 "{具体关键词}" 表示功能改进
-
-### 3. 归属关系
-- **Story ID**: STORY-XX.Y ({如果有父 Story}) 或 STORY-XX ({独立})
-- **父 Story**: STORY-XX ({如果有})
-- **Epic**: EPIC-XX
-- **Feature**: FEAT-XX
-
-### 4. 路由决策
-- **目标 Playbook**: `hotfix_story.md`
-- **特点**: 简化流程，无需根因分析
-
----
-
-## 🤔 请确认
-
-📝 将创建 Hotfix Story:
-- ID: STORY-XX[.Y]
-- Type: hotfix
-- 父 Story: STORY-XX ({如果有})
-- Epic: EPIC-XX / Feature: FEAT-XX
-
-文档将包含:
-1. 目标描述
-2. 验收标准
-3. 实现指导 (涉及文件/依赖/边界/技术要点)
-
-继续创建？[y/n]:
-```
-
-**如果用户确认**:
-```
-→ 加载 @playbooks/planning/hotfix_story.md
-
-传递信息:
-- Story ID: STORY-XX 或 STORY-XX.Y
-- 父 Story ID: STORY-XX (如果有)
-- Epic: EPIC-XX
-- Feature: FEAT-XX
-- 目标描述: {从用户输入提取}
+→ 加载 @playbooks/planning/{bug_fix|hotfix}_story.md
+传递: 父Story/新ID/Epic/Feature/描述
 ```
 
 ---
@@ -392,27 +269,7 @@ graph TB
     AutoOption -->|修改| Edit([修改 Story])
     
     Auto --> Done([完成])
-    
-    style Start fill:#e1f5ff
-    style Done fill:#c8e6c9
-    style Cancel1 fill:#ffcdd2
-    style Cancel2 fill:#ffcdd2
-    style BugPath fill:#fff9c4
-    style HotfixPath fill:#ffe0b2
-    style Step1 fill:#f3e5f5
-    style Step2 fill:#f3e5f5
-    style Step3 fill:#f3e5f5
-    style Step4 fill:#f3e5f5
-    style Step5 fill:#f3e5f5
 ```
-
-**流程说明**：
-- 🟦 **蓝色**：开始/结束节点
-- 🟪 **紫色**：主要步骤（Step 1-5）
-- 🟨 **黄色**：类型判断结果（bug_fix）
-- 🟧 **橙色**：类型判断结果（hotfix）
-- 🟩 **绿色**：成功完成
-- 🟥 **红色**：取消/中止
 
 ---
 
@@ -536,296 +393,24 @@ graph TD
 
 ---
 
-## 示例
+## 示例速查
 
-### 示例 1: 明确的 bug
+| #     | 输入                       | Step 1-2                                               | Step 3                                                        | Step 4                                    | 输出                   |
+| --- | --- | --- | --- | --- | --- |
+| **1** | `"STORY-03 在并发时崩溃"`  | 父Story: STORY-03<br/>关键词: "崩溃"<br/>类型: bug_fix | 读取STORY-03<br/>Epic/Feat: 02/01<br/>新ID: 03.1              | 路由: bug_fix_story.md<br/>需: 5-Why分析  | 创建Bug Fix Story 03.1 |
+| **2** | `"给登录功能增加详细日志"` | 关键词: "登录","增加","日志"<br/>类型: hotfix          | 搜索"登录"→STORY-03<br/>用户确认→03.1                         | 路由: hotfix_story.md<br/>需: 改进方案    | 创建Hotfix Story 03.1  |
+| **3** | `"STORY-05 登录很慢"`      | 父Story: STORY-05<br/>关键词: "慢"(模糊)               | 读验收标准:"<200ms"<br/>当前:300ms→bug_fix                    | 路由: bug_fix_story.md<br/>需: 性能+5-Why | 创建Bug Fix Story 05.1 |
+| **4** | `"增加配置热加载功能"`     | 关键词: "增加","配置","热加载"<br/>类型: hotfix        | 搜索"配置"→无相关<br/>列Epic/Feat→选"其他"<br/>新ID: STORY-96 | 路由: hotfix_story.md<br/>需: 改进方案    | 创建独立改进 STORY-96  |
 
-**输入**: 
-```
-tc quick "STORY-03 在并发时崩溃"
-```
-
-**分析过程**:
-```
-Step 1: 解析输入
-- 父 Story: STORY-03
-- 关键词: "崩溃"
-
-Step 2: 判断类型
-- "崩溃" ∈ BUG_KEYWORDS
-- 结论: bug_fix
-
-Step 3: 归属关系
-- 读取 STORY-03
-- 提取: EPIC-02, FEAT-01
-- 新 ID: STORY-03.1
-
-Step 4: 路由
-- 目标: bug_fix_story.md
-```
-
-**输出**:
+**统一输出格式**（所有示例）：
 ```markdown
 # 🔍 Quick Change 分析报告
-
-## 用户输入
-描述: "STORY-03 在并发时崩溃"
-
+## 用户输入: "{描述}"
 ## 分析结果
-
-### 1. 关键词提取
-- 检测到: "STORY-03", "并发", "崩溃"
-
-### 2. 类型判断
-- **结论**: Bug Fix
-- **理由**: 关键词 "崩溃" 表示功能不正常
-
-### 3. 归属关系
-- **父 Story**: STORY-03 (用户登录模块)
-- **Epic**: EPIC-02 (用户管理)
-- **Feature**: FEAT-01 (认证)
-- **新 ID**: STORY-03.1
-
-### 4. 路由决策
-- **目标 Playbook**: `bug_fix_story.md`
-- **需要**: 根因分析 (5-Why)
-
----
-
+关键词→类型(理由)→归属(父Story/Epic/Feature)→路由(playbook)
 ## 🤔 请确认
-
-📝 将创建 Bug Fix Story:
-- ID: STORY-03.1
-- Type: bug_fix
-- 父 Story: STORY-03 (用户登录模块)
-- Epic: EPIC-02 / Feature: FEAT-01
-
-继续创建？[y/n]:
-```
-
-### 示例 2: 明确的改进
-
-**输入**: 
-```
-tc quick "给登录功能增加详细日志"
-```
-
-**分析过程**:
-```
-Step 1: 解析输入
-- 父 Story: 未明确提到
-- 关键词: "登录", "增加", "日志"
-
-Step 2: 判断类型
-- "增加" ∈ HOTFIX_KEYWORDS
-- 结论: hotfix
-
-Step 3: 归属关系
-- 提取功能关键词: "登录"
-- 搜索相关 Story: 找到 STORY-03 (用户登录, status: done)
-- 询问用户: "是否关联到 STORY-03？"
-- 用户确认: y
-- 新 ID: STORY-03.1
-```
-
-**输出**:
-```markdown
-# 🔍 Quick Change 分析报告
-
-## 用户输入
-描述: "给登录功能增加详细日志"
-
-## 分析结果
-
-### 1. 关键词提取
-- 检测到: "登录", "增加", "日志"
-
-### 2. 类型判断
-- **结论**: Hotfix (小改进/小功能)
-- **理由**: 关键词 "增加" 表示功能改进
-
-### 3. 归属关系
-
-🔎 搜索 "登录" 相关 Story...
-✅ 找到: STORY-03 (用户登录模块, status: done)
-
-🤔 这个改进是否属于 STORY-03？
-[y] 是，这是 STORY-03 的改进
-[n] 否，这是独立的功能
-
-请选择 [y]: y
-
-- **Story ID**: STORY-03.1
-- **父 Story**: STORY-03
-- **Epic**: EPIC-02
-- **Feature**: FEAT-01
-
-### 4. 路由决策
-- **目标 Playbook**: `hotfix_story.md`
-- **特点**: 简化流程，无需根因分析
-
----
-
-## 🤔 请确认
-
-📝 将创建 Hotfix Story:
-- ID: STORY-03.1
-- Type: hotfix
-- 父 Story: STORY-03 (用户登录模块)
-- Epic: EPIC-02 / Feature: FEAT-01
-
-继续创建？[y/n]:
-```
-
-### 示例 3: 模糊情况
-
-**输入**: 
-```
-tc quick "STORY-03 登录响应很慢"
-```
-
-**分析过程**:
-```
-Step 1: 解析输入
-- 父 Story: STORY-03
-- 关键词: "慢"
-
-Step 2: 判断类型
-- "慢" ∈ AMBIGUOUS_KEYWORDS
-- 读取 STORY-03 验收标准
-- 发现: "响应时间 < 200ms"
-- 询问用户: "当前响应时间是否 > 200ms？"
-```
-
-**输出**:
-```markdown
-# 🔍 Quick Change 分析报告
-
-## 用户输入
-描述: "STORY-03 登录响应很慢"
-
-## 分析结果
-
-### 1. 关键词提取
-- 检测到: "STORY-03", "登录", "慢"
-
-### 2. 类型判断
-⚠️  类型不明确 (关键词: "慢" - 性能问题)
-
-📋 读取 STORY-03 的验收标准...
-   发现: "响应时间 < 200ms"
-
-🤔 请选择问题类型:
-
-[1] Bug: 当前响应时间 > 200ms (不符合验收标准)
-    → 使用 bug_fix 模板（需要根因分析）
-
-[2] 优化: 当前响应时间符合标准（< 200ms），但希望更快
-    → 使用 hotfix 模板（性能优化）
-
-请选择 [1]: 1
-
-- **结论**: Bug Fix
-- **理由**: 不符合原验收标准
-
-### 3. 归属关系
-- **父 Story**: STORY-03 (用户登录模块)
-- **Epic**: EPIC-02
-- **Feature**: FEAT-01
-- **新 ID**: STORY-03.1
-
-### 4. 路由决策
-- **目标 Playbook**: `bug_fix_story.md`
-- **需要**: 性能分析和根因
-
----
-
-## 🤔 请确认
-
-📝 将创建 Bug Fix Story:
-- ID: STORY-03.1
-- Type: bug_fix
-- 父 Story: STORY-03 (用户登录模块)
-- Epic: EPIC-02 / Feature: FEAT-01
-
-继续创建？[y/n]:
-```
-
-### 示例 4: 独立改进
-
-**输入**: 
-```
-tc quick "增加全局请求日志中间件"
-```
-
-**分析过程**:
-```
-Step 1: 解析输入
-- 父 Story: 无
-- 关键词: "增加", "全局", "日志", "中间件"
-
-Step 2: 判断类型
-- "增加" ∈ HOTFIX_KEYWORDS
-- 结论: hotfix
-
-Step 3: 归属关系
-- 搜索 "日志" 或 "中间件": 未找到明确相关的 done Story
-- 使用智能推断:
-  - 检查 git diff: 无
-  - 检查最近 commit: 最近活跃的是 EPIC-03
-  - 列出选择
-```
-
-**输出**:
-```markdown
-# 🔍 Quick Change 分析报告
-
-## 用户输入
-描述: "增加全局请求日志中间件"
-
-## 分析结果
-
-### 1. 关键词提取
-- 检测到: "增加", "全局", "日志", "中间件"
-
-### 2. 类型判断
-- **结论**: Hotfix (小改进/小功能)
-- **理由**: 关键词 "增加" 表示新功能
-
-### 3. 归属关系
-
-🔍 搜索相关 Story...
-⚠️  未找到明确的父 Story
-
-🔍 智能推断 Epic/Feature...
-
-📊 最近活跃的 Epic/Feature:
-1. EPIC-03 / FEAT-02 (日志管理) - 最后活动: 2 小时前
-2. EPIC-02 / FEAT-01 (用户认证) - 最后活动: 1 天前
-3. EPIC-01 / FEAT-03 (基础架构) - 最后活动: 3 天前
-
-🤔 请选择所属 Epic/Feature [1]: 1
-
-- **Story ID**: STORY-04 (新的独立 Story)
-- **父 Story**: 无
-- **Epic**: EPIC-03
-- **Feature**: FEAT-02
-
-### 4. 路由决策
-- **目标 Playbook**: `hotfix_story.md`
-- **特点**: 独立的小功能
-
----
-
-## 🤔 请确认
-
-📝 将创建 Hotfix Story:
-- ID: STORY-04
-- Type: hotfix
-- 父 Story: 无 (独立 Story)
-- Epic: EPIC-03 / Feature: FEAT-02
-
-继续创建？[y/n]:
+📝 创建{类型} Story: ID/父Story/Epic/Feature
+继续？[y/n]:
 ```
 
 ---
@@ -933,7 +518,7 @@ Quick Change 通常只涉及 1 个 Story，用户期望快速完成。因此在 
 **当前工作流**: quick_router → 任务生成与执行
 
 | Step | Playbook        | 状态 | 输出                  | 备注             |
-| ---- | --------------- | ---- | --------------------- | ---------------- |
+| --- | --- | --- | --- | --- |
 | 1    | task_generation | 🔄    | 正在生成 Task 简报... | -                |
 | 2    | task_execution  | ⏳    | 等待 Step 1 完成      | 包含后续闭环流程 |
 
