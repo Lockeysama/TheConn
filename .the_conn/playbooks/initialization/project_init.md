@@ -79,7 +79,7 @@ project_root/
 
 #### 必需文档
 
-**Architecture.md** - 系统架构
+**1. Architecture.md** - 系统架构
 
 ```yaml
 ---
@@ -88,36 +88,28 @@ scope: global
 title: 系统架构
 created: {yyyy-mm-dd}
 updated: {yyyy-mm-dd}
-tags:
-  - architecture
+tags: [architecture]
 ---
 
 # 系统架构
 
 ## 1. 概述与目标
-
-{项目的核心目标和适用场景}
+{项目核心目标和适用场景}
 
 ## 2. 核心设计原则
-
 - {原则1}
-- {原则2}
 
 ## 3. 系统架构
-
 {架构图或组件说明}
 
 ## 4. 主要模块职责
-
 - **{模块1}**: {职责}
-- **{模块2}**: {职责}
 
 ## 5. 技术栈
-
 - **{类别}**: {技术选型}
 ```
 
-**Tech_Stack.md** - 技术栈
+**2. Tech_Stack.md** - 技术栈
 
 ```yaml
 ---
@@ -126,38 +118,31 @@ scope: global
 title: 技术栈
 created: {yyyy-mm-dd}
 updated: {yyyy-mm-dd}
-tags:
-  - tech-stack
+tags: [tech-stack]
 ---
 
 # 技术栈
 
 ## 编程语言
-
 - **主语言**: {语言} ({版本})
-- **其他**: {列表}
 
 ## 核心框架/库
-
 | 类别   | 技术     | 版本   | 用途       |
-| ------ | -------- | ------ | ---------- |
+| --- | --- | --- | --- |
 | {类别} | {技术名} | {版本} | {用途说明} |
 
 ## 开发工具
-
 - **构建工具**: {工具}
 - **包管理**: {工具}
 - **测试框架**: {框架}
 - **BDD 工具**: {工具}
 
 ## 部署环境
-
 - **运行环境**: {环境}
 - **容器**: {Docker/其他}
-- **CI/CD**: {工具}
 ```
 
-**Coding_Standard_{Language}.md** - 编码规范
+**3. Coding_Standard_{Language}.md** - 编码规范
 
 ```yaml
 ---
@@ -166,39 +151,26 @@ scope: global
 title: {语言} 编码规范
 created: {yyyy-mm-dd}
 updated: {yyyy-mm-dd}
-tags:
-  - coding-standard
-  - {language}
+tags: [coding-standard, {language}]
 ---
 
 # {语言} 编码规范
 
 ## 1. 代码风格
-
 - **命名约定**: {说明}
 - **缩进**: {空格/Tab}
-- **行宽**: {字符数}
 
 ## 2. 最佳实践
-
 - {实践1}
-- {实践2}
 
 ## 3. 禁止事项
-
 - {禁止1}
-- {禁止2}
 
 ## 4. 代码组织
-
 - {组织规则}
-
-## 5. 参考资料
-
-- {链接或文档}
 ```
 
-**Testing_Strategy.md** - 测试策略
+**4. Testing_Strategy.md** - 测试策略
 
 ```yaml
 ---
@@ -207,43 +179,43 @@ scope: global
 title: 测试策略
 created: {yyyy-mm-dd}
 updated: {yyyy-mm-dd}
-tags:
-  - testing
+tags: [testing]
 ---
 
 # 测试策略
 
 ## 1. 测试理念
-
 本项目采用**单元测试 + E2E 测试**分层策略。
 
 ## 2. 测试工具
-
 | 测试类型 | 工具   | 用途       |
-| -------- | ------ | ---------- |
+| --- | --- | --- |
 | 单元测试 | {框架} | 函数/类    |
 | E2E 测试 | {工具} | 端到端场景 |
 
 ## 3. BDD 配置
-
 - **关键字**: 统一使用英文 (Given/When/Then)
 - **描述语言**: {中文/英文}
 - **Feature 文件位置**: `tests/bdd/features/`
 - **Step Definitions 位置**: `tests/bdd/`
 
 ## 4. 测试覆盖率目标
-
 - 单元测试: ≥ {百分比}%
 - E2E 场景: 核心流程 100%
 
 ## 5. 参考规范
-
 详细的测试策略规范请参考 The Conn 框架文档：
 - Story 类型与测试策略: `@rules/test_strategy_rules.md`
 - BDD 语言配置规范: `@rules/bdd_language_rules.md`
 
 使用 The Conn 框架进行开发时，AI 会自动遵循这些规范。
 ```
+
+**重要原则**:
+- ✅ 根据项目实际情况填充内容，不使用占位符
+- ✅ 生成的是**项目级配置**，不是框架规范的副本
+- ✅ 在文档中引用框架规范文件（如Testing_Strategy.md引用@rules/），而不是复制内容
+- ✅ 允许项目根据实际情况自定义配置
 
 ### 3. 生成 .gitignore
 

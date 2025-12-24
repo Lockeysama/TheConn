@@ -33,13 +33,13 @@
 ### ID 命名规则
 
 | 类型  | 格式           | 示例       | 说明        |
-| ----- | -------------- | ---------- | ----------- |
+| --- | --- | --- | --- |
 | Story | `STORY-{序号}` | `STORY-01` | Epic 内唯一 |
 
 ### 文件命名规则
 
 | 类型       | 格式                               | 示例                           |
-| ---------- | ---------------------------------- | ------------------------------ |
+| --- | --- | --- |
 | Story 文件 | `STORY-{序号}_{PascalCaseName}.md` | `STORY-01_Create_Structure.md` |
 
 **PascalCase 规则**：每个单词首字母大写，无分隔符
@@ -184,21 +184,15 @@ function processData(input):
 
 **所有字段均为必填！**
 
-| 字段         | 类型   | 说明                 | 示例                 |
-| ------------ | ------ | -------------------- | -------------------- |
-| `id`         | string | Story ID             | `STORY-01`           |
-| `type`       | enum   | 固定为 `dev`         | `dev`                |
-| `epic`       | string | 所属 Epic ID         | `EPIC-01`            |
-| `feature`    | string | 所属 Feature ID      | `FEAT-01`            |
-| `status`     | enum   | 状态                 | `pending` 或 `done`  |
-| `created`    | date   | 创建日期             | `2025-12-16`         |
-| `depends_on` | array  | 依赖的 Story ID 列表 | `[]` 或 `[STORY-01]` |
-
-**字段约束**:
-
-- `type`: 只能是 `dev`（开发 Story）
-- `status`: 只能是 `pending` 或 `done`
-- `created`: 格式必须是 `yyyy-mm-dd`
+| 字段         | 类型   | 说明             | 示例                  | 约束                      |
+| --- | --- | --- | --- | --- |
+| `id`         | string | Story ID         | `STORY-01`            | -                         |
+| `type`       | enum   | 固定为dev        | `dev`                 | **只能**是`dev`           |
+| `epic`       | string | 所属Epic ID      | `EPIC-01`             | -                         |
+| `feature`    | string | 所属Feature ID   | `FEAT-01`             | -                         |
+| `status`     | enum   | 状态             | `pending`/`done`      | **只能**是这两个值        |
+| `created`    | date   | 创建日期         | `2025-12-16`          | 格式**必须**`yyyy-mm-dd`  |
+| `depends_on` | array  | 依赖Story ID列表 | `[]`或`[STORY-01]`    | -                         |
 - `depends_on`: 如无依赖，必须写 `[]`
 
 ---
@@ -257,9 +251,7 @@ function processData(input):
 
 ---
 
-## 示例
-
-### 示例 1: 功能开发 Story
+## 示例（功能开发Story）
 
 ```markdown
 ---
@@ -272,203 +264,56 @@ created: 2025-12-16
 depends_on: []
 ---
 
-# Story: 用户注册模块
+# Story: 用户注册功能
 
 ## 1. 目标
-
-提供用户注册功能，允许新用户通过邮箱创建账号，确保账号安全性和数据有效性。
+为系统增加用户注册功能，允许新用户通过邮箱创建账号，提升用户增长和访问便利性。
 
 ## 2. 验收标准（功能清单）
-
-完成以下功能要求：
-
-- [ ] 用户可以使用邮箱和密码注册账号
-- [ ] 密码强度必须符合安全策略（至少8位，包含大小写字母和数字）
-- [ ] 邮箱地址格式必须有效
-- [ ] 同一邮箱不能重复注册
-- [ ] 注册成功后自动发送验证邮件
-- [ ] 注册失败时显示明确的错误提示
+- [ ] 用户可通过邮箱注册账号
+- [ ] 密码强度符合安全策略（≥8位,含大小写+数字+特殊字符）
+- [ ] 邮箱地址验证（格式+唯一性）
+- [ ] 注册成功后发送欢迎邮件
 - [ ] 单元测试覆盖率 ≥ 80%
-- [ ] 所有测试通过，代码通过 linter 检查
+- [ ] 所有测试通过+代码通过linter检查
 
-**验证方式**：
-- 运行单元测试套件
-- 手动测试各种注册场景（正常、异常）
-- Code Review 确认安全策略实现
+**验证方式**: 单元测试+手动验证+Code Review
 
 ## 3. 实现指导
+**复杂度**: 4.5分（标准业务逻辑+邮件集成）
 
 **涉及文件**:
-- `src/auth/register.py` - 注册逻辑实现
-- `src/auth/validators.py` - 邮箱和密码验证
-- `src/auth/email_service.py` - 邮件发送服务
+- `src/auth/register.py` - 注册逻辑
+- `src/utils/email.py` - 邮件发送
 - `tests/test_register.py` - 单元测试
 
 **关键逻辑**:
-- 使用 bcrypt 对密码进行加密存储
-- 使用正则表达式验证邮箱格式
-- 使用异步任务发送验证邮件（避免阻塞）
-- 实现幂等性：重复注册返回友好提示
+- 邮箱格式验证（正则）+唯一性检查（数据库查询）
+- 密码强度校验（8位+大小写+数字+特殊字符）
+- 密码加密存储（bcrypt哈希）
 
-**边界**:
-- 禁止修改: 现有的 User 数据模型
-- 接口约束: 必须实现 `IAuthService` 接口
+**依赖**: SMTP服务配置（环境变量）
 
-**技术要点**:
-- 密码加密：使用 bcrypt，cost factor = 12
-- 并发处理：邮箱唯一性使用数据库唯一索引
-- 错误处理：捕获所有异常，返回统一错误格式
+**边界**: 禁止修改现有登录模块
 
-**伪代码示例**:
-
+**伪代码**（关键流程）:
 ```python
-# 注册核心流程
-def register_user(email, password):
-    # 1. 验证输入
-    if not validate_email(email):
-        return error("Invalid email format")
-    if not validate_password_strength(password):
-        return error("Password too weak")
+def register(email, password):
+    # 1. 验证
+    if not validate_email(email): return error("邮箱格式错误")
+    if email_exists(email): return error("邮箱已注册")
+    if not validate_password_strength(password): return error("密码强度不足")
     
-    # 2. 检查重复
-    if user_exists(email):
-        return error("Email already registered")
+    # 2. 创建用户
+    hashed_pwd = bcrypt.hash(password)
+    user = create_user(email, hashed_pwd)
     
-    # 3. 加密密码
-    hashed_password = bcrypt.hash(password, cost=12)
-    
-    # 4. 创建用户
-    user = create_user(email, hashed_password)
-    
-    # 5. 异步发送邮件
-    send_verification_email.async(user.email)
-    
+    # 3. 发送欢迎邮件
+    send_welcome_email(user.email)
     return success(user)
 ```
 ```
 
-### 示例 2: 技术实现 Story
-
-```markdown
----
-id: STORY-02
-type: dev
-epic: EPIC-01
-feature: FEAT-02
-status: pending
-created: 2025-12-16
-depends_on: [STORY-01]
 ---
 
-# Story: 缓存层实现
-
-## 1. 目标
-
-实现 Redis 缓存层，提升数据读取性能，减少数据库查询压力。
-
-## 2. 验收标准（功能清单）
-
-完成以下技术要求：
-
-- [ ] 实现统一的缓存接口（get/set/delete/clear）
-- [ ] 支持 TTL（过期时间）配置
-- [ ] 实现缓存预热机制
-- [ ] 实现缓存失效时的降级策略（回源数据库）
-- [ ] 添加缓存命中率监控
-- [ ] 单元测试覆盖率 ≥ 85%
-- [ ] 性能测试：缓存命中响应时间 < 10ms
-- [ ] 代码通过 linter 检查
-
-**验证方式**：
-- 运行单元测试
-- 运行性能测试验证响应时间
-- 集成测试验证缓存和数据库一致性
-
-## 3. 实现指导
-
-**涉及文件**:
-- `src/cache/redis_cache.py` - Redis 缓存实现
-- `src/cache/cache_interface.py` - 缓存接口定义
-- `src/config/cache_config.py` - 缓存配置
-- `tests/test_cache.py` - 单元测试
-
-**关键逻辑**:
-- 使用 redis-py 客户端连接 Redis
-- 实现连接池避免频繁建立连接
-- 序列化使用 JSON（兼容性）或 MessagePack（性能）
-- 降级策略：缓存失败自动回源数据库
-
-**边界**:
-- 禁止修改: 数据库访问层接口
-- 接口约束: 必须实现 `ICacheService` 接口
-
-**技术要点**:
-- 连接池配置：max_connections = 50
-- 过期策略：默认 TTL = 3600s（可配置）
-- 错误处理：Redis 不可用时自动降级，不影响业务
-- 监控：记录缓存命中率、错误率到日志
-
-**伪代码示例**:
-
-```python
-# 缓存层核心逻辑
-class RedisCache:
-    def get(self, key):
-        try:
-            # 尝试从 Redis 获取
-            value = self.redis_client.get(key)
-            if value:
-                self.metrics.record_hit()
-                return deserialize(value)
-            
-            self.metrics.record_miss()
-            return None
-        
-        except RedisError as e:
-            # 降级策略：Redis 失败时返回 None
-            self.logger.error(f"Redis error: {e}")
-            self.metrics.record_error()
-            return None
-    
-    def set(self, key, value, ttl=3600):
-        try:
-            serialized = serialize(value)
-            self.redis_client.setex(key, ttl, serialized)
-        except RedisError as e:
-            # 降级策略：写入失败不影响业务
-            self.logger.error(f"Redis error: {e}")
-            self.metrics.record_error()
-```
-```
-
----
-
-## 注意事项
-
-### 关于测试
-
-**本 Playbook 生成的 Story 使用单元测试验证**：
-
-- ✅ 每个 Story 应该规划单元测试
-- ✅ 在功能清单中明确测试覆盖率要求
-- ❌ 不使用 BDD 场景（BDD 用于 E2E Story）
-
-### 关于 E2E 测试
-
-如果需要生成 E2E Story（Feature 级或 Epic 级集成测试），请使用：
-
-```
-@playbooks/planning/e2e_story.md
-```
-
-### 关于 Bug 修复
-
-如果需要生成 Bug Fix Story，请使用：
-
-```
-@playbooks/planning/bug_fix_story.md
-```
-
----
-
-现在，请根据用户提供的材料生成 Story。
+现在，请根据用户提供的需求生成普通 Story。

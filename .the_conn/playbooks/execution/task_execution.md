@@ -88,7 +88,7 @@
 ## 执行检查点追踪
 
 | Step   | 内容              | 状态 | 输出                           | 备注                       |
-| ------ | ----------------- | ---- | ------------------------------ | -------------------------- |
+| --- | --- | --- | --- | --- |
 | Step 1 | 加载 Task 上下文  | ✅    | task.md, context.manifest.json | 已加载 3 个 Context        |
 | Step 2 | 创建测试文件      | ✅    | tests/unit/test_init.py        | 测试文件已创建             |
 | Step 3 | 编写测试用例      | ✅    | 5 个测试用例                   | 基于验收标准               |
@@ -180,242 +180,19 @@ Step 失败
 
 ---
 
-### 典型失败案例参考 📚
+### 典型失败案例速查 📚
 
-**以下是常见失败场景及处理示例，帮助 AI 快速识别和处理问题**：
+| # | 场景 | 失败类型 | 关键处理 | 可否改测试 |
+|---| --- | --- | --- | --- |
+| **1** | 业务逻辑错误<br/>测试:`assert result==80.0`<br/>实际:`90.0` | 测试失败 | 1.检查测试逻辑(正确)<br/>2.分析业务代码<br/>3.修改`order.py`折扣公式 | ❌不可<br/>✅修改业务代码 |
+| **2** | 测试编写错误<br/>`user.full_name`不存在<br/>Story要求分开存储 | 测试失败 | 1.检查业务代码(符合Story)<br/>2.查阅验收标准(分开存储)<br/>3.修改测试用例 | ✅可以<br/>测试与验收标准不符 |
+| **3** | 依赖缺失<br/>`ModuleNotFoundError: No module named 'requests'` | 环境问题 | 1.安装依赖<br/>2.更新`requirements.txt`<br/>3.重新运行测试 | N/A |
+| **4** | 语法错误<br/>`SyntaxError: invalid syntax` | 代码错误 | 1.定位语法错误行<br/>2.修正语法<br/>3.重新运行测试 | N/A |
+| **5** | 边界条件遗漏<br/>空列表未处理 | 测试失败 | 1.补充边界测试用例<br/>2.修改业务代码处理边界<br/>3.重新运行测试 | ✅可以<br/>补充遗漏的测试 |
 
-#### 案例 1: 测试失败 - 业务逻辑错误
-
-**场景**：单元测试失败，预期结果与实际结果不符
-
-```markdown
-❌ Step 6 执行失败（测试 Green）
-
-**失败 Step**: 运行测试（Green）
-**失败原因**: 测试 `test_calculate_discount` 失败
-**失败类型**: 测试失败
-
-**错误信息**：
-```
-AssertionError: Expected 80.0, got 90.0
-  File "tests/test_order.py", line 23
-    assert result == 80.0
-```
-
-**已尝试修复**：
-1. 尝试 1: 检查测试用例，发现测试逻辑正确 → ❌ 问题在业务代码
-2. 尝试 2: 分析业务逻辑，发现折扣计算公式错误 → ✅ 修改 `order.py` 第 45 行
-3. 尝试 3: 重新运行测试 → ✅ 测试通过
-
-**修复方式**：
-- 修改文件: `src/order.py` 第 45 行
-- 原代码: `discounted_price = price * (1 - discount)`
-- 修正为: `discounted_price = price * (1 - discount / 100)`
-
-**当前状态**：✅ 已解决
-```
-
-**关键教训**：
-- ✅ **正确做法**：分析测试预期，检查业务逻辑，修改业务代码
-- ❌ **错误做法**：修改测试用例以"通过"测试
-
----
-
-#### 案例 2: 测试失败 - 测试用例本身有误
-
-**场景**：测试用例编写错误，需要修改测试
-
-```markdown
-❌ Step 6 执行失败（测试 Green）
-
-**失败 Step**: 运行测试（Green）
-**失败原因**: 测试 `test_user_login` 失败
-**失败类型**: 测试失败
-
-**错误信息**：
-```
-AttributeError: 'User' object has no attribute 'full_name'
-```
-
-**已尝试修复**：
-1. 尝试 1: 检查业务代码 `User` 类，确认只有 `first_name` 和 `last_name` 属性
-2. 尝试 2: 查阅 Story 验收标准，确认应该分别存储 `first_name` 和 `last_name`，不应有 `full_name`
-3. 尝试 3: 确认是测试用例编写错误 → ✅ 修改测试用例
-
-**修复方式**：
-- 修改文件: `tests/test_user.py` 第 18 行
-- 原测试: `assert user.full_name == "John Doe"`
-- 修正为: `assert f"{user.first_name} {user.last_name}" == "John Doe"`
-
-**当前状态**：✅ 已解决
-
-**⚠️ 重要说明**：
-本例中修改测试是**正确的**，因为：
-- 测试用例与 Story 验收标准不一致
-- 业务代码的实现符合验收标准
-- 测试用例编写时对需求理解有误
-```
-
-**关键教训**：
-- ✅ **何时可以修改测试**：测试用例与验收标准不一致时
-- ❌ **何时不能修改测试**：为了让错误的业务代码"通过"测试时
-
----
-
-#### 案例 3: 环境问题 - 依赖缺失
-
-**场景**：缺少必要的第三方库或工具
-
-```markdown
-❌ Step 6 执行失败（测试 Green）
-
-**失败 Step**: 运行测试（Green）
-**失败原因**: 导入模块失败
-**失败类型**: 环境问题
-
-**错误信息**：
-```
-ModuleNotFoundError: No module named 'pytest_bdd'
-```
-
-**已尝试修复**：
-1. 尝试 1: 检查 `requirements.txt`，发现缺少 `pytest-bdd` 依赖
-2. 尝试 2: 暂停执行，报告环境问题
-
-**需要用户帮助**：
-请安装缺失的依赖：
-```bash
-pip install pytest-bdd
-```
-
-或将以下行添加到 `requirements.txt`：
-```
-pytest-bdd==6.1.1
-```
-
-**当前状态**：⏸️ 等待用户解决环境问题
-```
-
-**关键教训**：
-- ✅ **正确做法**：识别环境问题，暂停执行，请求用户帮助
-- ❌ **错误做法**：尝试自动安装依赖（违反 base_rules.md 禁止事项）
-
----
-
-#### 案例 4: 代码错误 - 语法错误
-
-**场景**：代码编写时出现语法错误
-
-```markdown
-❌ Step 5 执行失败（实现业务代码）
-
-**失败 Step**: 实现业务代码
-**失败原因**: Python 语法错误
-**失败类型**: 代码错误
-
-**错误信息**：
-```
-SyntaxError: invalid syntax
-  File "src/auth.py", line 15
-    if user is None
-                   ^
-```
-
-**已尝试修复**：
-1. 尝试 1: 检查第 15 行，发现缺少冒号 → ✅ 添加冒号
-2. 尝试 2: 重新运行测试 → ✅ 语法错误已解决
-
-**修复方式**：
-- 修改文件: `src/auth.py` 第 15 行
-- 原代码: `if user is None`
-- 修正为: `if user is None:`
-
-**当前状态**：✅ 已解决
-```
-
-**关键教训**：
-- ✅ **正确做法**：快速识别语法错误，修正后重试
-- ⚠️ **注意**：语法错误通常可在 1 次尝试内解决，不应重复犯错
-
----
-
-#### 案例 5: 测试失败 - 边界条件遗漏
-
-**场景**：测试覆盖了边界条件，但业务代码未处理
-
-```markdown
-❌ Step 6 执行失败（测试 Green）
-
-**失败 Step**: 运行测试（Green）
-**失败原因**: 测试 `test_divide_by_zero` 失败
-**失败类型**: 测试失败（边界条件）
-
-**错误信息**：
-```
-ZeroDivisionError: division by zero
-  File "src/calculator.py", line 23
-    return a / b
-```
-
-**已尝试修复**：
-1. 尝试 1: 检查测试用例，确认测试了 `divide(10, 0)` 的场景
-2. 尝试 2: 查阅 Story 验收标准，确认应该处理除零错误
-3. 尝试 3: 在业务代码中添加边界条件检查 → ✅ 修复
-
-**修复方式**：
-- 修改文件: `src/calculator.py` 第 23 行
-- 原代码:
-  ```python
-  def divide(a, b):
-      return a / b
-  ```
-- 修正为:
-  ```python
-  def divide(a, b):
-      if b == 0:
-          raise ValueError("除数不能为零")
-      return a / b
-  ```
-
-**当前状态**：✅ 已解决
-```
-
-**关键教训**：
-- ✅ **正确做法**：补充边界条件检查，完善业务逻辑
-- ⚠️ **注意**：边界条件通常在测试阶段发现，这是 TDD 的价值
-
----
-
-#### 失败处理决策树 🌲
-
-```mermaid
-graph TD
-    Start[测试失败] --> CheckType{错误类型?}
-    
-    CheckType -->|ModuleNotFoundError<br/>ImportError| Env[环境问题]
-    CheckType -->|SyntaxError<br/>IndentationError| Syntax[语法错误]
-    CheckType -->|AssertionError<br/>预期不符| Logic[逻辑问题]
-    
-    Env --> Report[暂停执行<br/>报告用户]
-    
-    Syntax --> QuickFix[快速修复<br/>重新运行]
-    
-    Logic --> Analyze{分析原因}
-    Analyze -->|业务逻辑错误| FixCode[修改业务代码]
-    Analyze -->|测试用例错误| CheckStory{对比验收标准}
-    
-    CheckStory -->|测试与标准不符| FixTest[修改测试用例]
-    CheckStory -->|测试符合标准| FixCode
-    
-    FixCode --> Retry[重新运行测试]
-    FixTest --> Retry
-    QuickFix --> Retry
-    
-    Retry --> Success{是否通过?}
-    Success -->|是| Done[✅ 继续下一步]
-    Success -->|否 且 < 3 次| Analyze
-    Success -->|否 且 = 3 次| Report
-```
+**关键原则**：
+- ✅ **修改测试条件**：测试与验收标准不符 | 测试用例遗漏边界情况
+- ❌ **禁止修改测试**：为了让错误的业务代码"通过"测试
 
 ---
 
@@ -538,7 +315,7 @@ graph TD
 **当前工作流**: task_execution → 任务闭环
 
 | Step | Playbook       | 状态 | 输出 | 备注             |
-| ---- | -------------- | ---- | ---- | ---------------- |
+| --- | --- | --- | --- | --- |
 | 1    | change_summary | ⏳    | -    | 等待用户确认     |
 | 2    | story_sync     | ⏳    | -    | 等待 Step 1 完成 |
 

@@ -13,18 +13,30 @@
 
 ## 1. 语言决策规则
 
-BDD Feature 文件的编写遵循以下原则：
+### 核心原则
 
-1.  **关键字 (Keywords) 统一使用英文**：
-    -   无论项目使用何种编程语言或自然语言，Gherkin 关键字（如 `Feature`, `Scenario`, `Given`, `When`, `Then`, `And`, `But`, `Background`, `Examples`, `Scenario Outline` 等）一律使用英文。
-    -   **原因**：保持跨框架的兼容性，减少环境配置复杂度，且所有 BDD 框架原生均支持英文关键字。
+| 内容类型 | 语言规则 | 原因 |
+| --- | --- | --- |
+| **Keywords** | 强制英文 | 跨框架兼容，所有BDD工具原生支持 |
+| **Descriptions** | 项目交互语言 | 团队自然理解，利益相关者可读 |
 
-2.  **描述 (Descriptions) 使用项目交互语言**：
-    -   功能名称、场景描述、步骤详情等内容，应使用项目交互的自然语言。
-    -   **判断逻辑**：
-        1. **优先遵循指定**：检查 `Testing_Strategy.md` 或全局 Context 中是否有明确定义的语言设置。
-        2. **上下文推断**：如果无明确指定，AI 应根据用户当前对话使用的自然语言（如中文或英文）进行自动适配。
-    -   **原因**：确保团队成员和利益相关者（Stakeholders）能够以最自然的方式理解业务逻辑和验收标准。
+### 描述语言决策流程
+
+```mermaid
+graph TD
+    Start[编写BDD Feature] --> Check{检查语言指定}
+    Check -->|Testing_Strategy.md<br/>有明确设置| Use1[使用指定语言]
+    Check -->|Context 有定义| Use1
+    Check -->|无明确设置| Infer[根据用户对话语言]
+    Infer -->|中文对话| Use2[使用中文描述]
+    Infer -->|英文对话| Use3[使用英文描述]
+    
+    Use1 --> Write[编写 Feature<br/>Keywords: 英文<br/>Descriptions: 确定语言]
+    Use2 --> Write
+    Use3 --> Write
+```
+
+**快速决策**: 检查文档指定 → 无则推断对话语言 → Keywords英文 + Descriptions对应语言
 
 ---
 
@@ -54,13 +66,14 @@ Feature: 用户登录
 
 ---
 
-## 3. AI 工作流程
+## 3. AI 执行检查清单
 
-1.  **识别项目自然语言**：通过项目文档（如 README.md）或用户对话识别当前工程使用的交互语言。
-2.  **生成 Feature 文件**：
-    -   **强制**使用英文 Gherkin 关键字。
-    -   使用步骤 1 识别的自然语言编写所有描述性文本。
-3.  **校验**：确保生成的 `.feature` 文件格式正确，关键字未被翻译。
+| 步骤 | 检查项 | ✓ |
+| --- | --- |---|
+| 1 | 识别项目语言（文档或对话） | [ ] |
+| 2 | Keywords 使用英文 | [ ] |
+| 3 | Descriptions 使用识别的语言 | [ ] |
+| 4 | 格式正确，关键字未翻译 | [ ] |
 
 ---
 
