@@ -108,6 +108,11 @@ TASK-04 → STORY-02.1 (Bug 修复)
 - 如果 `type: dev` → 使用"格式 B: 普通 Story (单元测试)"
 - 如果 `type: bug_fix` → 使用"格式 B: 普通 Story (单元测试)"
 
+**Step 编号规范**：
+- **格式 A (E2E)**: Step 1-5（开发流程）+ Step 6-7（闭环流程）
+- **格式 B (普通/Bug Fix)**: Step 1-4（开发流程）+ Step 5-6（闭环流程）
+- **记忆规则**: E2E 多 1 个 Step（实现 Step Definitions），闭环都是最后 2 步
+
 **重要**：
 - ✅ task.md 只包含任务目标、验收标准、开发流程、技术要点、工作范围
 - ❌ 不要包含"参考资料"、"上下文文件列表"等已在 context.manifest.json 中定义的信息
@@ -414,7 +419,7 @@ TASK-04 → STORY-02.1 (Bug 修复)
 ## 🔄 Task 生成执行追踪
 
 | Phase | 内容                       | 状态 | 输出 | 备注   |
-| --- | --- | --- | --- | --- |
+| ----- | -------------------------- | ---- | ---- | ------ |
 | 1     | Story 内容分析             | ⏳    | -    | 待开始 |
 | 2     | Context 文件搜索           | ⏳    | -    | 待开始 |
 | 3     | 相关代码文件识别           | ⏳    | -    | 待开始 |
@@ -623,13 +628,13 @@ Step 5: 验证（确保能代表技术特征）
 
 ## 执行检查点
 
-| # | 检查点 | 已完成 | 产出 | 下一步 |
-|---| --- | --- | --- | --- |
-| **1** | Story内容分析 | 功能领域识别/技术关键词提取/依赖关系识别 | 功能领域清单/关键词列表/依赖Story列表 | Context搜索 |
-| **2** | Context搜索 | 调用context/search.md/获取Context列表/按优先级排序 | 相关Context文件列表 | 文件列表整合 |
-| **3** | 文件列表整合 | 合并Context+依赖Story/去重 | 完整Context文件列表 | 生成manifest |
-| **4** | context.manifest.json生成 | 按规范格式生成JSON | context.manifest.json | 生成task.md |
-| **5** | task.md生成 | 根据Story type选择格式/生成Task简报 | task.md | ✅完成 |
+| #     | 检查点                    | 已完成                                             | 产出                                  | 下一步       |
+| ----- | ------------------------- | -------------------------------------------------- | ------------------------------------- | ------------ |
+| **1** | Story内容分析             | 功能领域识别/技术关键词提取/依赖关系识别           | 功能领域清单/关键词列表/依赖Story列表 | Context搜索  |
+| **2** | Context搜索               | 调用context/search.md/获取Context列表/按优先级排序 | 相关Context文件列表                   | 文件列表整合 |
+| **3** | 文件列表整合              | 合并Context+依赖Story/去重                         | 完整Context文件列表                   | 生成manifest |
+| **4** | context.manifest.json生成 | 按规范格式生成JSON                                 | context.manifest.json                 | 生成task.md  |
+| **5** | task.md生成               | 根据Story type选择格式/生成Task简报                | task.md                               | ✅完成        |
 
 ---
 
