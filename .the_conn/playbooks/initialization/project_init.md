@@ -56,14 +56,10 @@
 ```
 project_root/
 ├── .the_conn/
-│   ├── docs/                # 用户文档
-│   │   ├── README.md
-│   │   └── GUIDE.md
 │   ├── epics/
 │   ├── context/
 │   │   ├── global/
 │   │   └── epics/
-│   ├── playbooks/           # 已存在，不需要创建
 │   └── ai_workspace/
 │
 ├── src/
@@ -128,7 +124,7 @@ tags: [tech-stack]
 
 ## 核心框架/库
 | 类别   | 技术     | 版本   | 用途       |
-| --- | --- | --- | --- |
+| ------ | -------- | ------ | ---------- |
 | {类别} | {技术名} | {版本} | {用途说明} |
 
 ## 开发工具
@@ -189,7 +185,7 @@ tags: [testing]
 
 ## 2. 测试工具
 | 测试类型 | 工具   | 用途       |
-| --- | --- | --- |
+| -------- | ------ | ---------- |
 | 单元测试 | {框架} | 函数/类    |
 | E2E 测试 | {工具} | 端到端场景 |
 
@@ -222,11 +218,13 @@ tags: [testing]
 在 `.the_conn/.gitignore` 中添加：
 
 ```gitignore
-# AI Workspace (临时工作区，不提交)
-ai_workspace/*/
-
-# 保留目录结构
-!ai_workspace/.gitkeep
+ai_workspace/
+context/
+docs/
+epics/
+playbooks/
+rules/
+.version
 ```
 
 ---
@@ -244,7 +242,7 @@ ai_workspace/*/
 9. **Frontmatter**: 所有字段必填，日期使用 `yyyy-mm-dd` 格式
 10. **目录权限**: 确保创建的目录有写权限
 11. **幂等性**: 重复执行不覆盖已有文件
-12. **用户文档保护**: `docs/` 目录下的文档仅在初始化时创建，后续**严格禁止任何 AI Playbook 修改 `docs/` 目录中的任何文件**
+12. **用户文档保护**: `.the_conn/docs/` 目录下的文档仅在初始化时创建，后续**严格禁止任何 AI Playbook 修改 `.the_conn/docs/` 目录中的任何文件**
 
 ---
 
