@@ -69,28 +69,68 @@
 
 ### Phase 1: 架构承接与配置确认
 
-#### 1.1 读取 Review 产出（必须执行）
+#### 📋 架构承接快速检查清单
+
+**AI 必须按顺序完成以下检查，完成一项勾选一项**：
+
+```markdown
+## ✅ Phase 1 架构承接检查清单
+
+### 1.1 Review 产出读取
+- [ ] 读取 Review 讨论历史 → 识别模式: Standard / Pro
+- [ ] 读取 ADR 文件 (`.the_conn/architecture/decisions/ADR-*.md`)
+- [ ] 提取架构约束清单 (通信/数据/一致性/边界)
+- [ ] Pro Mode: 读取 Review Phase 1.5 领域分析（限界上下文/聚合/事件）
+- [ ] 读取 Review Phase 3 复杂度评估（领域/技术复杂度）
+
+### 1.2 模式映射确认
+- [ ] Standard Mode: Epic=功能模块, Feature=Entity/Table, Story=MVC拆分
+- [ ] Pro Mode: Epic=限界上下文, Feature=聚合根, Story=战术设计任务
+- [ ] 记录映射策略到执行追踪表格
+
+### 1.3 ADR 约束提取
+- [ ] 提取通信模式约束 (如: ADR-001 异步消息)
+- [ ] 提取数据存储约束 (如: ADR-002 PostgreSQL)
+- [ ] 提取一致性策略约束 (如: ADR-003 Saga)
+- [ ] 提取聚合边界约束 (如: ADR-004 Order聚合)
+- [ ] 生成约束清单表格
+
+### 1.4 复杂度基准设定
+- [ ] 读取 Review 复杂度评估 (领域复杂度 + 技术复杂度)
+- [ ] 设定 Story 评分基准: 双高>7.0🔴🔴 / 技术高>6.0🔴 / 领域高>5.0🟡 / 双低<3.0🟢
+- [ ] 记录基准到执行追踪表格
+
+### 1.5 Context 配置确认
+- [ ] 读取 `.the_conn/context/global/Tech_Stack.md`
+- [ ] 读取 `.the_conn/context/global/Testing_Strategy.md`
+- [ ] 读取 `.the_conn/context/global/Architecture.md`
+- [ ] 确认 BDD 配置: 语言 / 框架 / 格式
+- [ ] 应用测试策略规则 (完整见 `@rules/test_strategy_rules.md`)
+```
+
+**快速决策树**（简化版）：
 
 ```mermaid
 graph LR
-    A[开始] --> B[读取 Review 记录]
-    B --> C[识别模式<br/>Standard/Pro]
-    C --> D[读取 ADR 文件]
-    D --> E[提取架构约束]
-    E --> F[读取复杂度评估]
-    F --> G[架构承接完成]
+    A[Phase 1开始] --> B{有Review历史?}
+    B -->|有| C[读取模式/ADR/复杂度]
+    B -->|无| D[跳过承接,直接Phase 2]
+    C --> E{模式?}
+    E -->|Standard| F[功能模块拆分策略]
+    E -->|Pro| G[DDD战略战术策略]
+    F --> H[设定复杂度基准]
+    G --> H
+    H --> I[确认BDD配置]
+    I --> J[Phase 1完成]
+    D --> I
 ```
 
-**AI 必须读取的文件**:
+---
 
-| 类型 | 路径 | 提取内容 |
-|------|------|---------|
-| Review 记录 | Review 讨论历史 | 模式标识（Standard/Pro） |
-| ADR | `.the_conn/architecture/decisions/ADR-*.md` | 架构约束清单 |
-| 领域分析 | Review Phase 1.5 输出 | 限界上下文、聚合、领域事件 |
-| 复杂度评估 | Review Phase 3 输出 | 领域复杂度、技术复杂度 |
+#### 详细规则参考（供 AI 内部查阅）
 
-#### 1.2 模式判定与映射规则
+<details>
+<summary>1.1 模式判定与映射规则（点击展开）</summary>
 
 **判定逻辑**:
 
@@ -101,20 +141,6 @@ graph LR
 
 **Pro Mode 映射规则**⭐:
 
-```mermaid
-graph TB
-    Review[Review 产出] --> BC[限界上下文]
-    Review --> AGG[聚合根]
-    Review --> EVT[领域事件]
-    Review --> ADR[ADR决策]
-    
-    BC --> Epic[EPIC-XX<br/>标注: 核心域/支撑域]
-    AGG --> Feature[FEAT-XX<br/>标注: 聚合边界]
-    EVT --> Story1[STORY-XX<br/>发布事件]
-    EVT --> Story2[STORY-YY<br/>订阅事件]
-    ADR --> Story3[STORY-ZZ<br/>Frontmatter: related_adr]
-```
-
 | Review 产出 | Breakdown 映射 | Epic 内记录 | Feature 内记录 | Story 内记录 |
 |------------|---------------|------------|---------------|-------------|
 | 限界上下文 | Epic | 上下文名称<br/>核心域标识 | - | - |
@@ -122,21 +148,10 @@ graph TB
 | 领域事件 | Story (Inter-process) | - | 事件清单 | `domain_event` 字段 |
 | ADR 决策 | Story 约束 | - | - | `related_adr` 字段 |
 
-#### 1.3 ADR 约束检查（自动化）
+</details>
 
-**检查流程**:
-
-```mermaid
-graph TB
-    A[读取所有 ADR] --> B[提取约束]
-    B --> C[分类约束]
-    C --> D{Story 涉及该约束?}
-    D -->|是| E[标注 related_adr]
-    D -->|否| F[继续]
-    E --> G[生成约束清单]
-```
-
-**约束分类表**（AI 内部维护）:
+<details>
+<summary>1.2 ADR 约束分类表（点击展开）</summary>
 
 | 约束类型 | ADR 示例 | 影响 Story 字段 | Story 实现指导要求 |
 |---------|---------|----------------|-------------------|
@@ -145,9 +160,10 @@ graph TB
 | 一致性策略 | ADR-003: Saga | `related_adr: [ADR-003]` | 需要补偿逻辑 |
 | 聚合边界 | ADR-004: Order 聚合 | `related_adr: [ADR-004]` | 遵循聚合边界 |
 
-#### 1.4 复杂度继承机制
+</details>
 
-**基准调整规则**（基于 Review Phase 3 复杂度评估）:
+<details>
+<summary>1.3 复杂度基准调整规则（点击展开）</summary>
 
 | Review 复杂度组合 | Story 评分基准 | 标识 |
 |------------------|---------------|------|
@@ -158,15 +174,35 @@ graph TB
 
 **AI 必须执行**: 在生成 Story 大纲时，根据 Review 评估自动调整复杂度基准。
 
-#### 1.5 Context 与配置确认
+</details>
 
-| Step | 任务 | 操作 |
-|------|------|------|
-| **1** | 检查 Context | 读取 `.the_conn/context/global/`: Tech_Stack/Testing_Strategy/Architecture |
-| **2** | 确认配置 | 缺失→仅询问缺失项<br/>BDD 格式: 英文关键字+项目语言 (参考 `@rules/bdd_language_rules.md`) |
-| **3** | 应用测试策略 | **完整规则见 `@rules/test_strategy_rules.md`** |
+<details>
+<summary>1.4 测试策略速查（点击展开）</summary>
 
-**测试策略速查**（完整规则见`@rules/test_strategy_rules.md`）：
+**完整规则见 `@rules/test_strategy_rules.md`**
+
+- Story级：用户可见→BDD+单元测试 | 技术实现→单元测试
+- Feature E2E：6维评分≥10分→必须
+- Epic E2E：跨Feature用户旅程 | ≥3个Feature有依赖
+- 性能测试：AI检测敏感场景后询问
+
+</details>
+
+---
+
+#### ✅ Phase 1 完成检查
+
+**AI 必须确认以下项目后才能进入 Phase 2**：
+
+- [ ] 所有检查清单项目已完成勾选
+- [ ] 模式已确定：Standard / Pro
+- [ ] 复杂度基准已设定
+- [ ] BDD 配置已确认
+- [ ] 执行追踪表格 Phase 1 状态为 ✅
+
+---
+
+### Phase 2: 生成拆解大纲
 
 ```mermaid
 graph TB
@@ -417,6 +453,18 @@ graph TB
 
 请用户确认大纲后，继续 Phase 3
 
+#### ✅ Phase 2 完成检查
+
+**AI 必须确认以下项目后才能进入用户确认环节**：
+
+- [ ] Epic 规划已生成（Epic 名称/业务价值/Feature 列表）
+- [ ] Feature 规划已生成（Feature 名称/所属 Epic/Story 列表）
+- [ ] Story 概要已生成（ID/名称/类型/复杂度/依赖）
+- [ ] 测试 Story 已规划（Feature E2E/Epic E2E/性能测试）
+- [ ] 依赖关系图已生成（Mermaid 图 + 并行建议）
+- [ ] 测试配置已确认（语言/框架/BDD 格式）
+- [ ] 执行追踪表格 Phase 2 状态为 ✅
+- [ ] 已输出大纲供用户确认
 
 ---
 
@@ -451,6 +499,15 @@ graph TB
 ```
 
 **重要原则**: 可以多轮迭代，直到用户满意。不要急于生成文件。
+
+#### ✅ Phase 2.1 (用户反馈与迭代) 完成检查
+
+**AI 必须确认以下项目后才能进入 Phase 3**：
+
+- [ ] 用户已明确输入 "确认，请生成详细文档" 或等效确认
+- [ ] 所有用户提出的调整已完成
+- [ ] 大纲已达到用户满意状态
+- [ ] 执行追踪表格 Phase 2.1 (如有迭代) 状态为 ✅
 
 ---
 
@@ -489,6 +546,17 @@ graph TB
 
 - 在生成 Story 前，确认项目的 BDD 配置（语言、测试库、Feature 文件语言）
 - 如果缺失，先提醒用户提供
+
+#### ✅ Phase 3 完成检查
+
+**AI 必须确认以下项目后才能进入质量检查**：
+
+- [ ] 所有 Epic 文档已生成（EPIC-XX/README.md）
+- [ ] 所有 Feature 文档已生成（FEAT-XX/README.md）
+- [ ] 所有 Story 文档已生成（STORY-XX_*.md）
+- [ ] 所有 Story 包含 BDD 场景
+- [ ] 执行追踪表格 Phase 3 状态为 ✅
+- [ ] 已提示用户使用 context/extract.md 提取 Context（可选）
 
 ---
 
