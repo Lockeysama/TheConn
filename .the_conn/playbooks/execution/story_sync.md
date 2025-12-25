@@ -1,4 +1,4 @@
-你是一位严谨的技术文档工程师。你的任务是确保规划文档（Story）与最终的代码实现保持 100% 一致。
+你是一位严谨的技术文档工程师。你的任务是确保规划文档（Story/Feature/Epic）与最终的代码实现保持 100% 一致。
 
 ## ⚠️ 重要：遵守基础公约
 
@@ -10,21 +10,51 @@
 - **基础公约**: `@rules/base_rules.md` - 禁止事项、文件路径约定、质量标准
 
 本 Playbook **不依赖**以下规范：
-- ❌ `test_strategy_rules.md` - Story 同步不涉及测试策略决策
-- ❌ `bdd_language_rules.md` - Story 同步不涉及 BDD 生成
+- ❌ `test_strategy_rules.md` - 同步不涉及测试策略决策
+- ❌ `bdd_language_rules.md` - 同步不涉及 BDD 生成
 
-**原因**: story_sync 只负责同步已完成的实现到 Story 文档，不涉及测试策略规划
+**原因**: 此 Playbook 只负责同步已完成的实现到规划文档，不涉及测试策略规划
 
 ## 本 Playbook 的工作范围
 
 **专注于**：
 
-- ✅ **同步 Story 文档**：更新 Story 文档内容与实际实现保持一致
-- ✅ **更新状态**：将 status 更新为 done
+- ✅ **同步 Story/Feature/Epic 文档**：更新文档内容与实际实现保持一致
+- ✅ **更新状态**：将 status 更新为 done（Story）或 in_progress/done（Feature/Epic）
+- ✅ **更新进度统计**：更新 Feature/Epic 的 Story 完成统计
 
 ---
 
 ## 📋 速览（AI 快速决策）
+
+### 同步路由决策
+
+```mermaid
+graph TD
+    A[接收同步任务] --> B{文档类型?}
+    B -->|Story| C[Story 同步流程]
+    B -->|Feature| D[Feature 同步流程]
+    B -->|Epic| E[Epic 同步流程]
+    
+    C --> C1[更新验收标准]
+    C1 --> C2[更新涉及文件]
+    C2 --> C3[更新 status=done]
+    C3 --> F[✅ 完成]
+    
+    D --> D1[统计Story完成情况]
+    D1 --> D2[更新进度百分比]
+    D2 --> D3[更新测试里程碑]
+    D3 --> D4[更新 status]
+    D4 --> F
+    
+    E --> E1[统计Feature完成情况]
+    E1 --> E2[更新Epic进度]
+    E2 --> E3[更新测试里程碑]
+    E3 --> E4[更新 status]
+    E4 --> F
+```
+
+### Story 同步流程详解
 
 ```mermaid
 graph LR
@@ -45,7 +75,7 @@ graph LR
 ```
 
 **关键点**：
-- ✅ **可修改**：status, updated, 验收标准, 涉及文件, 关键逻辑
+- ✅ **可修改**：status, updated, 验收标准, 涉及文件, 关键逻辑, 进度统计
 - ❌ **禁止修改**：id, type, epic, feature, created, depends_on, 目标描述
 - ✅ **保持规划性质**：不改为"已创建"、"已实现"等过去式
 - ✅ **Context 同步谨慎**：仅当设计真正变更时才建议同步
@@ -53,6 +83,8 @@ graph LR
 ---
 
 ## 🚨 常见错误与解决方案
+
+### Story 同步常见错误
 
 | #     | 错误类型                | 错误表现                                         | 正确做法                                                | 为什么错误                           |
 | ----- | ----------------------- | ------------------------------------------------ | ------------------------------------------------------- | ------------------------------------ |
@@ -62,9 +94,31 @@ graph LR
 | **4** | **过度同步 Context**    | 任何小改动都建议同步 Context                     | **谨慎操作**：仅当设计真正变更时才建议同步              | Context 是设计文档，小改动不需要同步 |
 | **5** | **未更新 status**       | 完成开发但 status 仍为 `in_progress`             | **必须更新**：status 更新为 `done`，添加 `updated` 日期 | Story 状态不一致，影响项目进度追踪   |
 
+### Feature 同步常见错误
+
+| #     | 错误类型             | 错误表现                              | 正确做法                                          | 为什么错误                     |
+| ----- | -------------------- | ------------------------------------- | ------------------------------------------------- | ------------------------------ |
+| **1** | **未统计所有 Story** | 只看部分 Story，进度计算错误          | **全面统计**：读取 `stories/` 下所有 Story 文件   | 进度不准确，误导项目管理       |
+| **2** | **进度计算错误**     | 百分比计算错误（如 3/5 = 50%）        | **正确计算**：3/5 = 60%                           | 数据错误影响决策               |
+| **3** | **过早标记 done**    | 还有 Story 未完成就标记 Feature done  | **严格条件**：所有 Story done 才能标记 Feature done | 状态不一致，破坏依赖链         |
+| **4** | **忘记测试里程碑**   | 未更新 E2E/性能测试 Story 状态        | **同步测试**：更新测试 Story 的状态列表           | 测试状态不清晰                 |
+
+### Epic 同步常见错误
+
+| #     | 错误类型               | 错误表现                                    | 正确做法                                             | 为什么错误                 |
+| ----- | ---------------------- | ------------------------------------------- | ---------------------------------------------------- | -------------------------- |
+| **1** | **未统计所有 Feature** | 只看部分 Feature，Epic 进度计算错误         | **全面统计**：读取 `features/` 下所有 Feature README | 进度不准确                 |
+| **2** | **嵌套进度错误**       | Feature 进度（Stories）未同步到 Epic 总览   | **两层统计**：Feature 完成度 + 每个 Feature 的 Stories | 缺少细节，无法追踪问题     |
+| **3** | **过早标记 done**      | 还有 Feature 未完成就标记 Epic done         | **严格条件**：所有 Feature done 才能标记 Epic done   | 状态不一致，误导项目整体进度 |
+| **4** | **忘记 Epic 测试**     | 未更新 Epic 级 E2E/性能测试里程碑           | **同步测试**：更新 Epic 测试 Story 的状态             | Epic 级测试状态不清晰      |
+
 ---
 
 ## 任务目标
+
+根据文档类型，完成相应的同步任务：
+
+### Story 同步目标
 
 对比【原始 Story】和【最终代码变更】，完成以下同步：
 
@@ -72,11 +126,42 @@ graph LR
 2. 将 Story 状态标记为 `done`（任务完成后）
 3. 如有需要，同步更新相关 Context 文档（谨慎操作）
 
+### Feature 同步目标
+
+统计【Feature 下所有 Story 状态】，完成以下同步：
+
+1. 更新 Story 列表中的完成状态和进度百分比
+2. 更新测试里程碑状态（E2E/性能测试）
+3. 根据 Story 完成情况更新 Feature 状态（所有 done → Feature done）
+4. 更新 `updated` 时间戳
+
+### Epic 同步目标
+
+统计【Epic 下所有 Feature 状态】，完成以下同步：
+
+1. 更新 Feature 列表中的完成进度（Stories 数量和百分比）
+2. 更新 Epic 总体进度统计
+3. 更新 Epic 级测试里程碑状态
+4. 根据 Feature 完成情况更新 Epic 状态（所有 done → Epic done）
+5. 更新 `updated` 时间戳
+
 ---
 
 ## 更新规则
 
-### 可以修改的部分
+### 同步规则总览
+
+| 文档类型 | 主要更新内容                       | 状态更新逻辑                        | 禁止修改                 |
+| -------- | ---------------------------------- | ----------------------------------- | ------------------------ |
+| Story    | 验收标准、涉及文件、关键逻辑       | `in_progress` → `done`              | id/type/epic/feature/目标 |
+| Feature  | Story 进度统计、测试里程碑         | 所有 Story done 后 → `done`         | id/epic/目标/依赖关系    |
+| Epic     | Feature 进度统计、整体测试里程碑   | 所有 Feature done 后 → `done`       | id/目标/拆分逻辑         |
+
+---
+
+### Story 同步规则
+
+#### 可以修改的部分
 
 1. **Frontmatter 中的 `status` 和 `updated` 字段**:
    - ✅ **必须更新**: 任务完成后将 `status` 改为 `done`
@@ -102,11 +187,122 @@ graph LR
    - 如实际实现的算法/流程与原规划不同，更新描述
    - 补充原规划未涵盖但实际实现的关键点
 
-### 绝对禁止修改的部分
+#### 绝对禁止修改的部分
 
 1. **Frontmatter 关键字段**: 不能修改 `id`, `type`, `epic`, `feature`, `created`, `depends_on`
 2. **Story 目标**: 不能修改业务目标和价值描述（"## 1. 目标"章节）
 3. **状态性表述**: 文档内容保持规划性质（如"需要创建"不改为"已创建"）
+
+---
+
+### Feature 同步规则
+
+#### 可以修改的部分
+
+1. **Frontmatter 中的 `status` 和 `updated` 字段**:
+   - ✅ **更新 status**:
+     - 有 Story 完成时 → `in_progress`
+     - 所有 Story 完成时 → `done`
+   - ✅ **更新时间**: `updated: {yyyy-mm-dd}`
+   - 格式示例:
+
+     ```yaml
+     status: done
+     updated: 2025-12-11
+     ```
+
+2. **Story 进度统计**:
+   - 更新"Story 列表"章节中的完成数量
+   - 更新进度条/百分比
+   - 示例:
+
+     ```markdown
+     ## 📋 Story 列表
+
+     **进度**: 5/5 完成 (100%)
+
+     | Story ID  | Story 名称    | 类型 | 状态    | 复杂度 |
+     | --------- | ------------- | ---- | ------- | ------ |
+     | STORY-01  | 用户登录      | dev  | ✅ done | 3.5    |
+     | STORY-02  | 密码重置      | dev  | ✅ done | 2.0    |
+     ```
+
+3. **测试里程碑状态**:
+   - 更新 E2E 测试 Story 的完成状态
+   - 更新性能测试 Story 的完成状态
+   - 示例:
+
+     ```markdown
+     ## 🧪 测试里程碑
+
+     | 测试类型 | Story ID  | 状态    |
+     | -------- | --------- | ------- |
+     | E2E 测试 | STORY-99  | ✅ done |
+     | 性能测试 | STORY-97  | ✅ done |
+     ```
+
+4. **Feature 总结**（可选）:
+   - 补充实际实现中发现的关键点
+   - 记录重要的技术决策
+
+#### 绝对禁止修改的部分
+
+1. **Frontmatter 关键字段**: 不能修改 `id`, `epic`, `created`, `depends_on`
+2. **Feature 目标**: 不能修改业务目标和价值描述
+3. **Story 拆分逻辑**: 不能修改 Story 的依赖关系和拆分逻辑（这是设计决策）
+
+---
+
+### Epic 同步规则
+
+#### 可以修改的部分
+
+1. **Frontmatter 中的 `status` 和 `updated` 字段**:
+   - ✅ **更新 status**:
+     - 有 Feature 完成时 → `in_progress`
+     - 所有 Feature 完成时 → `done`
+   - ✅ **更新时间**: `updated: {yyyy-mm-dd}`
+
+2. **Feature 进度统计**:
+   - 更新"Features 列表"章节中的完成数量和进度
+   - 更新 Gantt 图或进度条
+   - 示例:
+
+     ```markdown
+     ## 📦 Features 列表
+
+     **总进度**: 3/3 完成 (100%)
+
+     | Feature ID | Feature 名称 | Stories | 进度 | 状态    |
+     | ---------- | ------------ | ------- | ---- | ------- |
+     | FEAT-01    | 用户认证     | 5/5     | 100% | ✅ done |
+     | FEAT-02    | 权限管理     | 3/3     | 100% | ✅ done |
+     | FEAT-03    | 审计日志     | 2/2     | 100% | ✅ done |
+     ```
+
+3. **Epic 级测试里程碑**:
+   - 更新 Epic E2E 测试状态
+   - 更新 Epic 性能测试状态
+   - 示例:
+
+     ```markdown
+     ## 🧪 Epic 测试里程碑
+
+     | 测试类型     | Story ID   | 状态    |
+     | ------------ | ---------- | ------- |
+     | Epic E2E     | STORY-999  | ✅ done |
+     | Epic 性能测试 | STORY-997  | ✅ done |
+     ```
+
+4. **Epic 总结**（可选）:
+   - 补充 Epic 完成后的整体评估
+   - 记录关键成果和经验教训
+
+#### 绝对禁止修改的部分
+
+1. **Frontmatter 关键字段**: 不能修改 `id`, `created`
+2. **Epic 目标和范围**: 不能修改 Epic 的业务目标和价值
+3. **Feature 拆分逻辑**: 不能修改 Feature 的依赖关系和拆分逻辑
 
 ---
 
@@ -204,10 +400,14 @@ graph LR
 
 ## 数据获取方式
 
-| 数据类型     | 来源                                                                                                                                                    |
-| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 原始Story    | 上下文或路径：`.the_conn/epics/EPIC-XX_Name/features/FEAT-XX_Name/stories/STORY-XX_Name.md`                                                             |
-| 最终变更代码 | • `git diff <start-commit> <end-commit>`<br/>• `git log -p -1`<br/>• 变更摘要：`.the_conn/ai_workspace/EPIC-XX/TASK-XX_STORY-XX_Name/change_summary.md` |
+| 数据类型      | 来源                                                                                                                                                    |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 原始 Story    | 上下文或路径：`.the_conn/epics/EPIC-XX_Name/features/FEAT-XX_Name/stories/STORY-XX_Name.md`                                                             |
+| 原始 Feature  | 上下文或路径：`.the_conn/epics/EPIC-XX_Name/features/FEAT-XX_Name/README.md`                                                                            |
+| 原始 Epic     | 上下文或路径：`.the_conn/epics/EPIC-XX_Name/README.md`                                                                                                  |
+| 最终变更代码  | • `git diff <start-commit> <end-commit>`<br/>• `git log -p -1`<br/>• 变更摘要：`.the_conn/ai_workspace/EPIC-XX/TASK-XX_STORY-XX_Name/change_summary.md` |
+| Story 状态    | 读取同一 Feature 下所有 Story 文件的 `status` 字段                                                                                                      |
+| Feature 状态  | 读取同一 Epic 下所有 Feature 的 README 文件的 `status` 字段                                                                                             |
 
 ---
 
@@ -293,7 +493,125 @@ depends_on: []
 
 ---
 
+### 示例 3: Feature 同步
+
+#### 场景
+Feature 下所有 Story 均已完成，需要同步 Feature 状态
+
+#### 原始 Feature README 片段
+
+```markdown
+---
+id: FEAT-01
+epic: EPIC-01
+status: in_progress
+created: 2025-12-10
+updated: 2025-12-11
+---
+
+## 📋 Story 列表
+
+**进度**: 2/5 完成 (40%)
+
+| Story ID  | Story 名称    | 类型 | 状态        | 复杂度 |
+| --------- | ------------- | ---- | ----------- | ------ |
+| STORY-01  | 用户登录      | dev  | ✅ done     | 3.5    |
+| STORY-02  | 密码重置      | dev  | ✅ done     | 2.0    |
+| STORY-03  | 邮箱验证      | dev  | 🚧 in_progress | 2.5    |
+| STORY-04  | 会话管理      | dev  | ⏸️ pending | 3.0    |
+| STORY-99  | E2E 认证流程  | e2e_test | ⏸️ pending | 4.0    |
+```
+
+#### 同步后的 Feature README
+
+```markdown
+---
+id: FEAT-01
+epic: EPIC-01
+status: done
+created: 2025-12-10
+updated: 2025-12-25
+---
+
+## 📋 Story 列表
+
+**进度**: 5/5 完成 (100%)
+
+| Story ID  | Story 名称    | 类型 | 状态    | 复杂度 |
+| --------- | ------------- | ---- | ------- | ------ |
+| STORY-01  | 用户登录      | dev  | ✅ done | 3.5    |
+| STORY-02  | 密码重置      | dev  | ✅ done | 2.0    |
+| STORY-03  | 邮箱验证      | dev  | ✅ done | 2.5    |
+| STORY-04  | 会话管理      | dev  | ✅ done | 3.0    |
+| STORY-99  | E2E 认证流程  | e2e_test | ✅ done | 4.0    |
+
+## 🧪 测试里程碑
+
+| 测试类型 | Story ID  | 状态    |
+| -------- | --------- | ------- |
+| E2E 测试 | STORY-99  | ✅ done |
+```
+
+---
+
+### 示例 4: Epic 同步
+
+#### 场景
+Epic 下所有 Feature 均已完成，需要同步 Epic 状态
+
+#### 原始 Epic README 片段
+
+```markdown
+---
+id: EPIC-01
+status: in_progress
+created: 2025-12-01
+updated: 2025-12-15
+---
+
+## 📦 Features 列表
+
+**总进度**: 1/3 完成 (33%)
+
+| Feature ID | Feature 名称 | Stories | 进度 | 状态        |
+| ---------- | ------------ | ------- | ---- | ----------- |
+| FEAT-01    | 用户认证     | 3/5     | 60%  | 🚧 in_progress |
+| FEAT-02    | 权限管理     | 0/3     | 0%   | ⏸️ pending |
+| FEAT-03    | 审计日志     | 0/2     | 0%   | ⏸️ pending |
+```
+
+#### 同步后的 Epic README
+
+```markdown
+---
+id: EPIC-01
+status: done
+created: 2025-12-01
+updated: 2025-12-25
+---
+
+## 📦 Features 列表
+
+**总进度**: 3/3 完成 (100%)
+
+| Feature ID | Feature 名称 | Stories | 进度 | 状态    |
+| ---------- | ------------ | ------- | ---- | ------- |
+| FEAT-01    | 用户认证     | 5/5     | 100% | ✅ done |
+| FEAT-02    | 权限管理     | 3/3     | 100% | ✅ done |
+| FEAT-03    | 审计日志     | 2/2     | 100% | ✅ done |
+
+## 🧪 Epic 测试里程碑
+
+| 测试类型     | Story ID   | 状态    |
+| ------------ | ---------- | ------- |
+| Epic E2E     | STORY-999  | ✅ done |
+```
+
+---
+
 ## 快速自检清单
+
+### Story 同步自检
 
 AI 在同步 Story 前必须检查：
 
@@ -303,6 +621,30 @@ AI 在同步 Story 前必须检查：
 - [ ] 我**保持了规划性质**（未改为"已创建"、"已实现"等过去式）
 - [ ] 如果设计真正变更，我**输出了 Context 同步建议**（极度谨慎）
 
+### Feature 同步自检
+
+AI 在同步 Feature 前必须检查：
+
+- [ ] 我**读取了所有 Story 的状态**（从 Feature 目录下的 stories/ 文件夹）
+- [ ] 我**正确计算了进度百分比**（已完成数 / 总数 × 100%）
+- [ ] 我**更新了 Story 列表中的状态**（✅ done / 🚧 in_progress / ⏸️ pending）
+- [ ] 我**更新了测试里程碑状态**（E2E/性能测试 Story）
+- [ ] 我**正确设置了 Feature status**（所有 Story done → done）
+- [ ] 我**没有修改 Feature 身份字段**（id, epic, created, depends_on）
+- [ ] 我**没有修改目标和拆分逻辑**
+
+### Epic 同步自检
+
+AI 在同步 Epic 前必须检查：
+
+- [ ] 我**读取了所有 Feature 的状态**（从 Epic 目录下的 features/ 文件夹）
+- [ ] 我**正确计算了 Epic 总进度**（已完成 Feature 数 / 总 Feature 数）
+- [ ] 我**更新了 Feature 列表中的进度**（Stories 完成数和百分比）
+- [ ] 我**更新了 Epic 测试里程碑**（Epic E2E/性能测试 Story）
+- [ ] 我**正确设置了 Epic status**（所有 Feature done → done）
+- [ ] 我**没有修改 Epic 身份字段**（id, created）
+- [ ] 我**没有修改目标和拆分逻辑**
+
 ---
 
-现在，请分析并更新原始 Story 文件内容。
+现在，请根据文档类型（Story/Feature/Epic）分析并更新文件内容。
