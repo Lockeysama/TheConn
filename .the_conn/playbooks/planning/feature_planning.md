@@ -35,7 +35,7 @@
 
 ### 文件路径
 
-```
+```text
 .the_conn/epics/EPIC-{序号}_{Name}/features/FEAT-{序号}_{PascalCaseName}/README.md
 ```
 
@@ -62,6 +62,8 @@ depends_on: []
 
 ## 输出格式
 
+### Standard Mode 格式
+
 ```markdown
 # Feature: FEAT-{序号} {Feature 名称}
 
@@ -72,6 +74,49 @@ depends_on: []
   - {端到端验收项1}
   - {端到端验收项2}
 - **创建日期**: {yyyy-mm-dd}
+```
+
+### Pro Mode 格式⭐
+
+```markdown
+# Feature: FEAT-{序号} {Feature 名称}（聚合）
+
+- **所属 Epic**: EPIC-{序号}
+- **目标**: {一句话说明功能目标}
+- **包含的故事**: STORY-{序号}, STORY-{序号}, ...
+- **验收标准**:
+  - {端到端验收项1}
+  - {端到端验收项2}
+- **创建日期**: {yyyy-mm-dd}
+
+## 聚合设计
+
+| 要素 | 内容 |
+|------|------|
+| **聚合根** | {名称，如 Order} |
+| **实体** | {列举，如 OrderItem} |
+| **值对象** | {列举，如 Address, Money} |
+| **不变性规则** | {业务规则，如 "总价 = Σ(单价×数量) - 折扣"} |
+| **事务边界** | {说明，如 "单个 Order + 关联的所有 OrderItem"} |
+
+## 一致性边界
+
+| 维度 | 策略 |
+|------|------|
+| **聚合内一致性** | 强一致（本地事务） |
+| **聚合间一致性** | 最终一致（领域事件） |
+| **跨上下文一致性** | 最终一致（Saga / 事件驱动） |
+| **实现机制** | {说明，如 "数据库事务 + Kafka 事件"} |
+
+**参考**: Review Phase 2.2 战术层讨论 / ADR-XXX
+
+## 领域事件（如果有）
+
+| 事件名称 | 触发时机 | 携带数据 | 订阅者 | 对应 Story |
+|---------|---------|---------|--------|-----------|
+| OrderCreated | 订单创建成功 | orderId, items, totalPrice | 库存、支付 | STORY-XX |
+| OrderCancelled | 订单取消 | orderId, reason | 库存、支付 | STORY-YY |
+
 ```
 
 ---
@@ -209,7 +254,7 @@ graph TD
 
 ## 示例
 
-### 示例 1: 不需要测试 Story 的 Feature
+### 示例 1: Standard Mode - 不需要测试 Story 的 Feature
 
 ```markdown
 # Feature: FEAT-01 初始化项目结构
@@ -233,40 +278,70 @@ graph TD
 无需 Feature 级 E2E 测试（仅 2 个独立 Story，单元测试足够）
 ```
 
-### 示例 2: 需要测试 Story 的 Feature
+### 示例 2: Pro Mode - 需要测试 Story 的 Feature⭐
 
 ```markdown
-# Feature: FEAT-02 用户认证
+# Feature: FEAT-01 Order 聚合（订单核心逻辑）
 
-- **所属 Epic**: EPIC-02
-- **目标**: 提供完整的用户认证流程
-- **包含的故事**: STORY-03, STORY-04, STORY-05, STORY-99
+- **所属 Epic**: EPIC-02（订单上下文）
+- **目标**: 实现订单聚合的核心业务逻辑，确保订单状态一致性
+- **包含的故事**: STORY-01, STORY-02, STORY-03, STORY-04, STORY-99
 - **验收标准**:
-  - 用户可以通过邮箱/密码注册和登录
-  - 认证令牌自动刷新
-  - 支持记住登录状态
-- **创建日期**: 2025-12-17
+  - 订单创建后正确计算总价（含折扣）
+  - 订单状态流转符合业务规则（待支付 → 已支付 → 已完成）
+  - 订单取消时正确发布 OrderCancelled 事件
+  - 所有业务规则的不变性得到保证
+- **创建日期**: 2025-12-25
+
+## 聚合设计
+
+| 要素 | 内容 |
+|------|------|
+| **聚合根** | Order（订单） |
+| **实体** | OrderItem（订单项） |
+| **值对象** | Money（金额）, Address（地址）, Discount（折扣） |
+| **不变性规则** | • 总价 = Σ(单价×数量) - 折扣<br>• 已支付订单不可修改<br>• 订单项数量必须 > 0 |
+| **事务边界** | 单个 Order + 关联的所有 OrderItem（原子操作） |
+
+## 一致性边界
+
+| 维度 | 策略 |
+|------|------|
+| **聚合内一致性** | 强一致（数据库事务） |
+| **聚合间一致性** | 最终一致（领域事件 OrderCreated） |
+| **跨上下文一致性** | 最终一致（Saga，与支付/库存上下文） |
+| **实现机制** | PostgreSQL 事务 + Kafka 事件发布 |
+
+**参考**: Review Phase 2.2 聚合设计表 / ADR-003（最终一致性策略）
+
+## 领域事件
+
+| 事件名称 | 触发时机 | 携带数据 | 订阅者 | 对应 Story |
+|---------|---------|---------|--------|-----------|
+| OrderCreated | 订单创建成功 | orderId, items, totalPrice, userId | 库存上下文、支付上下文 | STORY-02 |
+| OrderCancelled | 订单取消 | orderId, reason, cancelledAt | 库存上下文、支付上下文 | STORY-04 |
 
 ## 包含的 Story
 
 ### 功能开发 Story
-- STORY-03: 用户注册接口
-- STORY-04: 用户登录接口
-- STORY-05: Token 刷新机制
+- STORY-01: 实现 Order 聚合根逻辑（Domain Logic）
+- STORY-02: 发布 OrderCreated 事件（Event Publisher）
+- STORY-03: 实现 OrderRepository（持久化）
+- STORY-04: 订单取消与补偿逻辑（Saga 补偿）
 
 ### 测试 Story（按开发顺序）
 
-**STORY-99: E2E_Auth_Flow**
+**STORY-99: E2E_Order_Flow**
 - **类型**: E2E 测试 (type: e2e_test)
-- **目的**: 验证注册 → 登录 → Token 刷新的完整认证流程
-- **理由**: Feature 构成完整用户旅程且涉及多系统集成（数据库、缓存、API）
-- **测试路径**: `tests/bdd/features/auth/auth_flow.feature`
-- **执行顺序**: STORY-03, STORY-04, STORY-05 完成后
+- **目的**: 验证订单创建 → 事件发布 → 持久化的完整流程
+- **理由**: Feature 构成完整业务闭环，涉及聚合根、事件、持久化的集成
+- **测试路径**: `tests/bdd/features/order/order_flow.feature`
+- **执行顺序**: STORY-01, STORY-02, STORY-03, STORY-04 完成后
 
-**STORY-97: Performance_Auth**
+**STORY-97: Performance_Order**
 - **类型**: 性能测试 (type: perf_test)
-- **目的**: 验证认证接口的高并发性能
-- **理由**: 认证是高频访问场景，需要确保 P95 响应时间 < 200ms
+- **目的**: 验证订单创建的高并发性能
+- **理由**: 核心域聚合，峰值需支持 1000 TPS，P95 < 500ms
 - **执行顺序**: STORY-99 完成后
 ```
 
