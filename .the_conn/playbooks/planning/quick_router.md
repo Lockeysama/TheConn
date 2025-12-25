@@ -20,20 +20,26 @@
 
 ```mermaid
 graph TD
-    A[用户描述] --> B[提取关键词]
-    B --> C{Bug关键词?}
-    C -->|是| D[bug_fix]
-    C -->|否| E[hotfix]
-    D --> F[推断归属]
-    E --> F
-    F --> G{找到父Story?}
-    G -->|是| H[使用父Story的Epic/Feature]
-    G -->|否| I[推断Epic/Feature]
-    H --> J[路由到模板]
-    I --> J
-    J --> K{自动衔接}
-    K --> L[生成Task]
-    L --> M[执行Task]
+    Start[用户描述] --> HasStory{有 STORY-XX?}
+    
+    %% 契约优先路径
+    HasStory -->|是| CheckContract[读取验收标准]
+    CheckContract --> Violate{违反契约?}
+    Violate -->|是| Bug[bug_fix]
+    Violate -->|否| Keywords[提取关键词]
+    
+    %% 关键词兜底路径
+    HasStory -->|否| Keywords
+    Keywords --> KeyCheck{Bug 关键词?}
+    KeyCheck -->|是| Bug
+    KeyCheck -->|否| Hotfix[hotfix]
+    
+    %% 归属与路由
+    Bug --> Attribution[归属推断]
+    Hotfix --> Attribution
+    Attribution --> Route[路由模板]
+    Route --> Auto{自动衔接}
+    Auto --> Exec[执行 Task]
 ```
 
 **关键点**：
@@ -97,9 +103,29 @@ graph TD
 
 **Context搜索特点** 💡：通常返回少/空（Bug/Hotfix仅需代码）。如搜到相关Context → 涉及架构级问题，需谨慎。
 
-### Step 2: 判断变更类型
+### Step 2: 判断变更类型（契约驱动）
 
-根据以下规则判断：
+#### 🎯 核心原则：契约优先，关键词兜底
+
+**⚠️ 重要：只要涉及现有 Story（描述中提到 STORY-XX），必须先读取验收标准（契约），判断当前行为是否违反契约，不管描述中使用了什么关键词。**
+
+**判断优先级**：
+
+| 优先级 | 条件       | 判断方式                                                                               | 示例                                                      |
+| ------ | ---------- | -------------------------------------------------------------------------------------- | --------------------------------------------------------- |
+| **P0** | 有STORY-XX | 1.读取Story<br/>2.提取验收标准<br/>3.对比当前行为<br/>4.违反→bug_fix / 符合→检查关键词 | "STORY-05 优化超时"→读标准"<200ms"→当前300ms→违反→bug_fix |
+| **P1** | 无STORY-XX | 关键词判断（见下方关键词库）                                                           | "登录崩溃"→Bug词→bug_fix                                  |
+| **P2** | 模糊情况   | 读取验收标准或询问用户                                                                 | "登录很慢"→查标准→判断                                    |
+
+**为什么契约优先？**
+
+| 场景 | 描述                        | 只看关键词        | 契约检查后                           | 结果      |
+| ---- | --------------------------- | ----------------- | ------------------------------------ | --------- |
+| 1    | "STORY-05 优化一下超时问题" | "优化"→hotfix ❌   | 验收标准"<200ms"，当前300ms→违反契约 | bug_fix ✅ |
+| 2    | "STORY-03 增加异常捕获"     | "增加"→hotfix ✅   | 功能正常，增强健壮性→符合契约+扩展   | hotfix ✅  |
+| 3    | "登录很慢"                  | "慢"(模糊)→不确定 | 无STORY-XX→无契约可查→关键词判断     | 询问用户  |
+
+---
 
 #### bug_fix 的判断标准
 
@@ -274,14 +300,20 @@ graph TB
     Step1_2_Result -->|无相关 Context| Step2[Step 2: 判断变更类型]
     LoadContext --> Step2
     
-    Step2 --> TypeCheck{关键词匹配}
-    TypeCheck -->|Bug 关键词| BugPath[类型: bug_fix<br/>功能不正常]
-    TypeCheck -->|Hotfix 关键词| HotfixPath[类型: hotfix<br/>功能正常但需改进]
-    TypeCheck -->|模糊关键词| AmbiguousPath{读取验收标准}
-    TypeCheck -->|无明确关键词| AskUser[询问用户<br/>选择类型]
+    %% --- 修改点开始：引入契约优先逻辑 ---
+    Step2 --> HasID{有 STORY-XX?}
     
-    AmbiguousPath -->|不符合标准| BugPath
-    AmbiguousPath -->|符合标准| HotfixPath
+    HasID -->|是| CheckContract{违反验收标准?}
+    CheckContract -->|是: 功能不正常| BugPath[类型: bug_fix<br/>违反契约]
+    CheckContract -->|否: 符合标准| TypeCheck
+    
+    HasID -->|否| TypeCheck{关键词匹配}
+    
+    TypeCheck -->|Bug 关键词| BugPath
+    TypeCheck -->|Hotfix 关键词| HotfixPath[类型: hotfix<br/>改进/优化]
+    TypeCheck -->|模糊/无明确| AskUser[询问用户<br/>选择类型]
+    %% --- 修改点结束 ---
+    
     AskUser --> UserChoice{用户选择}
     UserChoice -->|Bug| BugPath
     UserChoice -->|Hotfix| HotfixPath
@@ -331,32 +363,39 @@ graph TB
 
 ```mermaid
 graph TD
-    Start[用户描述] --> Extract[提取关键词]
-    Extract --> CheckBug{包含 Bug 关键词?}
-    Extract --> CheckHotfix{包含 Hotfix 关键词?}
-    Extract --> CheckAmbiguous{包含模糊关键词?}
+    Start[用户描述] --> CheckID{包含 STORY-XX?}
+
+    %% P0: 契约优先路径 (最高优先级)
+    CheckID -->|是| ReadAC[读取验收标准]
+    ReadAC --> CheckViolation{是否违反契约?}
+    CheckViolation -->|是: 功能异常/性能不达标| BugFix[类型: bug_fix]
+    CheckViolation -->|否: 符合标准但想改进| Extract[进入关键词判断]
     
-    CheckBug -->|是 且 非 Hotfix| BugFix[类型: bug_fix]
-    CheckHotfix -->|是 且 非 Bug| Hotfix[类型: hotfix]
+    %% P1: 关键词兜底路径
+    CheckID -->|否| Extract
     
-    CheckBug -->|是 且 是 Hotfix| ReadStory[读取原 Story 验收标准]
-    ReadStory --> AskUser1[询问用户选择]
+    Extract --> Keywords{关键词分析}
     
-    CheckAmbiguous -->|是: 慢/卡/延迟/超时| ReadPerf[读取原 Story 验收标准]
-    ReadPerf --> HasPerfReq{有性能要求?}
-    HasPerfReq -->|是| AskMeetReq{是否符合要求?}
-    AskMeetReq -->|不符合| BugFix
-    AskMeetReq -->|符合| Hotfix
-    HasPerfReq -->|否| AskUser2[询问用户选择]
+    Keywords -->|Bug 关键词| CheckConflict{也有 Hotfix 词?}
+    Keywords -->|Hotfix 关键词| Hotfix[类型: hotfix]
+    Keywords -->|模糊关键词| Ambiguous[慢/卡/超时]
+    Keywords -->|无明确关键词| AskUser[询问用户]
+
+    %% 冲突处理
+    CheckConflict -->|否| BugFix
+    CheckConflict -->|是: 修复现有| BugFix
+    CheckConflict -->|是: 预防未来| Hotfix
+
+    %% 模糊处理
+    Ambiguous --> HasRef{有参考标准?}
+    HasRef -->|有标准: 违反| BugFix
+    HasRef -->|有标准: 符合| Hotfix
+    HasRef -->|无标准| AskUser
     
-    CheckBug -->|否 且 否 且 否| Unclear[类型不明确]
-    Unclear --> AskUser3[询问用户选择]
-    
-    BugFix --> End[判断完成]
+    %% 结束状态
+    BugFix --> End([判断完成])
     Hotfix --> End
-    AskUser1 --> End
-    AskUser2 --> End
-    AskUser3 --> End
+    AskUser --> End
 ```
 
 **关键词库参考**：
