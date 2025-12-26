@@ -13,6 +13,31 @@
 
 ---
 
+## 🔄 执行追踪表格（AI 必须维护）
+
+**AI 必须在开始执行时立即输出此表格，并在每个 Step 完成后更新状态**：
+
+```markdown
+## 🔄 Task 生成执行追踪
+
+| Step | 内容                   | 状态 | 输出 | 备注   |
+| ---- | ---------------------- | ---- | ---- | ------ |
+| 1    | 读取 Story 信息        | ⏳    | -    | 待开始 |
+| 2    | 确定 Task 粒度         | ⏳    | -    | 待开始 |
+| 3    | 生成 task.md           | ⏳    | -    | 待开始 |
+| 4    | 生成 context.manifest  | ⏳    | -    | 待开始 |
+| 5    | 生成后检查             | ⏳    | -    | 待开始 |
+
+**图例**：✅ 已完成 | 🔄 进行中 | ⏳ 等待中 | ❌ 失败
+```
+
+**更新规则**：
+- 进入某个 Step → 状态更新为 🔄
+- 完成某个 Step → 状态更新为 ✅，填写输出
+- Step 失败 → 状态更新为 ❌，记录失败原因
+
+---
+
 ## 输入
 
 用户会提供：
@@ -654,6 +679,71 @@ Step 5: 验证（确保能代表技术特征）
 | **3** | 文件列表整合              | 合并Context+依赖Story/去重                         | 完整Context文件列表                   | 生成manifest |
 | **4** | context.manifest.json生成 | 按规范格式生成JSON                                 | context.manifest.json                 | 生成task.md  |
 | **5** | task.md生成               | 根据Story type选择格式/生成Task简报                | task.md                               | ✅完成        |
+
+---
+
+## ✅ Task 生成后检查清单
+
+**AI 必须在生成 Task 文档后执行以下检查**：
+
+### 基础检查
+- [ ] **目录路径正确**: `.the_conn/ai_workspace/EPIC-XX/TASK-XX_STORY-XX_*/`
+- [ ] **Task ID 格式正确**: TASK-XX（两位数字，Epic 内连续）
+- [ ] **目录命名规范**: PascalCase，无空格
+- [ ] **两个文件都已生成**: task.md + context.manifest.json
+
+### task.md 内容检查
+- [ ] **Story 信息完整**: Story ID / Epic / Feature / type / 复杂度
+- [ ] **目标明确**: 一句话说明 Task 要实现什么
+- [ ] **验收标准清晰**: 从 Story 中正确提取
+- [ ] **测试策略正确**: 根据 Story type 自动判定（e2e_test/dev/bug_fix）
+- [ ] **开发流程完整**: Step-by-Step 指导（测试先行 + 迭代修复）
+
+### 测试策略检查（关键）
+- [ ] **E2E Story**: BDD 测试先行 + 迭代修复流程
+- [ ] **普通 Story**: 单元测试先行（TDD）+ 迭代修复流程
+- [ ] **Bug Fix Story**: 单元测试 + 回归测试 + 迭代修复流程
+- [ ] **迭代修复规则**: 明确说明"只修改业务代码，严禁修改测试"
+
+### 实现指导检查
+- [ ] **涉及文件完整**: 列出所有需要修改/创建的文件
+- [ ] **关键逻辑清晰**: 核心代码逻辑说明
+- [ ] **技术要点明确**: 性能考虑/边界条件/错误处理
+- [ ] **依赖关系正确**: 前置 Task/Story 列表
+- [ ] **边界清晰**: 说明哪些可以修改，哪些不能修改
+
+### context.manifest.json 检查
+- [ ] **task_id 正确**: 与 task.md 中的 Task ID 一致
+- [ ] **story_id 正确**: 与 Story 文件中的 ID 一致
+- [ ] **epic/feature 正确**: 与 Story 所属 Epic/Feature 一致
+- [ ] **contexts 列表完整**: 
+  - 包含 Global Context（Architecture/Tech_Stack/Testing_Strategy）
+  - 包含 Epic Context（如存在）
+  - 包含依赖 Story（如有 depends_on）
+- [ ] **source_story 路径正确**: 指向源 Story 文件
+
+### Task 粒度检查
+- [ ] **粒度合理**: 
+  - 1 Story = 1 Task（默认）✅
+  - 1 Story = 2-3 Tasks（必要时拆分）✅
+  - 避免过度拆分（❌ 写测试/写代码分开，❌ 每个函数单独 Task）
+- [ ] **拆分理由明确**: 如拆分，说明了为什么拆分
+- [ ] **Task 命名清晰**: 能反映 Task 的具体内容
+
+### Context 搜索检查
+- [ ] **已调用 context/search.md**: 使用 Story 关键词搜索
+- [ ] **Context 优先级合理**: Global > Epic > Story 依赖
+- [ ] **Context 去重**: 没有重复的 Context 文件
+
+### 规范引用检查
+- [ ] **base_rules.md**: 如需要，已引用
+- [ ] **test_strategy_rules.md**: 根据 Story type 引用
+- [ ] **complexity_rules.md**: 如评估复杂度，已引用
+- [ ] **bdd_language_rules.md**: 如是 E2E Story，已引用
+
+### 输出检查点验证
+- [ ] **执行检查点已完成**: 1-5 步都标记为 ✅
+- [ ] **追踪表格已更新**: Step 5 (生成后检查) 状态为 ✅
 
 ---
 
