@@ -209,6 +209,11 @@ depends_on: []
 - 依赖的 Story: {STORY-XX}
 - 外部依赖: {第三方库}
 
+**波及分析 (Impact Analysis)**:
+- [ ] 数据模型变动 -> 检查: Migration, API Schema, Service Layer
+- [ ] 配置变动 -> 检查: 环境变量, 启动脚本, 文档
+- [ ] 外部接口变动 -> 检查: 前端调用, 第三方集成, Mock Data
+
 **边界**:
 - 禁止修改: {范围}
 
@@ -287,6 +292,11 @@ aggregate: {AggregateName}  # 如果适用
 **依赖**:
 - 依赖的 Story: {STORY-XX}
 - 外部依赖: {第三方库}
+
+**波及分析 (Impact Analysis)**:
+- [ ] 领域模型变动 -> 检查: DTO Assembler, Repository 实现, 数据库 Schema
+- [ ] 领域事件变动 -> 检查: 消费者(Consumer), 消息契约(Contract), 幂等性处理
+- [ ] 接口变动 -> 检查: ACL 层, 对外 API 文档
 
 **边界**:
 - 聚合边界：{说明}
@@ -546,6 +556,7 @@ class Order(AggregateRoot):
 - [ ] **验收标准清晰**: Standard 用功能清单 / Pro 用功能清单+领域约束
 - [ ] **验收标准可测试**: 每项标准都可以通过测试验证
 - [ ] **实现指导完整**: 涉及文件 / 关键逻辑 / 技术要点 / 依赖 / 边界
+- [ ] **波及分析完整**: 已检查 Data/Config/API 等联动影响
 
 ### Pro Mode 额外检查（如适用）
 - [ ] **ADR 关联检查**: 尝试检索相关 ADR。如未找到，已提示用户创建或留空。
