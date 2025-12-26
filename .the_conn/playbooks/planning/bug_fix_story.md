@@ -295,3 +295,60 @@ depends_on: [STORY-01]
 ---
 
 现在，请根据用户提供的 Bug 信息生成 Bug Fix Story。
+
+---
+
+## Phase 4: 自动衔接 (Router Compliance) 🆕
+
+**⚠️ 重要：本 Playbook 作为 Quick 流程的一部分，必须执行 `quick_router.md` 定义的自动衔接逻辑。**
+
+### 4.1 衔接菜单
+
+Story 生成并确认无误后，**必须**输出以下标准菜单供用户选择：
+
+```markdown
+✅ Story 已生成: `.the_conn/epics/.../STORY-{ID}_*.md`
+
+🚀 **Quick 模式 - 自动衔接**
+
+由于这是 Quick Change（单个 Story），我可以为你自动完成：
+
+**选项 1: 自动衔接（推荐）**
+✅ 自动生成 Task 简报（gtask）
+✅ 自动执行开发任务（etask）
+✅ 等待你 Review 后完成闭环
+
+**选项 2: 仅生成 Story**
+⏸️  暂停，稍后手动执行 `tc gtask` 和 `tc etask`
+
+**选项 3: 修改 Story**
+✏️  调整 Story 内容后再决定
+
+请选择 [1/2/3] 或输入 [继续/暂停/修改]:
+```
+
+### 4.2 执行逻辑
+
+根据用户选择，严格执行以下分支：
+
+| 用户选择 | AI 行为 |
+| :--- | :--- |
+| **1 / 继续** | 1. 初始化 "Quick 自动衔接追踪" 表格 (见下文)<br/>2. 加载 `@playbooks/execution/task_generation.md`<br/>3. 传递 Story 路径参数 |
+| **2 / 暂停** | 输出后续手动命令提示，结束任务。 |
+| **3 / 修改** | 询问具体修改点，修改 Story 后**重新**展示衔接菜单 (回到 4.1)。 |
+
+**Quick 自动衔接追踪表格** (仅当选择 1 时初始化):
+
+```markdown
+## 🔗 Quick 自动衔接追踪
+
+**当前工作流**: quick_router → (本playbook) → task_generation
+
+| Step | Playbook        | 状态 | 说明             |
+| ---- | --------------- | ---- | ---------------- |
+| 1    | task_generation | 🔄    | 正在加载并执行... |
+| 2    | task_execution  | ⏳    | 等待 Step 1 完成 |
+
+(AI 需将此状态传递给下一个 Playbook)
+```
+
