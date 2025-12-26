@@ -48,7 +48,7 @@
 ## 🔄 需求拆解执行追踪
 
 | Phase | 内容               | 状态 | 输出 | 备注   |
-| --- | --- | --- | --- | --- |
+| ----- | ------------------ | ---- | ---- | ------ |
 | 1     | 需求分析与配置确认 | ⏳    | -    | 待开始 |
 | 2     | Epic 拆解          | ⏳    | -    | 待开始 |
 | 3     | Feature 拆解       | ⏳    | -    | 待开始 |
@@ -67,16 +67,142 @@
 
 ---
 
-### Phase 1: 需求分析与配置确认
+### Phase 1: 架构承接与配置确认
 
-| Step  | 任务         | 操作                                                                                                                   |
-| --- | --- | --- |
-| **1** | 检查Context  | 读取 `.the_conn/context/global/`: Tech_Stack/Testing_Strategy/Coding_Standard/Architecture                             |
-| **2** | 确认配置     | • 有完整信息→直接使用<br/>• 缺失→仅询问缺失项<br/>• BDD格式: 英文关键字+项目语言（参考`@rules/bdd_language_rules.md`） |
-| **3** | 分析需求     | 5要素: 功能模块/优先级/依赖关系/规模估算/性能场景                                                                      |
-| **4** | 应用测试策略 | **详见`@rules/test_strategy_rules.md`**                                                                                |
+#### 📋 架构承接快速检查清单
 
-**测试策略速查**（完整规则见`@rules/test_strategy_rules.md`）：
+**AI 必须按顺序完成以下检查，完成一项勾选一项**：
+
+```markdown
+## ✅ Phase 1 架构承接检查清单
+
+### 1.1 Review 产出读取
+- [ ] 读取 Review 讨论历史 → 识别模式: Standard / Pro
+- [ ] 读取 ADR 文件 (`.the_conn/architecture/decisions/ADR-*.md`)
+- [ ] 提取架构约束清单 (通信/数据/一致性/边界)
+- [ ] Pro Mode: 读取 Review Phase 1.5 领域分析（限界上下文/聚合/事件）
+- [ ] 读取 Review Phase 3 复杂度评估（领域/技术复杂度）
+
+### 1.2 模式映射确认
+- [ ] Standard Mode: Epic=功能模块, Feature=Entity/Table, Story=MVC拆分
+- [ ] Pro Mode: Epic=限界上下文, Feature=聚合根, Story=战术设计任务
+- [ ] 记录映射策略到执行追踪表格
+
+### 1.3 ADR 约束提取
+- [ ] 提取通信模式约束 (如: ADR-001 异步消息)
+- [ ] 提取数据存储约束 (如: ADR-002 PostgreSQL)
+- [ ] 提取一致性策略约束 (如: ADR-003 Saga)
+- [ ] 提取聚合边界约束 (如: ADR-004 Order聚合)
+- [ ] 生成约束清单表格
+
+### 1.4 复杂度基准设定
+- [ ] 读取 Review 复杂度评估 (领域复杂度 + 技术复杂度)
+- [ ] 设定 Story 评分基准: 双高>7.0🔴🔴 / 技术高>6.0🔴 / 领域高>5.0🟡 / 双低<3.0🟢
+- [ ] 记录基准到执行追踪表格
+
+### 1.5 Context 配置确认
+- [ ] 读取 `.the_conn/context/global/Tech_Stack.md`
+- [ ] 读取 `.the_conn/context/global/Testing_Strategy.md`
+- [ ] 读取 `.the_conn/context/global/Architecture.md`
+- [ ] 确认 BDD 配置: 语言 / 框架 / 格式
+- [ ] 应用测试策略规则 (完整见 `@rules/test_strategy_rules.md`)
+```
+
+**快速决策树**（简化版）：
+
+```mermaid
+graph LR
+    A[Phase 1开始] --> B{有Review历史?}
+    B -->|有| C[读取模式/ADR/复杂度]
+    B -->|无| D[跳过承接,直接Phase 2]
+    C --> E{模式?}
+    E -->|Standard| F[功能模块拆分策略]
+    E -->|Pro| G[DDD战略战术策略]
+    F --> H[设定复杂度基准]
+    G --> H
+    H --> I[确认BDD配置]
+    I --> J[Phase 1完成]
+    D --> I
+```
+
+---
+
+#### 详细规则参考（供 AI 内部查阅）
+
+<details>
+<summary>1.1 模式判定与映射规则（点击展开）</summary>
+
+**判定逻辑**:
+
+| Review 模式 | 映射策略 | Epic 来源 | Feature 来源 | Story 特征 |
+|------------|---------|----------|-------------|-----------|
+| **Standard** | 功能模块拆分 | 整个应用 或 功能模块 | Entity/Table/页面 | MVC 标准拆分 |
+| **Pro** | DDD 战略/战术拆分 | 限界上下文 | 聚合根 | 战术设计任务 |
+
+**Pro Mode 映射规则**⭐:
+
+| Review 产出 | Breakdown 映射 | Epic 内记录 | Feature 内记录 | Story 内记录 |
+|------------|---------------|------------|---------------|-------------|
+| 限界上下文 | Epic | 上下文名称<br/>核心域标识 | - | - |
+| 聚合根 | Feature | - | 聚合边界<br/>一致性策略 | - |
+| 领域事件 | Story (Inter-process) | - | 事件清单 | `domain_event` 字段 |
+| ADR 决策 | Story 约束 | - | - | `related_adr` 字段 |
+
+</details>
+
+<details>
+<summary>1.2 ADR 约束分类表（点击展开）</summary>
+
+| 约束类型 | ADR 示例 | 影响 Story 字段 | Story 实现指导要求 |
+|---------|---------|----------------|-------------------|
+| 通信模式 | ADR-001: 异步消息 | `related_adr: [ADR-001]` | 禁止同步 API |
+| 数据存储 | ADR-002: PostgreSQL | `related_adr: [ADR-002]` | 禁止提及 MySQL |
+| 一致性策略 | ADR-003: Saga | `related_adr: [ADR-003]` | 需要补偿逻辑 |
+| 聚合边界 | ADR-004: Order 聚合 | `related_adr: [ADR-004]` | 遵循聚合边界 |
+
+</details>
+
+<details>
+<summary>1.3 复杂度基准调整规则（点击展开）</summary>
+
+| Review 复杂度组合 | Story 评分基准 | 标识 |
+|------------------|---------------|------|
+| 领域高 + 技术低 | > 5.0 | 🟡 精细建模 |
+| 领域低 + 技术高 | > 6.0 | 🔴 技术复杂 |
+| 双高 | > 7.0 | 🔴🔴 分阶段 |
+| 双低 | < 3.0 | 🟢 快速实现 |
+
+**AI 必须执行**: 在生成 Story 大纲时，根据 Review 评估自动调整复杂度基准。
+
+</details>
+
+<details>
+<summary>1.4 测试策略速查（点击展开）</summary>
+
+**完整规则见 `@rules/test_strategy_rules.md`**
+
+- Story级：用户可见→BDD+单元测试 | 技术实现→单元测试
+- Feature E2E：6维评分≥10分→必须
+- Epic E2E：跨Feature用户旅程 | ≥3个Feature有依赖
+- 性能测试：AI检测敏感场景后询问
+
+</details>
+
+---
+
+#### ✅ Phase 1 完成检查
+
+**AI 必须确认以下项目后才能进入 Phase 2**：
+
+- [ ] 所有检查清单项目已完成勾选
+- [ ] 模式已确定：Standard / Pro
+- [ ] 复杂度基准已设定
+- [ ] BDD 配置已确认
+- [ ] 执行追踪表格 Phase 1 状态为 ✅
+
+---
+
+### Phase 2: 生成拆解大纲
 
 ```mermaid
 graph TB
@@ -113,24 +239,96 @@ graph TB
 触发: 总分≥10 + 风险3分(一票通过)
 ```
 
----
-
+  
 ### Phase 2: 生成拆解大纲
+
+#### 2.1 拆解策略路由（自动判定）
+
+**Standard Mode 拆解策略**:
+
+```mermaid
+graph TB
+    App[整个应用] --> Epic1[EPIC-01: 系统基础]
+    Epic1 --> F1[FEAT-01: Entity/Table]
+    Epic1 --> F2[FEAT-02: Entity/Table]
+    F1 --> S1[STORY-01: API]
+    F1 --> S2[STORY-02: Service]
+    F1 --> S3[STORY-03: Repository]
+```
+
+**Pro Mode 拆解策略**⭐:
+
+```mermaid
+graph TB
+    Context1[限界上下文1<br/>核心域] --> Epic1[EPIC-01: Context1]
+    Context2[限界上下文2<br/>支撑域] --> Epic2[EPIC-02: Context2]
+    
+    Epic1 --> Agg1[聚合1]
+    Epic1 --> Agg2[聚合2]
+    
+    Agg1 --> Feat1[FEAT-01: Aggregate1]
+    Feat1 --> S1[STORY-01: Domain Logic]
+    Feat1 --> S2[STORY-02: Repository]
+    Feat1 --> S3[STORY-03: 发布 Event]
+    
+    Epic2 --> Agg3[聚合3]
+    Agg3 --> Feat2[FEAT-02: Aggregate3]
+    Feat2 --> S4[STORY-04: 订阅 Event]
+    Feat2 --> S5[STORY-05: Domain Logic]
+```
+
+**拆解对比表**:
+
+| 模式 | Epic 拆分 | Feature 拆分 | Story 拆分 |
+|------|----------|-------------|-----------|
+| **Standard** | 整个应用 或 功能模块 | Entity/Table/页面 | API → Service → Repository → DTO |
+| **Pro** | 限界上下文（标注核心域） | 聚合根（标注聚合边界） | Domain Logic → Repository → Events → DTO Assembler → ACL (if needed) |
+
+#### 2.2 领域事件特殊处理（Pro Mode）
+
+**事件 → Story 映射规则**:
+
+| Review 识别的事件 | Breakdown Story | Story 类型 | Frontmatter 字段 |
+|------------------|----------------|-----------|-----------------|
+| OrderCreated | STORY-XX: Publish_OrderCreated_Event | Inter-process | `domain_event: OrderCreated` |
+| PaymentCompleted | STORY-YY: Handle_PaymentCompleted_Event | Inter-process | `domain_event: PaymentCompleted` |
+
+**Story 命名规范**:
+- 发布: `STORY-XX: Publish_{EventName}_Event`
+- 订阅: `STORY-YY: Handle_{EventName}_Event`
+
+#### 2.3 复杂度继承与基准调整
+
+**AI 必须根据 Review Phase 3 复杂度评估调整评分**:
+
+```mermaid
+graph LR
+    Review[Review 复杂度评估] --> Check{复杂度组合?}
+    Check -->|双高| High[基准 > 7.0<br/>🔴🔴]
+    Check -->|技术高| TechHigh[基准 > 6.0<br/>🔴]
+    Check -->|领域高| DomainHigh[基准 > 5.0<br/>🟡]
+    Check -->|双低| Low[基准 < 3.0<br/>🟢]
+    
+    High --> Story[Story 评分]
+    TechHigh --> Story
+    DomainHigh --> Story
+    Low --> Story
+```
+
+**复杂度标识**（在大纲中标注）:
+
+| 标识 | 基准 | 含义 | Story 注意事项 |
+|------|------|------|---------------|
+| 🔴🔴 | > 7.0 | 双高复杂度 | 分阶段实施、POC 验证 |
+| 🔴 | > 6.0 | 技术复杂 | 技术预研、性能测试 |
+| 🟡 | > 5.0 | 领域复杂 | 精细建模、充分测试 |
+| 🟢 | < 3.0 | 简单实现 | 快速开发、标准模式 |
+
+#### 2.4 生成大纲格式
 
 **重要**: 先展示大纲，等用户确认后再生成详细文档！
 
-**粒度原则**: 默认使用**较粗的粒度**，按**模块边界和功能边界**拆分，便于 AI 编码：
 
-- **Epic**: 按大的业务领域或子系统划分，一个项目通常 1-3 个 Epic
-- **Feature**: 按完整的功能模块划分，每个 Epic 包含 2-4 个 Feature
-- **Story**: 按独立的功能单元或模块职责划分，每个 Feature 包含 2-5 个 Story
-- **拆分标准**:
-  - 边界清晰（输入输出明确）
-  - 职责单一（一个 Story 只做一件事）
-  - 可独立测试（有明确的验收标准）
-  - 接口稳定（不依赖未完成的内部实现）
-
-输出大纲格式：
 
 ```markdown
 # 需求拆解大纲
@@ -173,19 +371,19 @@ graph TB
 
 ### 功能开发 Story
 
-| ID | Story名称 | Feature | 类型 | 目标 | 测试策略 | 依赖 | 复杂度 |
-|----|----------|---------|------|------|---------|------|--------|
-| STORY-01 | {Story名称} | FEAT-01 | dev | {简要目标} | 单元测试 | 无 | 3.5 |
-| STORY-02 | {Story名称} | FEAT-01 | dev | {简要目标} | 单元测试 | STORY-01 | 2.0 |
+| ID       | Story名称   | Feature | 类型 | 目标       | 测试策略 | 依赖     | 复杂度 |
+| -------- | ----------- | ------- | ---- | ---------- | -------- | -------- | ------ |
+| STORY-01 | {Story名称} | FEAT-01 | dev  | {简要目标} | 单元测试 | 无       | 3.5    |
+| STORY-02 | {Story名称} | FEAT-01 | dev  | {简要目标} | 单元测试 | STORY-01 | 2.0    |
 
 ...（列出所有功能 Story）
 
 ### 测试 Story（自动规划）
 
-| ID | Story名称 | Feature | 类型 | 目标 | 依赖 | 复杂度 | 说明 |
-|----|----------|---------|------|------|------|--------|------|
-| STORY-99 | E2E_{FeatureName}_Flow | FEAT-01 | e2e_test | 验证STORY-01~03完整流程 | STORY-01,02,03 | 4.0 | 自动建议 |
-| STORY-97 | Performance_{FeatureName} | FEAT-03 | perf_test | 验证高并发性能指标 | STORY-06,07,08 | 5.0 | 性能敏感 |
+| ID       | Story名称                 | Feature | 类型      | 目标                    | 依赖           | 复杂度 | 说明     |
+| -------- | ------------------------- | ------- | --------- | ----------------------- | -------------- | ------ | -------- |
+| STORY-99 | E2E_{FeatureName}_Flow    | FEAT-01 | e2e_test  | 验证STORY-01~03完整流程 | STORY-01,02,03 | 4.0    | 自动建议 |
+| STORY-97 | Performance_{FeatureName} | FEAT-03 | perf_test | 验证高并发性能指标      | STORY-06,07,08 | 5.0    | 性能敏感 |
 
 **性能测试详细指标**:
 - 响应时间: P95 < {X}ms, P99 < {Y}ms
@@ -254,7 +452,19 @@ graph TB
    - 性能测试 Story 是否需要（如果有建议）
 
 请用户确认大纲后，继续 Phase 3
-```
+
+#### ✅ Phase 2 完成检查
+
+**AI 必须确认以下项目后才能进入用户确认环节**：
+
+- [ ] Epic 规划已生成（Epic 名称/业务价值/Feature 列表）
+- [ ] Feature 规划已生成（Feature 名称/所属 Epic/Story 列表）
+- [ ] Story 概要已生成（ID/名称/类型/复杂度/依赖）
+- [ ] 测试 Story 已规划（Feature E2E/Epic E2E/性能测试）
+- [ ] 依赖关系图已生成（Mermaid 图 + 并行建议）
+- [ ] 测试配置已确认（语言/框架/BDD 格式）
+- [ ] 执行追踪表格 Phase 2 状态为 ✅
+- [ ] 已输出大纲供用户确认
 
 ---
 
@@ -265,7 +475,7 @@ graph TB
 **常见反馈类型**:
 
 | 反馈                | 处理方式                              |
-| --- | --- |
+| ------------------- | ------------------------------------- |
 | "EPIC-01 太大了"    | 拆分为 2 个 Epic，重新分配 Features   |
 | "STORY-03 依赖不对" | 调整 `depends_on` 字段，更新依赖图    |
 | "缺少某个功能"      | 补充到合适的 Epic/Feature，新增 Story |
@@ -274,7 +484,7 @@ graph TB
 
 **迭代流程**:
 
-```
+```text
 展示大纲 v1
   ↓
 用户反馈调整
@@ -289,6 +499,15 @@ graph TB
 ```
 
 **重要原则**: 可以多轮迭代，直到用户满意。不要急于生成文件。
+
+#### ✅ Phase 2.1 (用户反馈与迭代) 完成检查
+
+**AI 必须确认以下项目后才能进入 Phase 3**：
+
+- [ ] 用户已明确输入 "确认，请生成详细文档" 或等效确认
+- [ ] 所有用户提出的调整已完成
+- [ ] 大纲已达到用户满意状态
+- [ ] 执行追踪表格 Phase 2.1 (如有迭代) 状态为 ✅
 
 ---
 
@@ -328,6 +547,17 @@ graph TB
 - 在生成 Story 前，确认项目的 BDD 配置（语言、测试库、Feature 文件语言）
 - 如果缺失，先提醒用户提供
 
+#### ✅ Phase 3 完成检查
+
+**AI 必须确认以下项目后才能进入质量检查**：
+
+- [ ] 所有 Epic 文档已生成（EPIC-XX/README.md）
+- [ ] 所有 Feature 文档已生成（FEAT-XX/README.md）
+- [ ] 所有 Story 文档已生成（STORY-XX_*.md）
+- [ ] 所有 Story 包含 BDD 场景
+- [ ] 执行追踪表格 Phase 3 状态为 ✅
+- [ ] 已提示用户使用 context/extract.md 提取 Context（可选）
+
 ---
 
 ## 拆解原则
@@ -342,7 +572,7 @@ graph TB
 
 **示例**:
 
-```
+```text
 ✅ 好的拆分:
 EPIC-01: 基础框架
 EPIC-02: 数据传输
@@ -363,7 +593,7 @@ EPIC-02: 其他功能（边界不清）
 
 **示例**:
 
-```
+```text
 ✅ 好的拆分:
 FEAT-01: 项目初始化
 FEAT-02: 模板生成
@@ -385,7 +615,7 @@ FEAT-02: 数据库设计（不是用户视角）
 
 **示例**:
 
-```
+```text
 ✅ 好的拆分（按功能模块边界）:
 STORY-01: 实现项目结构初始化模块（包含目录创建、权限检查、幂等性处理）
 STORY-02: 实现模板文件生成模块（包含模板加载、变量替换、文件写入）
@@ -421,7 +651,7 @@ STORY-03: 修改 init.py 的第 10-50 行（关注实现细节而非功能边界
 
 **示例**:
 
-```
+```text
 EPIC-01
 ├── FEAT-01
 │   ├── STORY-01
@@ -482,11 +712,13 @@ depends_on:
 
 ## 完整示例
 
-### 输入
+### 示例 1: Standard Mode（技术项目）
+
+#### 输入
 
 **需求文档**:
 
-```
+```text
 项目: DataStream 可靠传输
 需求: 
 1. 解决 UDP 丢包问题
@@ -496,16 +728,21 @@ depends_on:
 
 **技术方案**:
 
-```
+```text
 核心: 3次冗余 + 动态捎带
 协议: JSON 格式
 语言: Go + godog (BDD)
+模式: Standard Mode（技术项目，无复杂领域模型）
 ```
 
-### 输出大纲
+#### 输出大纲
 
 ```markdown
-# 需求拆解大纲
+# 需求拆解大纲（Standard Mode）
+
+## 模式标识
+**评审模式**: Standard Mode  
+**理由**: 技术项目，单一服务，无复杂领域模型
 
 ## Epic 规划
 
@@ -534,15 +771,15 @@ depends_on:
 
 ### 功能开发 Story
 
-| ID | Story名称 | Feature | 类型 | 目标 | 测试策略 | 依赖 | 复杂度 |
-|----|----------|---------|------|------|---------|------|--------|
-| STORY-01 | 发送缓冲队列模块 | FEAT-01 | dev | 队列管理、线程安全、容量控制 | 单元测试 | 无 | 4.0 |
-| STORY-02 | 历史窗口管理模块 | FEAT-01 | dev | 窗口维护、数据过期、查询接口 | 单元测试 | 无 | 4.5 |
-| STORY-03 | 冗余控制器模块 | FEAT-01 | dev | 冗余策略、发送控制、状态追踪 | 单元测试 | STORY-01,02 | 6.0 |
-| STORY-04 | Packet去重模块 | FEAT-02 | dev | ID管理、去重逻辑、内存优化 | 单元测试 | 无 | 5.0 |
-| STORY-05 | Event排序模块 | FEAT-02 | dev | 序列号处理、排序算法、输出保序 | 单元测试 | STORY-04 | 5.5 |
-| STORY-06 | 协议定义模块 | FEAT-03 | dev | 数据格式、序列化、版本兼容 | 单元测试 | 无 | 3.0 |
-| STORY-07 | 端到端集成 | FEAT-03 | dev | 模块组装、接口对接、端到端测试 | BDD E2E | STORY-03,05,06 | 7.0 |
+| ID       | Story名称        | Feature | 类型 | 目标                           | 测试策略 | 依赖           | 复杂度 |
+| -------- | ---------------- | ------- | ---- | ------------------------------ | -------- | -------------- | ------ |
+| STORY-01 | 发送缓冲队列模块 | FEAT-01 | dev  | 队列管理、线程安全、容量控制   | 单元测试 | 无             | 4.0    |
+| STORY-02 | 历史窗口管理模块 | FEAT-01 | dev  | 窗口维护、数据过期、查询接口   | 单元测试 | 无             | 4.5    |
+| STORY-03 | 冗余控制器模块   | FEAT-01 | dev  | 冗余策略、发送控制、状态追踪   | 单元测试 | STORY-01,02    | 6.0    |
+| STORY-04 | Packet去重模块   | FEAT-02 | dev  | ID管理、去重逻辑、内存优化     | 单元测试 | 无             | 5.0    |
+| STORY-05 | Event排序模块    | FEAT-02 | dev  | 序列号处理、排序算法、输出保序 | 单元测试 | STORY-04       | 5.5    |
+| STORY-06 | 协议定义模块     | FEAT-03 | dev  | 数据格式、序列化、版本兼容     | 单元测试 | 无             | 3.0    |
+| STORY-07 | 端到端集成       | FEAT-03 | dev  | 模块组装、接口对接、端到端测试 | BDD E2E  | STORY-03,05,06 | 7.0    |
 
 **复杂度统计**:
 - 功能开发: 35.0分
@@ -588,11 +825,222 @@ graph TB
 
 **关键路径**: STORY-01 → STORY-03 → STORY-07 (总计 17.0分)
 **总体复杂度**: 35.0分
+```
+
+---
+
+### 示例 2: Pro Mode（DDD 业务项目）⭐
+
+#### 输入
+
+**需求文档**:
+
+```text
+项目: 电商订单系统
+需求:
+1. 用户下单购买商品
+2. 订单自动扣减库存
+3. 支持多种支付方式
+4. 订单状态实时跟踪
+```
+
+**技术方案**（来自 requirements_review）:
+
+```text
+模式: Pro Mode
+架构: DDD（领域驱动设计）
+
+限界上下文:
+- 订单上下文（核心域）
+- 支付上下文（支撑域）
+- 库存上下文（支撑域）
+
+聚合根:
+- Order（订单上下文）
+- Payment（支付上下文）
+- Inventory（库存上下文）
+
+领域事件:
+- OrderCreated（订单创建）
+- PaymentCompleted（支付完成）
+- InventoryReserved（库存预留）
+
+ADR:
+- ADR-001: 异步消息驱动架构（Kafka）
+- ADR-002: PostgreSQL 数据库
+- ADR-003: 最终一致性（Saga）
+
+复杂度评估:
+- 订单上下文: 领域复杂度高（多种业务规则）+ 技术复杂度中（需要高并发）
+```
+
+#### 输出大纲
+
+```markdown
+# 需求拆解大纲（Pro Mode）
+
+## 模式标识
+**评审模式**: Pro Mode  
+**理由**: 跨服务、核心域重构、复杂业务规则、需要 DDD 战略/战术设计
+
+## 架构承接说明
+
+**Review 映射**:
+- 限界上下文（3个）→ Epic（3个）
+- 聚合根（3个）→ Feature（3个）
+- 领域事件（3个）→ Story（6个：发布3+订阅3）
+
+**ADR 约束清单**:
+| ADR | 约束类型 | 约束内容 | 影响范围 |
+|-----|---------|---------|---------|
+| ADR-001 | 通信模式 | 上下文间使用异步消息（Kafka） | Story 禁止同步 API |
+| ADR-002 | 数据库 | PostgreSQL | Story 禁止提及 MySQL |
+| ADR-003 | 一致性 | 最终一致性（Saga） | Story 需要补偿逻辑 |
+
+**复杂度继承**:
+- 订单上下文（领域高+技术中）→ Story 基准 > 5.5 分 🟡
+
+## Epic 规划
+
+### EPIC-01: 订单上下文（核心域 🔴）
+- **业务价值**: 核心订单处理能力，支撑业务收入增长
+- **限界上下文**: Order Context
+- **包含 Features**: FEAT-01（Order 聚合）
+- **上下文映射**: Customer-Supplier（下游：支付、库存）
+
+### EPIC-02: 支付上下文（支撑域 🟡）
+- **业务价值**: 提供多种支付方式，提升支付成功率
+- **限界上下文**: Payment Context
+- **包含 Features**: FEAT-02（Payment 聚合）
+- **上下文映射**: Conformist（上游：订单）
+
+### EPIC-03: 库存上下文（支撑域 🟡）
+- **业务价值**: 实时库存管理，防止超卖
+- **限界上下文**: Inventory Context
+- **包含 Features**: FEAT-03（Inventory 聚合）
+- **上下文映射**: Conformist（上游：订单）
+
+## Feature 规划
+
+### FEAT-01: Order 聚合（订单核心逻辑）
+- **所属 Epic**: EPIC-01
+- **聚合边界**: Order（聚合根） + OrderItem（实体）
+- **一致性策略**: 聚合内强一致（事务），聚合间最终一致（事件）
+- **包含 Stories**: STORY-01, STORY-02, STORY-03, STORY-04
+
+### FEAT-02: Payment 聚合（支付处理）
+- **所属 Epic**: EPIC-02
+- **聚合边界**: Payment（聚合根） + Transaction（实体）
+- **一致性策略**: 聚合内强一致，跨上下文最终一致
+- **包含 Stories**: STORY-05, STORY-06, STORY-07
+
+### FEAT-03: Inventory 聚合（库存管理）
+- **所属 Epic**: EPIC-03
+- **聚合边界**: Inventory（聚合根） + StockItem（实体）
+- **一致性策略**: 聚合内强一致，跨上下文最终一致
+- **包含 Stories**: STORY-08, STORY-09, STORY-10
+
+## Story 概要（Pro Mode 战术设计）
+
+### 功能开发 Story
+
+| ID | Story名称 | Feature | 类型 | 战术任务 | 相关ADR | 领域事件 | 复杂度 | 依赖 |
+|----|---------|---------|------|---------|---------|---------|--------|------|
+| STORY-01 | Order聚合根逻辑 | FEAT-01 | dev | Domain Logic | ADR-002 | - | 6.0🟡 | 无 |
+| STORY-02 | 发布OrderCreated事件 | FEAT-01 | dev | Event Publisher | ADR-001,003 | OrderCreated | 5.5🟡 | STORY-01 |
+| STORY-03 | OrderRepository实现 | FEAT-01 | dev | Repository | ADR-002 | - | 4.0 | STORY-01 |
+| STORY-04 | 订单取消补偿逻辑 | FEAT-01 | dev | Saga补偿 | ADR-003 | OrderCancelled | 6.5🟡 | STORY-01,02 |
+| STORY-05 | 订阅OrderCreated | FEAT-02 | dev | Event Handler | ADR-001 | OrderCreated | 5.0 | STORY-02 |
+| STORY-06 | Payment聚合根逻辑 | FEAT-02 | dev | Domain Logic | ADR-002 | - | 5.5 | STORY-05 |
+| STORY-07 | 发布PaymentCompleted | FEAT-02 | dev | Event Publisher | ADR-001,003 | PaymentCompleted | 5.0 | STORY-06 |
+| STORY-08 | 订阅OrderCreated | FEAT-03 | dev | Event Handler | ADR-001 | OrderCreated | 5.0 | STORY-02 |
+| STORY-09 | Inventory聚合根逻辑 | FEAT-03 | dev | Domain Logic | ADR-002 | - | 5.5 | STORY-08 |
+| STORY-10 | 发布InventoryReserved | FEAT-03 | dev | Event Publisher | ADR-001 | InventoryReserved | 4.5 | STORY-09 |
+
+**复杂度标识**: 🟡 = 基准 > 5.5（领域复杂度高）
+
+**复杂度统计**:
+- EPIC-01: 22.0分（核心域）
+- EPIC-02: 15.5分
+- EPIC-03: 15.0分
+- **总计**: 52.5分
+
+### 测试 Story（按 Feature 规划）
+
+| ID | Story名称 | Feature | 类型 | 目的 | 依赖 |
+|----|---------|---------|------|------|------|
+| STORY-99 | E2E_Order_Flow | FEAT-01 | e2e_test | 验证订单创建→事件发布→持久化 | STORY-01,02,03,04 |
+| STORY-98 | E2E_Payment_Flow | FEAT-02 | e2e_test | 验证订阅→支付→事件发布 | STORY-05,06,07 |
+| STORY-97 | E2E_Inventory_Flow | FEAT-03 | e2e_test | 验证订阅→库存扣减→事件发布 | STORY-08,09,10 |
+| STORY-96 | Epic_E2E_OrderSystem | EPIC-01 | e2e_test | 验证订单→支付→库存完整流程 | STORY-99,98,97 |
+
+## 依赖关系与开发顺序（Pro Mode）
+
+```mermaid
+graph TB
+    subgraph EPIC-01 [订单上下文 - 核心域]
+        S01[STORY-01<br/>Order聚合<br/>6.0🟡]
+        S02[STORY-02<br/>发布事件<br/>5.5🟡]
+        S03[STORY-03<br/>Repository<br/>4.0]
+        S04[STORY-04<br/>补偿逻辑<br/>6.5🟡]
+        
+        S01 --> S02
+        S01 --> S03
+        S01 --> S04
+        S02 --> S04
+    end
+    
+    subgraph EPIC-02 [支付上下文]
+        S05[STORY-05<br/>订阅事件<br/>5.0]
+        S06[STORY-06<br/>Payment聚合<br/>5.5]
+        S07[STORY-07<br/>发布事件<br/>5.0]
+        
+        S05 --> S06
+        S06 --> S07
+    end
+    
+    subgraph EPIC-03 [库存上下文]
+        S08[STORY-08<br/>订阅事件<br/>5.0]
+        S09[STORY-09<br/>Inventory聚合<br/>5.5]
+        S10[STORY-10<br/>发布事件<br/>4.5]
+        
+        S08 --> S09
+        S09 --> S10
+    end
+    
+    S02 -.->|事件| S05
+    S02 -.->|事件| S08
+```
+
+### 并行开发建议（Pro Mode）
+
+**阶段1: 订单上下文（核心域优先）**
+- STORY-01（Order聚合根）
+- 复杂度: 6.0分
+- 🔴 关键路径，必须优先
+
+**阶段2: 订单上下文完善**
+- 并行：STORY-02（事件发布）+ STORY-03（Repository）
+- 复杂度: 9.5分
+
+**阶段3: 下游上下文（并行开发）**
+- 并行：STORY-05,06,07（支付）+ STORY-08,09,10（库存）
+- 复杂度: 31.0分（两个上下文并行）
+
+**阶段4: 补偿逻辑 + E2E 测试**
+- STORY-04（补偿）
+- STORY-99, 98, 97, 96（E2E测试）
+
+**关键路径**: STORY-01 → STORY-02 → STORY-05 → STORY-06 → STORY-96（Epic E2E）
+**并行机会**: 支付和库存上下文可完全并行开发
+```
 
 ---
 
 **请确认大纲，输入"确认，请生成详细文档"继续**
-```
+
+
+
 ## 拆解质量标准
 
 ### Epic 层级
@@ -631,7 +1079,7 @@ graph TB
 
 **示例**:
 
-```
+```text
 大需求: 用户管理系统
 
 Epic 拆分:
@@ -674,7 +1122,7 @@ Epic 拆分:
 ## 执行检查点
 
 | #       | 检查点             | 已完成                                     | 产出                             | 下一步            |
-| --- | --- | --- | --- | --- |
+| ------- | ------------------ | ------------------------------------------ | -------------------------------- | ----------------- |
 | **1**   | 需求分析与配置确认 | Context检查/测试配置/需求分析/性能场景识别 | 测试配置清单/功能模块/依赖图     | 生成大纲          |
 | **2**   | 拆解大纲生成       | Epic/Feature/Story规划/测试决策/依赖分析   | 完整大纲/测试评分表/依赖图       | **⏸️等待用户确认** |
 | **2.1** | 大纲迭代（可选）   | 收集反馈/调整大纲/生成v{N}                 | 更新大纲v{N}                     | **⏸️继续等待确认** |
