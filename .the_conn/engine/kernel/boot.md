@@ -24,13 +24,10 @@
 
 ## 🗺️ 路由表 (Routing Table)
 
-| Intent / Command | Target Playbook | Required Persona |
+| Intent / Command | Target Workflow | Required Persona |
 | :--- | :--- | :--- |
-| `tc review`, `review` | `playbooks/requirements_review.md` | `Tech Architect`, `Product Manager` |
-| `tc plan`, `story` | `playbooks/story_writing.md` | `Product Manager` |
-| `tc diff`, `change` | `playbooks/change_summary.md` | `Tech Architect` |
-| `tc quick`, `fix` | `playbooks/quick_fix.md` | `QA Auditor` |
-| `tc test`, `e2e` | `playbooks/e2e_story.md` | `QA Auditor` |
+| `tc review`, `review`, `story`, `plan` | `workflows/innovation/workflow.md` | `Tech Architect`, `Product Manager` |
+| `tc quick`, `fix`, `maintenance` | `workflows/maintenance/workflow.md` | `QA Auditor` |
 
 ## ⚠️ 紧急协议 (Emergency Protocols)
 
